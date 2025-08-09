@@ -1117,11 +1117,14 @@ const showDuplicateNotification = (count) => {
                 threshold: 0.1
             });
 
-            // Observar las tarjetas de versiones
-            observer.observe(currentVersionsCard);
-            observer.observe(futureVersionsCard);
-            observer.observe(pastVersionsCard);
+// Observar las tarjetas de versiones
+observer.observe(currentVersionsCard);
+observer.observe(futureVersionsCard);
+observer.observe(pastVersionsCard);
 
+// ✅ Nueva línea para que se muestre la "Información Importante"
+const infoCard = document.querySelector('#downloads + div .glass-card');
+if (infoCard) observer.observe(infoCard);
             /**
              * #2: Efecto de scroll del logo
              * Cambia la opacidad y la posición del logo al hacer scroll.
