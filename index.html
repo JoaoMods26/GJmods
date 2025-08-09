@@ -1384,13 +1384,14 @@ allExploits = newExploits; // Ya vienen sin duplicados desde fetchData
                     // Lógica para la pestaña "No Detectado"
                     if (filterValue === 'not-detected') {
                          // Mostrar advertencia y luego filtrar los exploits externos no detectados
-                         showWarningModal("TODOS LOS EXPLOITS DE PC, SON DETECTADOS USA CUENTAS RECIEN CREADAS", 3000);
+                        
                          setTimeout(() => {
                             filteredExploits = allExploits.filter(e => (e.websitelink || e.discordlink) && !e.detected);
                             displayExploits(filteredExploits);
                          }, 3200); // Pequeño retraso para que el usuario vea la advertencia
                          return;
                     } else if (filterValue === 'detected') {
+  showWarningModal("TODOS LOS EXPLOITS DE PC, SON DETECTADOS USA CUENTAS RECIEN CREADAS", 3000);
                         filteredExploits = allExploits.filter(e => e.detected);
                     }
                 } else if (filterBy === 'external') {
