@@ -1238,8 +1238,8 @@ const fetchData = async (endpoint, retries = 3, delay = 1000) => {
                         }
                     }
 
-                    const websiteLinkText = exploit.websitelink ? `<p><strong>Sitio web:</strong> <a href="${exploit.websitelink}" target="_blank">Enlace a la web de ${exploit.title}</a></p>` : '';
-                    const discordLinkText = exploit.discordlink ? `<p><strong>Discord:</strong> <a href="${exploit.discordlink}" target="_blank">Discord  ${exploit.title}</a></p>` : '';
+                    const websiteLinkText = exploit.websitelink ? `<p><strong>Pagina Oficial:    </strong> <a href="${exploit.websitelink}" target="_blank">Enlace a la web de ${exploit.title}</a></p>` : '';
+                    const discordLinkText = exploit.discordlink ? `<p><strong>Discord Oficial:   </strong> <a href="${exploit.discordlink}" target="_blank">Discord de ${exploit.title}</a></p>` : '';
 
                     exploitCard.innerHTML = `
                         <h3>${exploit.title} ${statusPill}</h3>
