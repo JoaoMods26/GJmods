@@ -935,7 +935,7 @@ font-size: clamp(2.5rem, 6vw, 4rem);
  */
 const removeDuplicates = (exploits) => {
     if (!exploits || !Array.isArray(exploits)) {
-        console.warn('removeDuplicates: entrada inválida');
+       
         return [];
     }
 
@@ -947,7 +947,7 @@ const removeDuplicates = (exploits) => {
         const normalizedTitle = (exploit.title || '').trim().toLowerCase();
         
         if (!normalizedTitle) {
-            console.warn(`Exploit sin título en índice ${index}:`, exploit);
+            ;
             return;
         }
 
@@ -964,9 +964,9 @@ const removeDuplicates = (exploits) => {
                     uniqueExploits[existingIndex] = exploit;
                     seenTitles.set(normalizedTitle, exploit);
                 }
-                console.log(`Reemplazado exploit duplicado: ${exploit.title}`);
+                
             } else {
-                console.log(`Duplicado eliminado: ${exploit.title}`);
+                
             }
         } else {
             seenTitles.set(normalizedTitle, exploit);
@@ -976,7 +976,7 @@ const removeDuplicates = (exploits) => {
 
     const removedCount = originalCount - uniqueExploits.length;
     if (removedCount > 0) {
-        console.log(`🔄 ${removedCount} duplicados eliminados de ${originalCount} exploits`);
+        
         showDuplicateNotification(removedCount);
     }
 
@@ -1085,17 +1085,17 @@ const fetchData = async (endpoint, retries = 3, delay = 1000) => {
         
         // APLICAR ANTI-DUPLICADOS A LA API DE EXPLOITS
         if (endpoint === '/status/exploits') {
-            console.log(`📥 Datos recibidos: ${data.length} exploits`);
+            
             const uniqueData = removeDuplicates(data);
-            console.log(`🎯 Datos únicos: ${uniqueData.length} exploits`);
+            
             return uniqueData;
         }
         
         return data;
     } catch (error) {
-        console.error(`Error al obtener datos de ${endpoint}:`, error);
+       
         if (retries > 0) {
-            console.log(`Intentando de nuevo (${retries} intentos restantes)...`);
+            
             await new Promise(res => setTimeout(res, delay));
             return fetchData(endpoint, retries - 1, delay * 2);
         } else {
@@ -1279,7 +1279,7 @@ allExploits = newExploits; // Ya vienen sin duplicados desde fetchData
                     }
 
                 } catch (error) {
-                    console.error('Falló la actualización de datos:', error);
+                    
                     updateStatusVersions.innerHTML = '<span class="status-pill error">Error de carga</span>';
                     updateStatusExploits.innerHTML = '<span class="status-pill error">Error de carga</span>';
                 } finally {
