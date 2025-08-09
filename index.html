@@ -824,7 +824,7 @@ font-size: clamp(2.5rem, 6vw, 4rem);
                     // Lógica para la pestaña "No Detectado"
                     if (filterValue === 'not-detected') {
                          // Mostrar advertencia y luego filtrar los exploits externos no detectados
-                         showWarningModal("TODOS LOS EXPLOITS DE PC, SON DETECTADOS USA ALT", 3000);
+                         showWarningModal("TODOS LOS EXPLOITS DE PC, SON DETECTADOS USA CUENTAS RECIEN CREADAS", 3000);
                          setTimeout(() => {
                             filteredExploits = allExploits.filter(e => (e.websitelink || e.discordlink) && !e.detected);
                             displayExploits(filteredExploits);
