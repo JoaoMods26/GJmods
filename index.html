@@ -753,21 +753,15 @@ font-size: clamp(2.5rem, 6vw, 4rem);
                                            JSON.stringify(future) !== JSON.stringify(futureVersions) ||
                                            JSON.stringify(past) !== JSON.stringify(pastVersions);
 
-                    if (versionsChanged) {
-                        if (currentVersions.Windows !== current.Windows) {
-                            showFullscreenNotification(`Actualización de Roblox: Windows a la versión ${current.Windows}`);
-                        } else if (currentVersions.Mac !== current.Mac) {
-                            showFullscreenNotification(`Actualización de Roblox: Mac a la versión ${current.Mac}`);
-                        } else {
-                            showFullscreenNotification('Actualización de Roblox: se detectaron nuevos datos de versiones.');
-                        }
-                        currentVersions = current;
-                        futureVersions = future;
-                        pastVersions = past;
-                        renderVersions(current, 'current-versions');
-                        renderVersions(future, 'future-versions');
-                        renderVersions(past, 'past-versions');
-                    }
+
+
+
+
+
+
+
+
+
                     
                     // Comprobar si los datos de exploits han cambiado
                     if (JSON.stringify(newExploits) !== JSON.stringify(allExploits)) {
