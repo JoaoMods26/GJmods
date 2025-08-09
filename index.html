@@ -710,13 +710,7 @@ font-size: clamp(2.5rem, 6vw, 4rem);
              * @param {string} message El mensaje a mostrar
              * @param {number} duration La duración en milisegundos
              */
-            const showFullscreenNotification = (message, duration = 3000) => {
-                fullscreenNotificationText.textContent = message;
-                fullscreenNotification.classList.add('show');
-                setTimeout(() => {
-                    fullscreenNotification.classList.remove('show');
-                }, duration);
-            };
+
 
             const showWarningModal = (message, duration) => {
                 warningModal.querySelector('p').innerHTML = `<strong>${message}</strong>`;
