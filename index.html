@@ -1318,11 +1318,11 @@ const fetchData = async (endpoint, retries = 3, delay = 1000) => {
 
                     if (versionsChanged) {
                         if (currentVersions.Windows !== current.Windows) {
-                            showFullscreenNotification(`Actualización de Roblox: Windows a la versión ${current.Windows}`);
+                           // showFullscreenNotification(`Actualización de Roblox: Windows a la versión ${current.Windows}`);
                         } else if (currentVersions.Mac !== current.Mac) {
-                            showFullscreenNotification(`Actualización de Roblox: Mac a la versión ${current.Mac}`);
+                           // showFullscreenNotification(`Actualización de Roblox: Mac a la versión ${current.Mac}`);
                         } else {
-                            showFullscreenNotification('Actualización de Roblox: se detectaron nuevos datos de versiones.');
+                           // showFullscreenNotification('Actualización de Roblox: se detectaron nuevos datos de versiones.');
                         }
                         currentVersions = current;
                         futureVersions = future;
