@@ -1158,7 +1158,7 @@ observer.observe(futureVersionsCard);
 observer.observe(pastVersionsCard);
 
 // ✅ Nueva línea para que se muestre la "Información Importante"
-const infoCard = document.querySelector('#downloads + div .glass-card');
+const infoCard = document.querySelector('#downloads ~ div .glass-card'); // Selecciona el div correcto
 if (infoCard) observer.observe(infoCard);
             /**
              * #2: Efecto de scroll del logo
