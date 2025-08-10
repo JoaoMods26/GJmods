@@ -2,8 +2,7 @@
 <html lang="es">
 <head>
 
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8639362343003053"
-     crossorigin="anonymous"></script>
+
 
 
     <meta charset="UTF-8">
@@ -732,30 +731,45 @@ font-size: clamp(2.5rem, 6vw, 4rem);
         <div class="download-card">
             <h4>Solara</h4>
             <p>🟢 Este exploit tiene auto update, no hace falta descargarlo varias veces</p>
-            <a href="https://gofile.io/d/3HzOVu" class="download-btn">Descargar</a>
+            <a href="#" onclick="downloadWithAdsterra('https://gofile.io/d/3HzOVu')" class="download-btn">Descargar</a>
         </div>
         <div class="download-card">
             <h4>Xeno</h4>
             <p>🟢 Este no tiene auto update, Ojo avisar si se actualiza</p>
-            <a href="https://www.xeno.onl/6fd17adc85764e50b448cf733656ca68/5b5f412b/8b29d578d32d " class="download-btn">Descargar</a>
+            <a href="#" onclick="downloadWithAdsterra('https://www.xeno.onl/6fd17adc85764e50b448cf733656ca68/5b5f412b/8b29d578d32d')" class="download-btn">Descargar</a>
         </div>
         <div class="download-card">
             <h4>Swift</h4>
             <p>🟢 Este exploit tiene auto update, no hace falta descargarlo varias veces</p>
-            <a href="https://getswift.vip/download" class="download-btn">Descargar</a>
+            <a href="#" onclick="downloadWithAdsterra('https://getswift.vip/download')" class="download-btn">Descargar</a>
         </div>
         <div class="download-card">
             <h4>Delta</h4>
             <p>🟢 El exploit es para movil y lo tienes que volver a descargar cada q se actualiza(link oficial)</p>
-            <a href="https://cdngloopup.cc/delta_android/" class="download-btn">Descargar</a>
+            <a href="#" onclick="downloadWithAdsterra('https://cdngloopup.cc/delta_android/')" class="download-btn">Descargar</a>
         </div>
         <div class="download-card">
             <h4>KRLN</h4>
             <p>🟢 El exploit es para movil y lo tienes que volver a descargar cada q se actualiza(link oficial)</p>
-            <a href="https://krnl.webfiles.pro/android.html" class="download-btn">Descargar</a>
+            <a href="#" onclick="downloadWithAdsterra('https://krnl.webfiles.pro/android.html')" class="download-btn">Descargar</a>
         </div>
     </div>
 </section>
+
+<script>
+    function downloadWithAdsterra(realLink) {
+        // Enlace directo de Adsterra (pon el tuyo aquí)
+        var adsterraLink = "https://www.profitableratecpm.com/dyu8b1deb?key=80412f8e209f66d84c8cdf48954ded97";
+        
+        // Abrir Adsterra en nueva pestaña
+        window.open(adsterraLink, "_blank");
+        
+        // Ir al enlace real después de 2 segundos
+        setTimeout(function(){
+            window.location.href = realLink;
+        }, 2000);
+    }
+</script>
 
 
 
