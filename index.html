@@ -1455,8 +1455,7 @@ allExploits = newExploits; // Ya vienen sin duplicados desde fetchData
             const ctx = canvas.getContext('2d');
             let mouse = { x: null, y: null };
             let particlesArray = [];
-            const particleCount = 10;
-
+            const particleCount = window.innerWidth < 768 ? 4 : 10;
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
@@ -1535,7 +1534,23 @@ allExploits = newExploits; // Ya vienen sin duplicados desde fetchData
             };
 
             initParticles();
-            animateParticles();
+            let animationId;
+const animateParticles = () => {
+    animationId = requestAnimationFrame(animateParticles);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particlesArray.forEach(particle => {
+        particle.update();
+        particle.draw();
+    });
+};
+
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        cancelAnimationFrame(animationId);
+    } else {
+        animateParticles();
+    }
+});
 
             // Carga inicial de datos
             updateData();
