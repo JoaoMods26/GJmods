@@ -719,7 +719,11 @@ font-size: clamp(2.5rem, 6vw, 4rem);
 
 
 
-
+<!-- wea xd-->
+<div style="margin: 2rem auto; text-align:center;">
+    <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
+    <div id="container-4525df450d44613469633168ded413cf"></div>
+</div>
 <!-- Separador visual -->
 <div class="separator"></div>
 
@@ -773,6 +777,7 @@ font-size: clamp(2.5rem, 6vw, 4rem);
         }, 2000);
     }
 </script>
+
 
 
 
@@ -838,14 +843,6 @@ font-size: clamp(2.5rem, 6vw, 4rem);
         </div>
 
 
-
-
-
-    <!-- wea xd-->
-<div style="margin: 2rem auto; text-align:center;">
-    <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
-    <div id="container-4525df450d44613469633168ded413cf"></div>
-</div>
 
 
 
@@ -1158,7 +1155,7 @@ observer.observe(futureVersionsCard);
 observer.observe(pastVersionsCard);
 
 // ✅ Nueva línea para que se muestre la "Información Importante"
-const infoCard = document.querySelector('#downloads ~ div .glass-card'); // Selecciona el div correcto
+const infoCard = document.querySelector('#downloads ~ div .glass-card');
 if (infoCard) observer.observe(infoCard);
             /**
              * #2: Efecto de scroll del logo
@@ -1455,7 +1452,8 @@ allExploits = newExploits; // Ya vienen sin duplicados desde fetchData
             const ctx = canvas.getContext('2d');
             let mouse = { x: null, y: null };
             let particlesArray = [];
-            const particleCount = window.innerWidth < 768 ? 4 : 10;
+            const particleCount = 10;
+
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
@@ -1534,23 +1532,7 @@ allExploits = newExploits; // Ya vienen sin duplicados desde fetchData
             };
 
             initParticles();
-            let animationId;
-const animateParticles = () => {
-    animationId = requestAnimationFrame(animateParticles);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particlesArray.forEach(particle => {
-        particle.update();
-        particle.draw();
-    });
-};
-
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        cancelAnimationFrame(animationId);
-    } else {
-        animateParticles();
-    }
-});
+            animateParticles();
 
             // Carga inicial de datos
             updateData();
@@ -1641,11 +1623,5 @@ document.addEventListener('click', (e) => {
 
         });
     </script>
-
-<script type="text/javascript" src="//pl27389380.profitableratecpm.com/e2/69/8e/e2698e6bdb29e5d4fac529d459d899ca.js"></script>
-
-<script type="text/javascript" src="//pl27389532.profitableratecpm.com/f0/0d/c8/f00dc8f4ef2dc93f765f514dbe706189.js"></script>
-
-
 </body>
 </html>
