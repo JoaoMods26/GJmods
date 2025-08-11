@@ -1212,69 +1212,129 @@ font-size: clamp(2.5rem, 6vw, 4rem);
 
 <script>
 // Funciones para la sección de scripts compacta
-function copyScriptCompact(button) {
-    const codeBlock = button.closest('.script-compact-code').querySelector('.script-code-compact');
-    const textToCopy = codeBlock.textContent.trim();
-    
-    // Método moderno con Clipboard API
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            // Cambiar el botón temporalmente para mostrar éxito
-            const originalText = button.textContent;
-            button.textContent = '✅ Copiado';
-            button.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+        function copyScriptCompact(button) {
+            const codeBlock = button.closest('.script-compact-code').querySelector('.script-code-compact');
             
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.style.background = 'linear-gradient(45deg, var(--color-success), #059669)';
-            }, 2000);
-        }).catch(err => {
-            console.error('Error al copiar:', err);
-            fallbackCopy(textToCopy, button);
-        });
-    } else {
-        // Método de respaldo para navegadores más antiguos
-        fallbackCopy(textToCopy, button);
-    }
-}
-function fallbackCopy(text, button) {
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.left = '-999999px';
-    textArea.style.top = '-999999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    
-    try {
-        const successful = document.execCommand('copy');
-        if (successful) {
-            const originalText = button.textContent;
-            button.textContent = '✅ Copiado';
-            button.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+            // Primero intentamos obtener el código desde el atributo data-script-code
+            let textToCopy = codeBlock.getAttribute('data-script-code');
             
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.style.background = 'linear-gradient(45deg, var(--color-success), #059669)';
-            }, 2000);
-        } else {
-            button.textContent = '❌ Error';
-            setTimeout(() => {
-                button.textContent = '📋';
-            }, 2000);
+            // Si no existe el atributo, usamos el textContent
+            if (!textToCopy) {
+                textToCopy = codeBlock.textContent || codeBlock.innerText;
+            }
+            
+            // Limpiar el texto (quitar espacios extra y saltos de línea innecesarios)
+            textToCopy = textToCopy.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
+            
+            console.log('Texto a copiar:', textToCopy); // Para debugging
+            
+            // Método moderno con Clipboard API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showCopySuccess(button, textToCopy);
+                }).catch(err => {
+                    console.error('Error al copiar con Clipboard API:', err);
+                    fallbackCopy(textToCopy, button);
+                });
+            } else {
+                // Método de respaldo para navegadores más antiguos
+                fallbackCopy(textToCopy, button);
+            }
         }
-    } catch (err) {
-        console.error('Error en fallback copy:', err);
-        button.textContent = '❌ Error';
-        setTimeout(() => {
-            button.textContent = '📋';
-        }, 2000);
-    }
-    
-    document.body.removeChild(textArea);
-}
 
+        function fallbackCopy(text, button) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopySuccess(button, text);
+                } else {
+                    showCopyError(button);
+                }
+            } catch (err) {
+                console.error('Error en fallback copy:', err);
+                showCopyError(button);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function showCopySuccess(button, text) {
+            // Cambiar el botón temporalmente
+            const originalText = button.innerHTML;
+            button.innerHTML = '✅ ¡Copiado!';
+            button.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+            
+            // Mostrar notificación
+            showNotification(`Script copiado al portapapeles (${text.length} caracteres)`, 'success');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(45deg, var(--color-success), #059669)';
+            }, 2500);
+        }
+
+        function showCopyError(button) {
+            const originalText = button.innerHTML;
+            button.innerHTML = '❌ Error';
+            button.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
+            
+            showNotification('Error al copiar el script', 'error');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(45deg, var(--color-success), #059669)';
+            }, 2500);
+        }
+
+        function showNotification(message, type) {
+            // Crear elemento de notificación
+            const notification = document.createElement('div');
+            notification.className = 'copy-notification';
+            notification.textContent = message;
+            
+            if (type === 'error') {
+                notification.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Mostrar con animación
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Ocultar después de 3 segundos
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Agregar event listeners cuando la página cargue
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Scripts de Roblox cargados correctamente');
+            
+            // Verificar que todos los botones tengan el event listener
+            const copyButtons = document.querySelectorAll('.copy-btn-small');
+            console.log(`Se encontraron ${copyButtons.length} botones de copia`);
+        });
+    </script>
+</body>
+</html>
 
 
 
