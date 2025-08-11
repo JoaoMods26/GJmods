@@ -1636,17 +1636,17 @@ const showDuplicateNotification = (count) => {
              * #1: Funcionalidad de Intersection Observer
              * Anima elementos al entrar en el viewport.
              */
-            /*const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate-in');
-                        observer.unobserve(entry.target); // Detener la observación después de la animación
-                    }
-                });
-            }, {
-                root: null,
-                threshold: 0.1
-            });
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+            observer.unobserve(entry.target);
+        }
+    });
+}, {
+    root: null,
+    threshold: 0.1
+});
 
 // Observar las tarjetas de versiones
 observer.observe(currentVersionsCard);
@@ -1781,7 +1781,7 @@ const fetchData = async (endpoint, retries = 3, delay = 1000) => {
                         ${discordLinkText}
                     `;
                     exploitsGrid.appendChild(exploitCard);
-                    observer.observe(exploitCard);
+                 //   observer.observe(exploitCard);
                 });
             };
 
