@@ -1226,14 +1226,14 @@ font-size: clamp(2.5rem, 6vw, 4rem);
             // Limpiar el texto (quitar espacios extra y saltos de línea innecesarios)
             textToCopy = textToCopy.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
             
-            console.log('Texto a copiar:', textToCopy); // Para debugging
+            
             
             // Método moderno con Clipboard API
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(textToCopy).then(() => {
                     showCopySuccess(button, textToCopy);
                 }).catch(err => {
-                    console.error('Error al copiar con Clipboard API:', err);
+                   
                     fallbackCopy(textToCopy, button);
                 });
             } else {
@@ -1261,7 +1261,7 @@ font-size: clamp(2.5rem, 6vw, 4rem);
                     showCopyError(button);
                 }
             } catch (err) {
-                console.error('Error en fallback copy:', err);
+                
                 showCopyError(button);
             }
             
@@ -1326,11 +1326,11 @@ font-size: clamp(2.5rem, 6vw, 4rem);
 
         // Agregar event listeners cuando la página cargue
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Scripts de Roblox cargados correctamente');
+            
             
             // Verificar que todos los botones tengan el event listener
             const copyButtons = document.querySelectorAll('.copy-btn-small');
-            console.log(`Se encontraron ${copyButtons.length} botones de copia`);
+            
         });
     </script>
 </body>
