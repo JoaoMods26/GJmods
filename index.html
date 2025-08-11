@@ -1535,48 +1535,49 @@ font-size: clamp(2.5rem, 6vw, 4rem);
  */
 const removeDuplicates = (exploits) => {
     if (!exploits || !Array.isArray(exploits)) {
-       
         return [];
     }
 
     const originalCount = exploits.length;
     const uniqueExploits = [];
-    const seenTitles = new Map();
+    const seenExploits = new Map();
     
-    exploits.forEach((exploit, index) => {
-        const normalizedTitle = (exploit.title || '').trim().toLowerCase();
+    exploits.forEach((exploit) => {
+        // Crear una clave única más específica que incluya título, plataforma y características importantes
+        const uniqueKey = [
+            (exploit.title || '').trim().toLowerCase(),
+            (exploit.platform || '').toLowerCase(),
+            exploit.free ? 'free' : 'paid',
+            exploit.detected ? 'detected' : 'undetected'
+        ].join('|');
         
-        if (!normalizedTitle) {
-            ;
-            return;
+        if (!exploit.title || !exploit.title.trim()) {
+            return; // Saltar exploits sin título
         }
 
-        if (seenTitles.has(normalizedTitle)) {
-            const existingExploit = seenTitles.get(normalizedTitle);
+        if (seenExploits.has(uniqueKey)) {
+            // Solo reemplazar si la fecha de actualización es más reciente
+            const existing = seenExploits.get(uniqueKey);
             const currentDate = new Date(exploit.updatedDate || '1970-01-01');
-            const existingDate = new Date(existingExploit.updatedDate || '1970-01-01');
+            const existingDate = new Date(existing.updatedDate || '1970-01-01');
             
             if (currentDate > existingDate) {
                 const existingIndex = uniqueExploits.findIndex(e => 
-                    e.title.toLowerCase() === normalizedTitle
+                    seenExploits.get(uniqueKey) === e
                 );
                 if (existingIndex !== -1) {
                     uniqueExploits[existingIndex] = exploit;
-                    seenTitles.set(normalizedTitle, exploit);
+                    seenExploits.set(uniqueKey, exploit);
                 }
-                
-            } else {
-                
             }
         } else {
-            seenTitles.set(normalizedTitle, exploit);
+            seenExploits.set(uniqueKey, exploit);
             uniqueExploits.push(exploit);
         }
     });
 
     const removedCount = originalCount - uniqueExploits.length;
     if (removedCount > 0) {
-        
         showDuplicateNotification(removedCount);
     }
 
