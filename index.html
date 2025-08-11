@@ -847,6 +847,379 @@ font-size: clamp(2.5rem, 6vw, 4rem);
 
 
 
+<!-- Sección de Scripts - Para agregar después de la información importante -->
+<section class="scripts-section" id="scripts">
+    <div class="scripts-container">
+        <h2 class="scripts-main-title">Scripts de Roblox</h2>
+        <p class="scripts-subtitle">Colección de scripts de la Comunidad Mods para mejorar tu experiencia en Roblox</p>
+        
+        <!-- Grid de scripts compacto -->
+        <div class="scripts-compact-grid">
+            <!-- Script 1: GUI Universal -->
+            <div class="script-compact-card">
+                <div class="script-compact-header">
+                    <h4 class="script-compact-title">GUI Universal</h4>
+                    <span class="script-compact-category gui">GUI</span>
+                </div>
+                
+                <p class="script-compact-description">
+                    Interfaz completa juegos.
+                </p>
+                
+                <div class="script-compact-code">
+                    <div class="code-compact-header">
+                        <span class="code-language-small">Lua Script</span>
+                        <button class="copy-btn-small" onclick="copyScriptCompact(this)">📋</button>
+                    </div>
+                    <pre class="script-code-compact">asdasdaxd</pre>
+                </div>
+                
+                <button class="execute-btn-compact" onclick="executeScriptCompact(this)">⚡ Ejecutar</button>
+            </div>
+
+            <!-- Script 2: ESP Universal -->
+            <div class="script-compact-card">
+                <div class="script-compact-header">
+                    <h4 class="script-compact-title">Universal</h4>
+                    <span class="script-compact-category utility">Utilidad</span>
+                </div>
+                
+                <p class="script-compact-description">
+                    Sistema
+                </p>
+                
+                <div class="script-compact-code">
+                    <div class="code-compact-header">
+                        <span class="code-language-small">Lua Script</span>
+                        <button class="copy-btn-small" onclick="copyScriptCompact(this)">📋</button>
+                    </div>
+                    <pre class="script-code-compact">aaaaaxdd</pre>
+                </div>
+                
+                <button class="execute-btn-compact" onclick="executeScriptCompact(this)">⚡ Ejecutar</button>
+            </div>
+
+            <!-- Script 3: Speed & Jump Enhancer -->
+            <div class="script-compact-card">
+                <div class="script-compact-header">
+                    <h4 class="script-compact-title">velocidad</h4>
+                    <span class="script-compact-category utility">Utilidad</span>
+                </div>
+                
+                <p class="script-compact-description">
+                    Modificador de velocidad.
+                </p>
+                
+                <div class="script-compact-code">
+                    <div class="code-compact-header">
+                        <span class="code-language-small">Lua Script</span>
+                        <button class="copy-btn-small" onclick="copyScriptCompact(this)">📋</button>
+                    </div>
+                    <pre class="script-code-compact">scrtipxD</pre>
+                </div>
+                
+                <button class="execute-btn-compact" onclick="executeScriptCompact(this)">⚡ Ejecutar</button>
+            </div>
+
+            <!-- Script 4: Fly Script -->
+            <div class="script-compact-card">
+                <div class="script-compact-header">
+                    <h4 class="script-compact-title">Script</h4>
+                    <span class="script-compact-category fun">Diversión</span>
+                </div>
+                
+                <p class="script-compact-description">
+                    Script de vuelo simple y efectivo. Controles
+                </p>
+                
+                <div class="script-compact-code">
+                    <div class="code-compact-header">
+                        <span class="code-language-small">Lua Script</span>
+                        <button class="copy-btn-small" onclick="copyScriptCompact(this)">📋</button>
+                    </div>
+                    <pre class="script-code-compact">xD</pre>
+                </div>
+                
+                <button class="execute-btn-compact" onclick="executeScriptCompact(this)">⚡ Ejecutar</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Estilos para la sección de scripts compacta */
+.scripts-section {
+    margin: 3rem auto 4rem auto;
+    padding: 0 2rem;
+    max-width: 1200px;
+}
+
+.scripts-container {
+    width: 100%;
+}
+
+.scripts-main-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+.scripts-subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.scripts-compact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+.script-compact-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.script-compact-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
+    border-radius: 1rem 1rem 0 0;
+}
+
+.script-compact-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-accent);
+    box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15);
+}
+
+.script-compact-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.script-compact-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-white);
+    margin: 0;
+}
+
+.script-compact-category {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.script-compact-category.gui { 
+    background: linear-gradient(45deg, #8b5cf6, #a855f7); 
+    color: white;
+}
+
+.script-compact-category.utility { 
+    background: linear-gradient(45deg, #06b6d4, #0891b2); 
+    color: white;
+}
+
+.script-compact-category.fun { 
+    background: linear-gradient(45deg, #ec4899, #be185d); 
+    color: white;
+}
+
+.script-compact-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.script-compact-code {
+    background: #1a1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.code-compact-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.code-language-small {
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+.copy-btn-small {
+    background: linear-gradient(45deg, var(--color-success), #059669);
+    border: none;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.copy-btn-small:hover {
+    background: linear-gradient(45deg, #059669, #047857);
+    transform: translateY(-1px);
+}
+
+.script-code-compact {
+    padding: 1rem;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: #e2e8f0;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    max-height: 200px;
+    overflow-y: auto;
+    margin: 0;
+}
+
+.script-code-compact::-webkit-scrollbar {
+    width: 6px;
+}
+
+.script-code-compact::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.script-code-compact::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 3px;
+}
+
+.execute-btn-compact {
+    width: 100%;
+    padding: 0.75rem;
+    background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+    border: none;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.execute-btn-compact:hover {
+    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .scripts-section {
+        padding: 0 1rem;
+        margin: 2rem auto 3rem auto;
+    }
+    
+    .scripts-main-title {
+        font-size: 2rem;
+    }
+    
+    .scripts-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .scripts-compact-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .script-compact-card {
+        padding: 1.25rem;
+    }
+    
+    .script-compact-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .script-compact-category {
+        align-self: flex-end;
+    }
+    
+    .script-code-compact {
+        font-size: 0.7rem;
+        max-height: 150px;
+    }
+}
+
+/* Animación para las tarjetas */
+@keyframes slideUpCompact {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.script-compact-card {
+    animation: slideUpCompact 0.6s ease forwards;
+}
+
+.script-compact-card:nth-child(2) { animation-delay: 0.1s; }
+.script-compact-card:nth-child(3) { animation-delay: 0.2s; }
+.script-compact-card:nth-child(4) { animation-delay: 0.3s; }
+</style>
+
+<script>
+// Funciones para la sección de scripts compacta
+function copyScriptCompact(button) {
+    const codeBlock = button.closest('.script-compact-code').querySelector('.script-code-compact');
+    const textToCopy = codeBlock.textContent;
+    
+    // Crear un elemento de texto temporal
+    const tempTextArea = document.createElement('textarea');
+    tempTextArea.
+
+
+
+
+
 
 
 
