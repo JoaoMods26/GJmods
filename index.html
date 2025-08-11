@@ -619,52 +619,62 @@ font-size: clamp(2.5rem, 6vw, 4rem);
         <div class="navbar-logo" onclick="scrollToTop()">GJMODS</div>
         
         <!-- Navegación escritorio -->
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a href="#home" class="nav-link" onclick="scrollToSection('home')">
-                    <svg class="nav-icon" viewBox="0 0 24 24">
-                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg>
-                    Inicio
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#links" class="nav-link" onclick="scrollToSection('links')">
-                    <svg class="nav-icon" viewBox="0 0 24 24">
-                        <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
-                    </svg>
-                    Links
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#roblox-updates" class="nav-link" onclick="scrollToSection('roblox-updates')">
-                    <svg class="nav-icon" viewBox="0 0 24 24">
-                        <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-                    </svg>
-                    Versiones
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#exploits-status" class="nav-link" onclick="scrollToSection('exploits-status')">
-                    <svg class="nav-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
-                    Exploits
-                </a>
-            </li>
-        </ul>
+<ul class="navbar-nav">
+    <li class="nav-item">
+        <a href="#home" class="nav-link" onclick="scrollToSection('home')">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            Inicio
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#links" class="nav-link" onclick="scrollToSection('links')">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+            </svg>
+            Links
+        </a>
+    </li>
+    <!-- NUEVO: Botón Scripts -->
+    <li class="nav-item">
+        <a href="#scripts" class="nav-link" onclick="scrollToSection('scripts')">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M8 3C7.4 3 7 3.4 7 4s.4 1 1 1 1-.4 1-1-.4-1-1-1zM7 7c-.6 0-1 .4-1 1s.4 1 1 1 1-.4 1-1-.4-1-1-1zm0 4c-.6 0-1 .4-1 1s.4 1 1 1 1-.4 1-1-.4-1-1-1zm0 4c-.6 0-1 .4-1 1s.4 1 1 1 1-.4 1-1-.4-1-1-1zm4-10.5c-.3 0-.5.2-.5.5s.2.5.5.5h8c.3 0 .5-.2.5-.5s-.2-.5-.5-.5h-8zm0 4c-.3 0-.5.2-.5.5s.2.5.5.5h8c.3 0 .5-.2.5-.5s-.2-.5-.5-.5h-8zm0 4c-.3 0-.5.2-.5.5s.2.5.5.5h8c.3 0 .5-.2.5-.5s-.2-.5-.5-.5h-8zm0 4c-.3 0-.5.2-.5.5s.2.5.5.5h8c.3 0 .5-.2.5-.5s-.2-.5-.5-.5h-8z"/>
+            </svg>
+            Scripts
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#roblox-updates" class="nav-link" onclick="scrollToSection('roblox-updates')">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+            </svg>
+            Versiones
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#exploits-status" class="nav-link" onclick="scrollToSection('exploits-status')">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            Exploits
+        </a>
+    </li>
+</ul>
 
         <!-- Botón menú móvil -->
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
         
         <!-- Menú móvil -->
         <div class="mobile-menu" id="mobileMenu">
-            <ul class="mobile-nav">
-                <li><a href="#home" class="nav-link" onclick="scrollToSection('home'); closeMobileMenu()">🏠 Inicio</a></li>
-                <li><a href="#links" class="nav-link" onclick="scrollToSection('links'); closeMobileMenu()">🔗 Links</a></li>
-                <li><a href="#roblox-updates" class="nav-link" onclick="scrollToSection('roblox-updates'); closeMobileMenu()">🔄 Versiones</a></li>
-                <li><a href="#exploits-status" class="nav-link" onclick="scrollToSection('exploits-status'); closeMobileMenu()">⚡ Exploits</a></li>
-            </ul>
+<ul class="mobile-nav">
+    <li><a href="#home" class="nav-link" onclick="scrollToSection('home'); closeMobileMenu()">🏠 Inicio</a></li>
+    <li><a href="#links" class="nav-link" onclick="scrollToSection('links'); closeMobileMenu()">🔗 Links</a></li>
+    <li><a href="#scripts" class="nav-link" onclick="scrollToSection('scripts'); closeMobileMenu()">📜 Scripts</a></li>
+    <li><a href="#roblox-updates" class="nav-link" onclick="scrollToSection('roblox-updates'); closeMobileMenu()">🔄 Versiones</a></li>
+    <li><a href="#exploits-status" class="nav-link" onclick="scrollToSection('exploits-status'); closeMobileMenu()">⚡ Exploits</a></li>
+</ul>
         </div>
     </div>
 </nav>
@@ -1976,7 +1986,7 @@ window.addEventListener('scroll', () => {
     }
     
     // Detectar sección activa
-    const sections = ['home', 'links', 'downloads', 'roblox-updates', 'exploits-status'];
+    const sections = ['home', 'links', 'downloads','scripts', 'roblox-updates', 'exploits-status'];
     const navbarHeight = navbar.offsetHeight;
     
     for (let i = sections.length - 1; i >= 0; i--) {
