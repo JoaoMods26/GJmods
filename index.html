@@ -1214,15 +1214,66 @@ font-size: clamp(2.5rem, 6vw, 4rem);
 // Funciones para la sección de scripts compacta
 function copyScriptCompact(button) {
     const codeBlock = button.closest('.script-compact-code').querySelector('.script-code-compact');
-    const textToCopy = codeBlock.textContent;
+    const textToCopy = codeBlock.textContent.trim();
     
-    // Crear un elemento de texto temporal
-    const tempTextArea = document.createElement('textarea');
-    tempTextArea.
-
-
-
-
+    // Método moderno con Clipboard API
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            // Cambiar el botón temporalmente para mostrar éxito
+            const originalText = button.textContent;
+            button.textContent = '✅ Copiado';
+            button.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = 'linear-gradient(45deg, var(--color-success), #059669)';
+            }, 2000);
+        }).catch(err => {
+            console.error('Error al copiar:', err);
+            fallbackCopy(textToCopy, button);
+        });
+    } else {
+        // Método de respaldo para navegadores más antiguos
+        fallbackCopy(textToCopy, button);
+    }
+}
+function fallbackCopy(text, button) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            const originalText = button.textContent;
+            button.textContent = '✅ Copiado';
+            button.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = 'linear-gradient(45deg, var(--color-success), #059669)';
+            }, 2000);
+        } else {
+            button.textContent = '❌ Error';
+            setTimeout(() => {
+                button.textContent = '📋';
+            }, 2000);
+        }
+    } catch (err) {
+        console.error('Error en fallback copy:', err);
+        button.textContent = '❌ Error';
+        setTimeout(() => {
+            button.textContent = '📋';
+        }, 2000);
+    }
+    
+    document.body.removeChild(textArea);
+}
 
 
 
