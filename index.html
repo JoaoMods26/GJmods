@@ -1342,27 +1342,8 @@ font-size: clamp(2.5rem, 6vw, 4rem);
 
 
 <div style="margin: 2rem auto; text-align:center;">
-    <script>
-    (function() {
-        var intervaloMinutos = 5; // tiempo entre popunders
-        var ultimaVez = localStorage.getItem("popunder_last_time");
-        var ahora = Date.now();
-
-        if (!ultimaVez || (ahora - ultimaVez) > intervaloMinutos * 60 * 1000) {
-            localStorage.setItem("popunder_last_time", ahora);
-
-            var s = document.createElement("script");
-            s.async = true;
-            s.dataset.cfasync = "false";
-            s.src = "//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js";
-            document.currentScript.parentNode.appendChild(s);
-
-            var div = document.createElement("div");
-            div.id = "container-4525df450d44613469633168ded413cf";
-            document.currentScript.parentNode.appendChild(div);
-        }
-    })();
-    </script>
+    <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
+    <div id="container-4525df450d44613469633168ded413cf"></div>
 </div>
 
 <!-- AGREGAR ESTOS ESTILOS CSS DENTRO DE TU <style> -->
