@@ -2163,12 +2163,15 @@ document.addEventListener('click', (e) => {
 
 
 
-<div class="script-ad-container-final">
-    <div id="container-4525df450d44613469633168ded413cf"></div>
-</div>
+<style>
+/* Forzar que el anuncio se centre abajo */
+body > div[style*="position: fixed"][style*="bottom: 0px"] {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+</style>
 
 <script type="text/javascript">
-    // Configuración de anuncio
     atOptions = {
         'key' : 'd1a9332ab68f936abaa310ff142b94ef',
         'format' : 'iframe',
@@ -2176,13 +2179,8 @@ document.addEventListener('click', (e) => {
         'width' : 728,
         'params' : {}
     };
-
-    // Crear el script de anuncio y meterlo en el div
-    var adScript = document.createElement('script');
-    adScript.src = '//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js';
-    document.getElementById('container-4525df450d44613469633168ded413cf').appendChild(adScript);
 </script>
-
+<script type="text/javascript" src="//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js"></script>
 
 
 
