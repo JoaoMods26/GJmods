@@ -971,56 +971,65 @@ font-size: clamp(2.5rem, 6vw, 4rem);
         <!-- Publicidad Native Bar al final de los scripts -->
 <!-- Publicidad Native Bar -->
 <div class="script-ad-container-final">
-    <h3 class="ads-title">Anuncios (ignorar)</h3>
+  <h3 class="ads-title">Anuncios (ignorar)</h3>
 
-    <!-- Primer anuncio -->
-    <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
-    <div id="container-4525df450d44613469633168ded413cf"></div>
+  <!-- Primer anuncio -->
+  <div id="container-4525df450d44613469633168ded413cf"></div>
 
-    <!-- Segundo anuncio -->
-    <div id="container-believableordinary"></div>
+  <!-- Segundo anuncio -->
+  <div id="container-believableordinary"></div>
 </div>
 
 <script type="text/javascript">
-    atOptions = {
-        'key' : 'd1a9332ab68f936abaa310ff142b94ef',
-        'format' : 'iframe',
-        'height' : 90,
-        'width' : 728,
-        'params' : {}
-    };
+  atOptions = {
+    'key' : 'd1a9332ab68f936abaa310ff142b94ef',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
 
-    // Inyectar el segundo anuncio en el contenedor
-    var adScript2 = document.createElement('script');
-    adScript2.src = "//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js";
-    document.getElementById("container-believableordinary").appendChild(adScript2);
+  // Cargar segundo anuncio dentro del contenedor
+  var adScript2 = document.createElement('script');
+  adScript2.src = "//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js";
+  document.getElementById("container-believableordinary").appendChild(adScript2);
+
+  // El primer anuncio debe cargarse con tu script existente:
+  // <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
 </script>
 
 <style>
-/* Contenedor general */
-.script-ad-container-final {
+  .script-ad-container-final {
     width: 90%;
     max-width: 800px;
-    margin: 20px auto;
-    padding: 15px;
+    margin: 30px auto;
+    padding: 20px;
     background: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     text-align: center;
-}
+  }
 
-/* Título */
-.ads-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
+  .ads-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
 
-/* Espaciado entre anuncios */
-.script-ad-container-final > div {
-    margin-top: 10px;
-}
+  /* Espacio entre anuncios */
+  #container-4525df450d44613469633168ded413cf,
+  #container-believableordinary {
+    margin-top: 20px;
+  }
 </style>
+
+
+
+
+
+
+
+
 
 
 
