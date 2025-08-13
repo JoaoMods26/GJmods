@@ -973,14 +973,14 @@ font-size: clamp(2.5rem, 6vw, 4rem);
 
 
         <!-- Publicidad Native Bar al final de los scripts -->
-<!-- Publicidad Native Bar -->
-<div class="script-ad-container-final">
-  <h3 class="ads-title">Anuncios (ignorar)</h3>
-
-  <!-- Primer anuncio -->
+<!-- Contenedor del primer anuncio -->
+<div class="ad-container" id="ad-container-1">
+  <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
   <div id="container-4525df450d44613469633168ded413cf"></div>
+</div>
 
-  <!-- Segundo anuncio -->
+<!-- Contenedor del segundo anuncio -->
+<div class="ad-container" id="ad-container-2">
   <div id="container-believableordinary"></div>
 </div>
 
@@ -993,64 +993,23 @@ font-size: clamp(2.5rem, 6vw, 4rem);
     'params' : {}
   };
 
-  // Cargar segundo anuncio dentro del contenedor
+  // Cargar el segundo anuncio en su contenedor
   var adScript2 = document.createElement('script');
   adScript2.src = "//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js";
   document.getElementById("container-believableordinary").appendChild(adScript2);
-
-  // El primer anuncio debe cargarse con tu script existente:
-  // <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
 </script>
 
 <style>
-  .script-ad-container-final {
+  .ad-container {
     width: 90%;
     max-width: 800px;
+    min-height: 100px;
     margin: 30px auto;
     padding: 20px;
     background: #f9f9f9;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     text-align: center;
-  }
-
-  .ads-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 20px;
-  }
-
-  /* Espacio entre anuncios */
-  #container-4525df450d44613469633168ded413cf,
-  #container-believableordinary {
-    margin-top: 20px;
-  }
-</style>
-
-
-<!-- Publicidad Native Bar -->
-<div class="script-ad-container-final">
-  <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
-  <div id="container-4525df450d44613469633168ded413cf"></div>
-</div>
-
-<style>
-  .script-ad-container-final {
-    width: 90%;
-    max-width: 800px;
-    min-height: 180px; /* altura mínima para que el anuncio tenga espacio */
-    margin: 30px auto;
-    padding: 20px 20px 40px 20px; /* más padding abajo */
-    background: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    text-align: center;
-  }
-
-  /* Espacio para que el div del anuncio no se colapse */
-  #container-4525df450d44613469633168ded413cf {
-    min-height: 90px; /* igual a la altura del anuncio */
-    margin-top: 10px;
   }
 </style>
 
