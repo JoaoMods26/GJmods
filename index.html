@@ -2153,31 +2153,39 @@ document.addEventListener('click', (e) => {
 
     </script>
 
+
+
+
+
+
+
+
+
+
+
 <div class="script-ad-container-final">
     <div id="container-4525df450d44613469633168ded413cf"></div>
 </div>
 
-<script>
+<script type="text/javascript">
     // Configuración de anuncio
-    var atOptions = {
-        key: 'd1a9332ab68f936abaa310ff142b94ef',
-        format: 'iframe',
-        height: 90,
-        width: 728,
-        params: {}
+    atOptions = {
+        'key' : 'd1a9332ab68f936abaa310ff142b94ef',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
     };
 
-    // Crear el iframe manualmente en tu div
-    var iframe = document.createElement('iframe');
-    iframe.src = '//believableordinarygentlemen.com/' + atOptions.key + '/invoke.js';
-    iframe.width = atOptions.width;
-    iframe.height = atOptions.height;
-    iframe.frameBorder = 0;
-    iframe.scrolling = 'no';
-
-    // Insertar en el contenedor
-    document.getElementById('container-4525df450d44613469633168ded413cf').appendChild(iframe);
+    // Crear el script de anuncio y meterlo en el div
+    var adScript = document.createElement('script');
+    adScript.src = '//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js';
+    document.getElementById('container-4525df450d44613469633168ded413cf').appendChild(adScript);
 </script>
+
+
+
+
 
 
 
