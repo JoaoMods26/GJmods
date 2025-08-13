@@ -873,7 +873,7 @@ font-size: clamp(2.5rem, 6vw, 4rem);
                 </div>
                 
                 <p class="script-compact-description">
-                    Interfaz con un monton de funciones para todos los juegos, velocidad, salto, vuelo, animaciones, funciones de reacctivacion de Voice chat, aimbots etc....
+                    Interfaz con un monton de funciones para todos los juegos, velocidad, salto, vuelo, animaciones, funciones de reacctivacion de Voice chat, aimbots etc.... by: joao_mods
                 </p>
                 
                 <div class="script-compact-code">
@@ -945,6 +945,28 @@ font-size: clamp(2.5rem, 6vw, 4rem);
                 </div>
             </div>
         </div>
+
+
+            <!-- copia e intento -->
+            <div class="script-compact-card">
+                <div class="script-compact-header">
+                    <h4 class="script-compact-title">AnimSpoofer Jmods</h4>
+                    <span class="script-compact-category utility">Animaciones</span>
+                </div>
+                
+                <p class="script-compact-description">
+                    Con esto peudes poner las id del catalogo y se ejecutara, tambien aparece la asset id para poder usarla en scripts o juegos. by: joao_mods
+                </p>
+                
+                <div class="script-compact-code">
+                    <div class="code-compact-header">
+                        <span class="code-language-small">Lua Script</span>
+                        <button class="copy-btn-small" onclick="copyScriptCompact(this)">📋</button>
+                    </div>
+                    <pre class="script-code-compact">loadstring(game:HttpGet("https://raw.githubusercontent.com/sapoqluwu/IDIOT/refs/heads/main/AnimSpoofer%20Jmods"))()</pre>
+                </div>
+            </div>
+
         
         <!-- Publicidad Native Bar al final de los scripts -->
         <div class="script-ad-container-final">
@@ -1727,63 +1749,69 @@ const fetchData = async (endpoint, retries = 3, delay = 1000) => {
             };
 
             const displayExploits = (exploits) => {
-                // Limpia el contêiner antes de añadir nuevos elementos para evitar duplicados
-                exploitsGrid.innerHTML = ''; 
-                
-                if (!exploits || exploits.length === 0) {
-                     exploitsGrid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center;">No se encontraron exploits para esta categoría.</p>';
-                    return;
-                }
+    exploitsGrid.innerHTML = ''; 
 
-                exploits.forEach((exploit, index) => {
-                    const exploitCard = document.createElement('div');
-                    exploitCard.className = 'exploit-card';
-                    exploitCard.style.animationDelay = `${index * 0.1}s`;
+    exploits.forEach((exploit, index) => {
+        const exploitCard = document.createElement('div');
+        exploitCard.className = 'exploit-card';
+        exploitCard.style.animationDelay = `${index * 0.1}s`;
 
-                    let statusPill = '';
-                    // El bug de duplicado en móviles se corrigió al limpiar el contêiner antes de la renderización.
-                    if (exploit.updateStatus) {
-                        statusPill += `<span class="status-pill updated">Actualizado</span>`;
-                    } else {
-                        statusPill += `<span class="status-pill not-updated">No Actualizado</span>`;
-                    }
+        let statusPill = '';
+        if (exploit.updateStatus) {
+            statusPill += `<span class="status-pill updated">Actualizado</span>`;
+        } else {
+            statusPill += `<span class="status-pill not-updated">No Actualizado</span>`;
+        }
 
-                    if (exploit.detected) {
-                        statusPill += `<span class="status-pill detected">Detectado</span>`;
-                    } else {
-                        statusPill += `<span class="status-pill not-detected">No Detectado</span>`;
-                    }
+        if (exploit.detected) {
+            statusPill += `<span class="status-pill detected">Detectado</span>`;
+        } else {
+            statusPill += `<span class="status-pill not-detected">No Detectado</span>`;
+        }
 
-                    if (exploit.free) {
-                        statusPill += `<span class="status-pill free">Gratis</span>`;
-                    } else {
-                        statusPill += `<span class="status-pill paid">De pago</span>`;
-                    }
-                    
-                    if (exploit.platform) {
-                        const platformClass = exploit.platform.toLowerCase();
-                        if (platformClass === 'ios' || platformClass === 'android') {
-                            statusPill += `<span class="status-pill mobile">Móvil</span>`;
-                        } else {
-                            statusPill += `<span class="status-pill ${platformClass}">${exploit.platform}</span>`;
-                        }
-                    }
+        if (exploit.free) {
+            statusPill += `<span class="status-pill free">Gratis</span>`;
+        } else {
+            statusPill += `<span class="status-pill paid">De pago</span>`;
+        }
+        
+        if (exploit.platform) {
+            const platformClass = exploit.platform.toLowerCase();
+            if (platformClass === 'ios' || platformClass === 'android') {
+                statusPill += `<span class="status-pill mobile">Móvil</span>`;
+            } else {
+                statusPill += `<span class="status-pill ${platformClass}">${exploit.platform}</span>`;
+            }
+        }
 
-                    const websiteLinkText = exploit.websitelink ? `<p><strong>Pagina Oficial:    </strong> <a href="${exploit.websitelink}" target="_blank">Enlace a la web de ${exploit.title}</a></p>` : '';
-                    const discordLinkText = exploit.discordlink ? `<p><strong>Discord Oficial:   </strong> <a href="${exploit.discordlink}" target="_blank">Discord de ${exploit.title}</a></p>` : '';
+        // 🔹 Enlaces con publicidad
+        const websiteLinkText = exploit.websitelink ? 
+            `<p><strong>Página Oficial:</strong> 
+                <a href="#" onclick="downloadWithAdsterra('${exploit.websitelink}')">
+                    Enlace a la web de ${exploit.title}
+                </a>
+            </p>` : '';
 
-                    exploitCard.innerHTML = `
-                        <h3>${exploit.title} ${statusPill}</h3>
-                        <p><strong>Versión:</strong> ${exploit.version}</p>
-                        <p><strong>Última actualización:</strong> ${exploit.updatedDate}</p>
-                        <p><strong>Plataforma:</strong> ${exploit.platform}</p>
-                        ${websiteLinkText}
-                        ${discordLinkText}
-                    `;
-                    exploitsGrid.appendChild(exploitCard);
-                   // observer.observe(exploitCard);
-                });
-            };
+        const discordLinkText = exploit.discordlink ? 
+            `<p><strong>Discord Oficial:</strong> 
+                <a href="#" onclick="downloadWithAdsterra('${exploit.discordlink}')">
+                    Discord de ${exploit.title}
+                </a>
+            </p>` : '';
+
+        exploitCard.innerHTML = `
+            <h3>${exploit.title} ${statusPill}</h3>
+            <p><strong>Versión:</strong> ${exploit.version}</p>
+            <p><strong>Última actualización:</strong> ${exploit.updatedDate}</p>
+            <p><strong>Plataforma:</strong> ${exploit.platform}</p>
+            ${websiteLinkText}
+            ${discordLinkText}
+        `;
+
+        exploitsGrid.appendChild(exploitCard);
+    });
+};
+
 
             /**
              * Función para mostrar una notificación de pantalla completa
@@ -2109,37 +2137,28 @@ window.addEventListener('scroll', () => {
     }
 });
 
-
-
-<script>
-// Funcionalidad del menú móvil
+// Cerrar menú móvil al hacer clic fuera
 document.addEventListener('click', (e) => {
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     
-    if (mobileMenu && mobileMenuBtn) {
-        if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-            mobileMenu.classList.remove('show');
-        }
+    if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+        mobileMenu.classList.remove('show');
     }
 });
 
-// Control de publicidad con delay
-document.addEventListener('DOMContentLoaded', function() {
-    const DELAY_TIME = 6 * 60 * 1000; // 6 minutos
-    
-    // Cargar el script publicitario después del delay
-    setTimeout(() => {
-        const script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = '//pl27389380.profitableratecpm.com/e2/69/8e/e2698e6bdb29e5d4fac529d459d899ca.js';
-        script.onerror = function() {
-            console.log('Error cargando script publicitario');
-        };
-        document.head.appendChild(script); // Mejor usar head que body
-    }, DELAY_TIME);
-});
-</script>
+
+        });
+
+
+    </script>
+
+
+
+
+
+
+
 
 
 
