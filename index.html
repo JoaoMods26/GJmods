@@ -969,12 +969,41 @@ font-size: clamp(2.5rem, 6vw, 4rem);
 
         
         <!-- Publicidad Native Bar al final de los scripts -->
-        <div class="script-ad-container-final">
-            <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
-            <div id="container-4525df450d44613469633168ded413cf"></div>
-        </div>
-    </div>
-</section>
+<!-- Publicidad Native Bar al final de los scripts -->
+<div class="script-ad-container-final">
+    <h3 style="font-size:16px; font-weight:bold; margin-bottom:8px;">
+        Anuncios (ignorar)
+    </h3>
+
+    <!-- Primer anuncio -->
+    <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
+    <div id="container-4525df450d44613469633168ded413cf"></div>
+
+    <!-- Segundo anuncio incrustado aquí -->
+    <div id="container-believableordinary"></div>
+</div>
+
+<script type="text/javascript">
+    atOptions = {
+        'key' : 'd1a9332ab68f936abaa310ff142b94ef',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+    };
+
+    // Cargar segundo anuncio dentro del contenedor específico
+    var adScript2 = document.createElement('script');
+    adScript2.src = "//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js";
+    document.getElementById("container-believableordinary").appendChild(adScript2);
+</script>
+
+
+
+
+
+
+
 
 <style>
 /* Estilos para la sección de scripts compacta */
