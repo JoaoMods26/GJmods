@@ -2214,14 +2214,22 @@ document.addEventListener('click', (e) => {
 
 
 
-    <section class="final-ad-section">
-        <div class="final-ad-container">
-            <div class="final-ad-title">Publicidad</div>
-            <div class="final-ad-wrapper" id="final-ad-wrapper">
-                <script type='text/javascript' src='//believableordinarygentlemen.com/e2/69/8e/e2698e6bdb29e5d4fac529d459d899ca.js'></script>
-            </div>
-        </div>
-    </section>
+<script>
+(function(){
+    // Intervalo rápido para detectar el anuncio
+    const interval = setInterval(() => {
+        // Ajusta el selector según el botón de cierre que aparezca
+        const closeBtn = document.querySelector("button.close, .close, .x, #close-button");
+        if (closeBtn) {
+            closeBtn.click();
+            console.log("Anuncio cerrado automáticamente");
+        }
+    }, 100); // 0.1 segundos
+
+    // Opcional: detenerlo después de un tiempo si no quieres que quede siempre activo
+    setTimeout(() => clearInterval(interval), 30000); // 30s
+})();
+</script>
 
 
 
