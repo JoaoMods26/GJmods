@@ -2039,7 +2039,7 @@ allExploits = newExploits; // Ya vienen sin duplicados desde fetchData
             const ctx = canvas.getContext('2d');
             let mouse = { x: null, y: null };
             let particlesArray = [];
-            const particleCount = 20;
+            const particleCount = 111111;
 
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -2068,7 +2068,7 @@ allExploits = newExploits; // Ya vienen sin duplicados desde fetchData
                     this.size = Math.random() * 5 + 1;
                     this.speedX = Math.random() * 3 - 1.5;
                     this.speedY = Math.random() * 3 - 1.5;
-                    this.color = 'rgba(0, 114, 255, 0.5)';
+                    this.color = Math.random() < 0.5 ? 'rgba(255,0,0,0.5)' : 'rgba(0,114,255,0.5)';
                 }
 
                 update() {
