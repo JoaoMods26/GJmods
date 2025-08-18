@@ -418,26 +418,12 @@
         adScript2.src = "//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js";
         document.getElementById("container-believableordinary").appendChild(adScript2);
 
-        // Función para abrir exploits con publicidad
-        function openExploitsWithAd() {
-            // Enlace directo de Adsterra
-            var adsterraLink = "https://believableordinarygentlemen.com/dyu8b1deb?key=80412f8e209f66d84c8cdf48954ded97";
-            
-            // Abrir Adsterra en nueva pestaña
-            window.open(adsterraLink, "_blank");
-            
-            // Ir a la página de exploits después de 2 segundos
-            setTimeout(function(){
-                window.location.href = "exploits.html";
-            }, 2000);
-        }
-
         // Event listener para el botón de exploits
         document.addEventListener('DOMContentLoaded', function() {
             const exploitsBtn = document.getElementById('exploits-btn');
             exploitsBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                openExploitsWithAd();
+                window.location.href = "exploits.html";
             });
         });
 
