@@ -36,24 +36,7 @@
             min-height: 100vh;
         }
 
-        /* Fondo animado */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(220, 38, 38, 0.1) 0%, transparent 50%);
-            animation: gradientShift 20s ease-in-out infinite alternate;
-            z-index: -1;
-        }
 
-        @keyframes gradientShift {
-            0% { transform: scale(1) rotate(0deg); }
-            100% { transform: scale(1.1) rotate(2deg); }
-        }
 
         /* Canvas para partículas */
         #particles-canvas {
@@ -181,7 +164,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
-            max-width: 900px;
+            max-width: 1200px;
             margin-bottom: 4rem;
         }
 
@@ -248,33 +231,7 @@
             line-height: 1.5;
         }
 
-        /* Enlaces sociales */
-        .social-links {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-        }
 
-        .social-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.8rem 1.5rem;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 50px;
-            color: var(--color-white);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover {
-            transform: translateY(-2px);
-            border-color: var(--color-accent);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
-        }
 
         /* Contenedor de anuncios */
         .ad-container {
@@ -387,18 +344,55 @@
                     Acceso gratuito a todos nuestros exploits, scripts y herramientas.
                 </p>
             </div>
-        </div>
 
-        <!-- Enlaces sociales -->
-        <div class="social-links fade-in fade-in-delay-4">
-            <a href="https://www.youtube.com/@joao_mods0" target="_blank" class="social-link">
-                🎥 YouTube
-            </a>
-            <a href="https://discord.gg/ZTVC94ZmVZ" target="_blank" class="social-link">
-                💬 Discord
-            </a>
+            <div class="feature-card">
+                <span class="feature-icon">📱</span>
+                <h3 class="feature-title">Multi-Plataforma</h3>
+                <p class="feature-description">
+                    Exploits disponibles para Windows, Mac, Android e iOS. Compatible con todos los dispositivos.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🔄</span>
+                <h3 class="feature-title">Auto-Update</h3>
+                <p class="feature-description">
+                    Muchos de nuestros exploits incluyen sistema de auto-actualización automática.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🎮</span>
+                <h3 class="feature-title">Scripts Exclusivos</h3>
+                <p class="feature-description">
+                    Biblioteca completa de scripts personalizados creados por nuestra comunidad.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">👥</span>
+                <h3 class="feature-title">Comunidad Activa</h3>
+                <p class="feature-description">
+                    Únete a miles de usuarios en nuestro Discord. Soporte 24/7 y ayuda técnica.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🚀</span>
+                <h3 class="feature-title">Sin Publicidad Molesta</h3>
+                <p class="feature-description">
+                    Descargas directas sin esperas, acortadores de enlaces o publicidad invasiva.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🔥</span>
+                <h3 class="feature-title">Exploits Premium</h3>
+                <p class="feature-description">
+                    Acceso gratuito a exploits que normalmente son de pago en otros sitios.
+                </p>
+            </div>
         </div>
-    </div>
 
     <!-- Contenedores de anuncios -->
     <div class="ad-container">
