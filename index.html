@@ -1,206 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8639362343003053"
-     crossorigin="anonymous"></script>
-
-
-
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8639362343003053"
+         crossorigin="anonymous"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>joao_mods</title>
+    <title>GJMODS - Exploits y Scripts para Roblox</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        /* Variables CSS para consistencia */
         :root {
             --color-black: #0a0a0a;
             --color-white: #ffffff;
---color-primary: #1e40af;
---color-secondary: #dc2626;
---color-accent: #3b82f6;
---color-blue: #3b82f6;
---color-text-gradient-start: #3b82f6;
---color-text-gradient-end: #dc2626;
+            --color-primary: #1e40af;
+            --color-secondary: #dc2626;
+            --color-accent: #3b82f6;
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --color-red: #dc3545;
         }
 
-/* ===== NUEVA BARRA DE NAVEGACIÓN ===== */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 70px;
-    background: rgba(10, 10, 10, 0.9);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
-    z-index: 1000;
-    transition: all 0.3s ease;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.navbar.scrolled {
-    background: rgba(10, 10, 10, 0.95);
-    border-bottom: 1px solid var(--color-accent);
-    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--color-black);
+            color: var(--color-white);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-.navbar-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-}
-
-.navbar-logo {
-    font-size: 1.5rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.navbar-logo:hover {
-    transform: scale(1.05);
-}
-
-.navbar-nav {
-    display: flex;
-    gap: 0.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-item {
-    position: relative;
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    border-radius: 50px;
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
-    white-space: nowrap;
-}
-
-.nav-link:hover {
-    color: var(--color-white);
-    background: var(--glass-bg);
-    border-color: var(--glass-border);
-    transform: translateY(-2px);
-}
-
-.nav-link.active {
-    color: var(--color-accent);
-    background: rgba(59, 130, 246, 0.1);
-    border-color: var(--color-accent);
-}
-
-.nav-icon {
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
-}
-
-/* Menú móvil */
-.mobile-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    color: var(--color-white);
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 8px;
-    transition: background 0.3s ease;
-}
-
-.mobile-menu-btn:hover {
-    background: var(--glass-bg);
-}
-
-.mobile-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: rgba(10, 10, 10, 0.95);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
-    transform: translateY(-100%);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    padding: 1rem 2rem;
-}
-
-.mobile-menu.show {
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
-}
-
-.mobile-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .navbar-nav {
-        display: none;
-    }
-
-    .mobile-menu-btn {
-        display: block;
-    }
-
-    .navbar-container {
-        padding: 0 1rem;
-    }
-
-    .navbar-logo {
-        font-size: 1.2rem;
-    }
-}
-
-
-        /* Estilos generales y fondo */
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--color-black);
-    color: var(--color-white);
-    margin: 0;
-    padding: 0;
-    padding-top: 70px; /* Espacio para la navbar */
-    overflow-x: hidden;
-}
-        /* Scanlines animadas de fondo */
+        /* Fondo animado */
         body::before {
             content: '';
             position: fixed;
@@ -208,32 +44,18 @@ body {
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            background: repeating-linear-gradient(
-                to bottom,
-                transparent 0%,
-                transparent 1px,
-                rgba(0, 0, 0, 0.1) 1px,
-                rgba(0, 0, 0, 0.1) 2px
-            );
-/* animation: scanlines-anim 20s linear infinite; /* animacion de fondo scanlines*/
-opacity: 0.03; /* ⭐ Menos visible */
+            background: radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(220, 38, 38, 0.1) 0%, transparent 50%);
+            animation: gradientShift 20s ease-in-out infinite alternate;
             z-index: -1;
         }
 
-        @keyframes scanlines-anim {
-            from { background-position: 0 0; }
-            to { background-position: 0 -100px; }
+        @keyframes gradientShift {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(2deg); }
         }
 
-        /* Contenedor principal */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Contenedor para el sistema de partículas */
+        /* Canvas para partículas */
         #particles-canvas {
             position: fixed;
             top: 0;
@@ -243,2045 +65,500 @@ opacity: 0.03; /* ⭐ Menos visible */
             z-index: -2;
         }
 
-.header {
-    text-align: center;
-    padding: 2rem 0;
-    margin-bottom: 3rem;
-}
+        /* Contenedor principal */
+        .hero-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
 
-        .logo {
-font-size: clamp(2.5rem, 6vw, 4rem);
+        /* Logo principal */
+        .main-logo {
+            font-size: clamp(3rem, 10vw, 6rem);
             font-weight: 900;
-            letter-spacing: -2px;
+            letter-spacing: -3px;
             text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(0, 114, 255, 0.5), 0 0 40px rgba(0, 114, 255, 0.3);
-            will-change: transform, opacity;
-            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
-
-            /* Gradiente animado para el texto */
-         background: linear-gradient(45deg, var(--color-text-gradient-start), var(--color-text-gradient-end), var(--color-text-gradient-start));
+            background: linear-gradient(45deg, var(--color-accent), var(--color-secondary), var(--color-accent));
             background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradient-anim 10s ease-in-out infinite;
-    
-
+            animation: logoGlow 8s ease-in-out infinite, textGradient 10s ease-in-out infinite;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
         }
 
-        @keyframes gradient-anim {
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4)); }
+            50% { filter: drop-shadow(0 0 40px rgba(220, 38, 38, 0.6)); }
+        }
+
+        @keyframes textGradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* Estilo glassmorphism para los contenedores de datos */
-        .card-container {
-            display: grid;
+        /* Subtítulo */
+        .subtitle {
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            line-height: 1.4;
+            max-width: 600px;
+        }
+
+        /* Contenedor de botones principales */
+        .main-buttons {
+            display: flex;
             gap: 2rem;
-            padding: 2rem 0;
-        }
-
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 1rem;
-            padding: 2rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            /*transform: translateY(20px);
-            opacity: 0;*/
-        }
-
-        /*.glass-card.animate-in {
-            transform: translateY(0);
-            opacity: 1;
-        }*/
-
-        .glass-card h2 {
-            margin-top: 0;
-            font-size: 1.8rem;
-            background: linear-gradient(90deg, var(--color-text-gradient-start), var(--color-text-gradient-end));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(0, 114, 255, 0.5);
-        }
-
-        .glass-card p {
-            margin-bottom: 0.5rem;
-            line-height: 1.5;
-        }
-
-        .glass-card strong {
-            color: var(--color-blue);
-        }
-
-        /* Estilos para las pestañas de exploits */
-        .tab-navigation {
-            display: flex;
+            margin-bottom: 4rem;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
             justify-content: center;
         }
 
-        .tab-button {
-            padding: 0.75rem 1.5rem;
-            border: 1px solid var(--glass-border);
-            border-radius: 9999px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(10px);
-            color: var(--color-white);
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .main-btn {
+            padding: 1.2rem 3rem;
+            font-size: 1.2rem;
             font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .tab-button:hover {
-            background: rgba(255, 255, 255, 0.1);
+        .main-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
         }
 
-        .tab-button.active {
-            background: rgba(0, 114, 255, 0.3);
-            border-color: var(--color-blue);
-            box-shadow: 0 0 15px rgba(0, 114, 255, 0.5);
+        .main-btn:hover::before {
+            left: 100%;
         }
 
-        /* Estilos de los botones de estado mejorados */
-        .status-pill {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-left: 0.5rem;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
-            transition: all 0.2s ease;
+        .btn-primary {
+            background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+            color: white;
+            border: 2px solid transparent;
         }
-        
-        .status-pill.updated { background-color: #28a745; color: var(--color-white); }
-        .status-pill.not-updated { background-color: #dc3545; color: var(--color-white); }
-        .status-pill.detected { background-color: #ffc107; color: var(--color-black); }
-        .status-pill.not-detected { background-color: #28a745; color: var(--color-white); }
-        .status-pill.free { background-color: #17a2b8; color: var(--color-white); }
-        .status-pill.paid { background-color: #6c757d; color: var(--color-white); }
-        .status-pill.mobile { background-color: #f8f9fa; color: var(--color-black); }
-        .status-pill.mac { background-color: #6c757d; color: var(--color-white); }
-        .status-pill.windows { background-color: #007bff; color: var(--color-white); }
-        .status-pill.loading { background-color: #ffc107; color: var(--color-black); }
-        .status-pill.error { background-color: var(--color-red); color: var(--color-white); }
 
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
+        }
 
-        /* Estilos específicos para la sección de exploits */
-.exploits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-    gap: 1.5rem;
-}
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-accent);
+            border: 2px solid var(--color-accent);
+        }
 
-        .exploit-card {
+        .btn-secondary:hover {
+            transform: translateY(-3px) scale(1.05);
+            background: var(--color-accent);
+            color: white;
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Características */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
             border-radius: 1rem;
-            padding: 1.5rem;
-            /*transform: translateY(20px);
-            opacity: 0;*/
-        }
-
-        /*.exploit-card.animate-in {
-            transform: translateY(0);
-            opacity: 1;
-        }*/
-
-        .exploit-card h3 {
-            margin: 0 0 1rem;
-            font-size: 1.5rem;
-            color: var(--color-blue);
-        }
-
-        .exploit-card a {
-            color: var(--color-blue);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .exploit-card a:hover {
-            color: var(--color-white);
-        }
-
-        /* Contenedor de notificaciones emergentes */
-        .modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.5);
-            background: rgba(0, 114, 255, 0.7);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 1rem;
             padding: 2rem;
-            border: 1px solid rgba(0, 114, 255, 0.8);
-            box-shadow: 0 0 30px rgba(0, 114, 255, 0.8);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .modal.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -50%) scale(1);
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--color-accent), transparent);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
         }
-        
-        /* Estilos para la nueva notificación de pantalla completa */
-        #fullscreen-notification {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease;
-            z-index: 2000;
-        }
-        
-        #fullscreen-notification.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        #fullscreen-notification-content {
-            padding: 2rem;
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: var(--color-black);
             border-radius: 1rem;
-            text-align: center;
-            animation: pulse-border 1.5s infinite;
+            z-index: -1;
         }
 
-        @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 rgba(0, 114, 255, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(0, 114, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 114, 255, 0); }
-        }
-
-        #fullscreen-notification h2 {
-            font-size: clamp(2rem, 8vw, 4rem);
-            font-weight: 900;
-            margin: 0;
-            background: linear-gradient(45deg, var(--color-text-gradient-start), var(--color-text-gradient-end), var(--color-text-gradient-start));
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient-anim 10s ease-in-out infinite;
-        }
-        
-        #warning-modal {
-            background: rgba(220, 53, 69, 0.7);
-            border: 1px solid rgba(220, 53, 69, 0.8);
-            box-shadow: 0 0 30px rgba(220, 53, 69, 0.8);
-            font-size: 1.5rem;
-            font-weight: 900;
-        }
-
-        .modal .modal-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        @keyframes spinner {
+        @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
 
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spinner 1s linear infinite;
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
         }
 
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
 
-/* Sección de links */
-.links-section {
-    margin-bottom: 4rem;
-}
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.links-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    max-width: 1000px;
-    margin: 0 auto;
-}
+        .feature-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
 
-.link-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid var(--glass-border);
-    border-radius: 1rem;
-    padding: 2rem;
-    text-align: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
+        /* Enlaces sociales */
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
 
-.link-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: var(--color-accent);
-    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
-}
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: var(--color-white);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
 
-.link-card h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0 0 1rem 0;
-    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+        .social-link:hover {
+            transform: translateY(-2px);
+            border-color: var(--color-accent);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+        }
 
-.link-card a {
-    display: inline-block;
-    padding: 0.75rem 2rem;
-    background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
-    color: white;
-    text-decoration: none;
-    border-radius: 50px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-}
+        /* Contenedor de anuncios */
+        .ad-container {
+            width: 90%;
+            max-width: 800px;
+            min-height: 100px;
+            margin: 30px auto;
+            padding: 20px;
+            background: transparent;
+            border-radius: 10px;
+            text-align: center;
+        }
 
-.link-card a:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
-}
-
-/* Separador visual */
-.separator {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--color-accent), var(--color-secondary), transparent);
-    margin: 3rem 0;
-    border-radius: 1px;
-}
-
-
-
-
-        /* Media queries para responsividad */
+        /* Responsive */
         @media (max-width: 768px) {
-            .logo {
-                font-size: clamp(1.5rem, 10vw, 3rem);
-            }
-            .container {
+            .hero-container {
                 padding: 1rem;
             }
-            .exploits-grid {
+            
+            .main-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .main-btn {
+                width: 100%;
+                max-width: 300px;
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+            
+            .features {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
-            .tab-navigation {
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: 0.5rem;
+            
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
             }
-            .tab-navigation::-webkit-scrollbar {
-                display: none;
-            }
-            .tab-navigation button {
-                white-space: nowrap;
+        }
+
+        /* Animaciones de entrada */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .fade-in-delay-1 { animation-delay: 0.2s; }
+        .fade-in-delay-2 { animation-delay: 0.4s; }
+        .fade-in-delay-3 { animation-delay: 0.6s; }
+        .fade-in-delay-4 { animation-delay: 0.8s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
     </style>
 </head>
 
-
 <body>
-
-
-<!-- ===== NUEVA BARRA DE NAVEGACIÓN SUPERIOR ===== -->
-<nav class="navbar" id="navbar">
-    <div class="navbar-container">
-        <div class="navbar-logo" onclick="scrollToTop()">GJMODS</div>
-        
-        <!-- Navegación escritorio -->
-<ul class="navbar-nav">
-    <li class="nav-item">
-        <a href="#home" class="nav-link" onclick="scrollToSection('home')">
-            <svg class="nav-icon" viewBox="0 0 24 24">
-                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-            </svg>
-            Inicio
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="#links" class="nav-link" onclick="scrollToSection('links')">
-            <svg class="nav-icon" viewBox="0 0 24 24">
-                <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
-            </svg>
-            Links
-        </a>
-    </li>
-    <!-- NUEVO: Botón Scripts -->
-    <li class="nav-item">
-        <a href="#scripts" class="nav-link" onclick="scrollToSection('scripts')">
-            <svg class="nav-icon" viewBox="0 0 24 24">
-                <path d="M8 3C7.4 3 7 3.4 7 4s.4 1 1 1 1-.4 1-1-.4-1-1-1zM7 7c-.6 0-1 .4-1 1s.4 1 1 1 1-.4 1-1-.4-1-1-1zm0 4c-.6 0-1 .4-1 1s.4 1 1 1 1-.4 1-1-.4-1-1-1zm0 4c-.6 0-1 .4-1 1s.4 1 1 1 1-.4 1-1-.4-1-1-1zm4-10.5c-.3 0-.5.2-.5.5s.2.5.5.5h8c.3 0 .5-.2.5-.5s-.2-.5-.5-.5h-8zm0 4c-.3 0-.5.2-.5.5s.2.5.5.5h8c.3 0 .5-.2.5-.5s-.2-.5-.5-.5h-8zm0 4c-.3 0-.5.2-.5.5s.2.5.5.5h8c.3 0 .5-.2.5-.5s-.2-.5-.5-.5h-8zm0 4c-.3 0-.5.2-.5.5s.2.5.5.5h8c.3 0 .5-.2.5-.5s-.2-.5-.5-.5h-8z"/>
-            </svg>
-            Scripts
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="#roblox-updates" class="nav-link" onclick="scrollToSection('roblox-updates')">
-            <svg class="nav-icon" viewBox="0 0 24 24">
-                <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-            </svg>
-            Versiones
-        </a>
-    </li>
-    <li class="nav-item">
-        <a href="#exploits-status" class="nav-link" onclick="scrollToSection('exploits-status')">
-            <svg class="nav-icon" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-            </svg>
-            Exploits
-        </a>
-    </li>
-</ul>
-
-        <!-- Botón menú móvil -->
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-        
-        <!-- Menú móvil -->
-        <div class="mobile-menu" id="mobileMenu">
-<ul class="mobile-nav">
-    <li><a href="#home" class="nav-link" onclick="scrollToSection('home'); closeMobileMenu()">🏠 Inicio</a></li>
-    <li><a href="#links" class="nav-link" onclick="scrollToSection('links'); closeMobileMenu()">🔗 Links</a></li>
-    <li><a href="#scripts" class="nav-link" onclick="scrollToSection('scripts'); closeMobileMenu()">📜 Scripts</a></li>
-    <li><a href="#roblox-updates" class="nav-link" onclick="scrollToSection('roblox-updates'); closeMobileMenu()">🔄 Versiones</a></li>
-    <li><a href="#exploits-status" class="nav-link" onclick="scrollToSection('exploits-status'); closeMobileMenu()">⚡ Exploits</a></li>
-</ul>
-        </div>
-    </div>
-</nav>
-
-
-    <!-- Canvas para el sistema de partículas -->
+    <!-- Canvas para partículas -->
     <canvas id="particles-canvas"></canvas>
 
+    <div class="hero-container">
+        <!-- Logo y título principal -->
+        <h1 class="main-logo fade-in">GJMODS</h1>
+        <p class="subtitle fade-in fade-in-delay-1">
+            La mejor comunidad de exploits y scripts para Roblox.<br>
+            Descarga gratis, sin publicidad molesta, actualizaciones constantes.
+        </p>
 
+        <!-- Botones principales -->
+        <div class="main-buttons fade-in fade-in-delay-2">
+            <a href="exploits.html" class="main-btn btn-primary" id="exploits-btn">
+                🚀 Ver Exploits
+            </a>
+            <a href="https://discord.gg/ZTVC94ZmVZ" target="_blank" class="main-btn btn-secondary">
+                💬 Discord
+            </a>
+        </div>
 
-    <!-- Notificación emergente de actualización de exploit -->
-    <div id="notification-modal" class="modal">
-        <div class="modal-content">
-            <div class="spinner"></div>
-            <p id="notification-text">Actualizando exploit...</p>
+        <!-- Características principales -->
+        <div class="features fade-in fade-in-delay-3">
+            <div class="feature-card">
+                <span class="feature-icon">🛡️</span>
+                <h3 class="feature-title">Totalmente Seguro</h3>
+                <p class="feature-description">
+                    Todos nuestros exploits son verificados y probados. Sin malware ni virus.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">⚡</span>
+                <h3 class="feature-title">Actualizaciones Rápidas</h3>
+                <p class="feature-description">
+                    Actualizamos nuestros exploits apenas Roblox lanza nuevas versiones.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <span class="feature-icon">🆓</span>
+                <h3 class="feature-title">Completamente Gratis</h3>
+                <p class="feature-description">
+                    Acceso gratuito a todos nuestros exploits, scripts y herramientas.
+                </p>
+            </div>
+        </div>
+
+        <!-- Enlaces sociales -->
+        <div class="social-links fade-in fade-in-delay-4">
+            <a href="https://www.youtube.com/@joao_mods0" target="_blank" class="social-link">
+                🎥 YouTube
+            </a>
+            <a href="https://discord.gg/ZTVC94ZmVZ" target="_blank" class="social-link">
+                💬 Discord
+            </a>
         </div>
     </div>
 
-    <!-- Advertencia emergente para la pestaña "No Detectado" -->
-    <div id="warning-modal" class="modal">
-        <p><strong>TODOS LOS EXPLOITS DE PC, SON DETECTADOS USA ALT</strong></p>
+    <!-- Contenedores de anuncios -->
+    <div class="ad-container">
+        <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
+        <div id="container-4525df450d44613469633168ded413cf"></div>
     </div>
 
-    <!-- NUEVA NOTIFICACIÓN DE PANTALLA COMPLETA -->
-    <div id="fullscreen-notification">
-        <div id="fullscreen-notification-content">
-            <h2 id="fullscreen-notification-text"></h2>
-        </div>
+    <div class="ad-container">
+        <div id="container-believableordinary"></div>
     </div>
 
-<!-- Header compacto -->
-<header class="header" id="home">
-    <h1 class="logo">GJMODS</h1>
-</header>
-
-<!-- Sección de links -->
-<section class="links-section" id="links">
-    <div class="links-container">
-        <div class="link-card">
-            <h3>Discord Oficial</h3>
-            <p>Únete a nuestra comunidad oficial de Comunidad Mods</p>
-            <a href="https://discord.gg/ZTVC94ZmVZ" target="_blank">Unirse</a>
-        </div>
-        <div class="link-card">
-            <h3>YouTube</h3>
-            <p>Tutoriales exclusivos, reviews de exploits y tonterias</p>
-            <a href="https://www.youtube.com/@joao_mods0" target="_blank">Suscribirse</a>
-        </div>
-    </div>
-</section>
-
-
-
-
-<!-- Separador visual -->
-<div class="separator"></div>
-
-
-
-
-<!-- AGREGAR ESTO DESPUÉS DEL SEPARADOR Y ANTES DEL <main class="container"> -->
-
-<!-- Sección de descargas compacta -->
-<section class="downloads-section" id="downloads">
-    <div class="downloads-container">
-        <div class="download-card">
-            <h4>Solara</h4>
-            <p>🟢 Este exploit tiene auto update, no hace falta descargarlo varias veces</p>
-            <a href="#" onclick="downloadWithAdsterra('https://gofile.io/d/3HzOVu')" class="download-btn">Descargar</a>
-        </div>
-        <div class="download-card">
-            <h4>Xeno</h4>
-            <p>🟢 Este no tiene auto update, Ojo avisar si se actualiza</p>
-            <a href="#" onclick="downloadWithAdsterra('https://www.xeno.onl/6fd17adc85764e50b448cf733656ca68/5b5f412b/8b29d578d32d')" class="download-btn">Descargar</a>
-        </div>
-        <div class="download-card">
-            <h4>Swift</h4>
-            <p>🟢 Este exploit tiene auto update, no hace falta descargarlo varias veces</p>
-            <a href="#" onclick="downloadWithAdsterra('https://getswift.vip/download')" class="download-btn">Descargar</a>
-        </div>
-        <div class="download-card">
-            <h4>Velocity</h4>
-            <p>🟢 Este exploit tiene auto update, no hace falta descargarlo varias veces</p>
-            <a href="#" onclick="downloadWithAdsterra('https://gofile.io/d/OAdat2')" class="download-btn">Descargar</a>
-        </div>
-        <div class="download-card">
-            <h4>Delta</h4>
-            <p>🟢 El exploit es para movil y lo tienes que volver a descargar cada q se actualiza(link oficial)</p>
-            <a href="#" onclick="downloadWithAdsterra('https://cdngloopup.cc/delta_android/')" class="download-btn">Descargar</a>
-        </div>
-        <div class="download-card">
-            <h4>KRLN</h4>
-            <p>🟢 El exploit es para movil y lo tienes que volver a descargar cada q se actualiza(link oficial)</p>
-            <a href="#" onclick="downloadWithAdsterra('https://krnl.webfiles.pro/android.html')" class="download-btn">Descargar</a>
-        </div>
- <div class="download-card">
-            <h4>Ronix pc</h4>
-            <p>🟢 Este exploit No tiene auto update, avisar cuando necesite actualizacion por discord.</p>
-            <a href="#" onclick="downloadWithAdsterra('https://wrdcdn.net/r/154522/1755386247633/Ronix%20(UD%20VER%20CHECKED).zip')" class="download-btn">Descargar</a>
-        </div>
- <div class="download-card">
-            <h4>Volcano</h4>
-            <p>🟢 Este exploit tiene auto update, no hace falta descargarlo varias veces</p>
-            <a href="#" onclick="downloadWithAdsterra('https://mega.nz/file/6xchxCza#Z00UbKrvE6-t3zpRFl34mdOQstOXA_9ad0KcsVTVbFs')" class="download-btn">Descargar</a>
-        </div>
-
-    </div>
-</section>
-
-<script>
-    function downloadWithAdsterra(realLink) {
-        // Enlace directo de Adsterra (pon el tuyo aquí)
-        var adsterraLink = "https://believableordinarygentlemen.com/dyu8b1deb?key=80412f8e209f66d84c8cdf48954ded97";
-        
-        // Abrir Adsterra en nueva pestaña
-        window.open(adsterraLink, "_blank");
-        
-        // Ir al enlace real después de 2 segundos
-        setTimeout(function(){
-            window.location.href = realLink;
-        }, 2000);
-    }
-</script>
-
-
-
-
-
-<!-- Información importante sobre las descargas -->
-        <div style="max-width: 1000px; margin: 2rem auto 0 auto; padding: 0 2rem;">
-            <div class="glass-card">
-                <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                    <span style="font-size: 1.3rem; margin-right: 0.5rem;">⚠️</span>
-                    <h3 style="margin: 0; color: var(--color-accent); font-size: 1.2rem;">INFORMACION IMPORTANTE</h3>
-                </div>
-                
-                <div style="background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; padding: 0.75rem; margin-bottom: 1rem; border-radius: 0 0.5rem 0.5rem 0;">
-                    <p style="margin: 0; color: #ffc107; font-weight: 600; font-size: 0.85rem;"><strong>ACLARO! Los enlaces NO son fuentes oficiales</strong>, pero todos los exploits son extraídos directamente de su fuente oficial.</p>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
-                    <div style="display: flex; align-items: center; background: var(--glass-bg); padding: 0.6rem; border-radius: 0.4rem; border: 1px solid var(--glass-border);">
-                        <span style="font-size: 1rem; margin-right: 0.5rem;">🛡️</span>
-                        <div>
-                            <strong style="color: var(--color-white); font-size: 0.8rem; display: block;">Seguridad</strong>
-                            <small style="color: rgba(255,255,255,0.7); font-size: 0.7rem;">Probados y usados por mi. Sin malware</small>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; background: var(--glass-bg); padding: 0.6rem; border-radius: 0.4rem; border: 1px solid var(--glass-border);">
-                        <span style="font-size: 1rem; margin-right: 0.5rem;">⚡</span>
-                        <div>
-                            <strong style="color: var(--color-white); font-size: 0.8rem; display: block;">Descarga directa</strong>
-                            <small style="color: rgba(255,255,255,0.7); font-size: 0.7rem;">Sin esperas y sin anuncios</small>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; background: var(--glass-bg); padding: 0.6rem; border-radius: 0.4rem; border: 1px solid var(--glass-border);">
-                        <span style="font-size: 1rem; margin-right: 0.5rem;">🔄</span>
-                        <div>
-                            <strong style="color: var(--color-white); font-size: 0.8rem; display: block;">Actuales</strong>
-                            <small style="color: rgba(255,255,255,0.7); font-size: 0.7rem;">Se actualizan los archivos seguidamente</small>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; background: var(--glass-bg); padding: 0.6rem; border-radius: 0.4rem; border: 1px solid var(--glass-border);">
-                        <span style="font-size: 1rem; margin-right: 0.5rem;">📱</span>
-                        <div>
-                            <strong style="color: var(--color-white); font-size: 0.8rem; display: block;">Multiplataforma</strong>
-                            <small style="color: rgba(255,255,255,0.7); font-size: 0.7rem;">PC y móvil</small>
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="display: flex; gap: 1rem; align-items: center; justify-content: space-between;">
-                    <div style="flex: 1;">
-                        <p style="margin: 0; color: rgba(255,255,255,0.8); font-size: 0.8rem;">
-                            <span style="color: var(--color-accent);">🔗 si quieres las fuentes oficiales:</span> Ve a la seccion de abajo sección <strong>"Estado de Exploits/exploits"</strong>
-                        </p>
-                    </div>
-                    
-                    <div style="flex-shrink: 0;">
-                        <a href="https://discord.gg/ZTVC94ZmVZ" style="display: inline-block; background: linear-gradient(45deg, var(--color-primary), var(--color-accent)); color: white; text-decoration: none; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; transition: all 0.2s ease;" target="_blank">💬 Discord</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-<!-- Sección de Scripts - Para agregar después de la información importante -->
-<section class="scripts-section" id="scripts">
-    <div class="scripts-container">
-        <h2 class="scripts-main-title">Scripts Comunidad Mods</h2>
-        <p class="scripts-subtitle">Colección de scripts de la Comunidad Mods para mejorar tu experiencia en Roblox</p>
-        
-        <!-- Grid de scripts compacto -->
-        <div class="scripts-compact-grid">
-            <!-- Script 1: GUI Universal -->
-            <div class="script-compact-card">
-                <div class="script-compact-header">
-                    <h4 class="script-compact-title">Jmods Universal</h4>
-                    <span class="script-compact-category gui">GUI</span>
-                </div>
-                
-                <p class="script-compact-description">
-                    Interfaz con un monton de funciones para todos los juegos, velocidad, salto, vuelo, animaciones, funciones de reacctivacion de Voice chat, aimbots etc.... by: joao_mods
-                </p>
-                
-                <div class="script-compact-code">
-                    <div class="code-compact-header">
-                        <span class="code-language-small">Lua Script</span>
-                        <button class="copy-btn-small" onclick="copyScriptCompact(this)">📋</button>
-                    </div>
-                    <pre class="script-code-compact">loadstring(game:HttpGet("https://pastebin.com/raw/XJBYdYMq"))()()</pre>
-                </div>
-            </div>
-
-            <!-- Script 2: ESP Universal -->
-            <div class="script-compact-card">
-                <div class="script-compact-header">
-                    <h4 class="script-compact-title">Scripts - Jmods</h4>
-                    <span class="script-compact-category utility">Busqueda</span>
-                </div>
-                
-                <p class="script-compact-description">
-                    Interfaz en donde puedes buscar y guardar tus scripts favoritos by: joao_mods
-                </p>
-                
-                <div class="script-compact-code">
-                    <div class="code-compact-header">
-                        <span class="code-language-small">Lua Script</span>
-                        <button class="copy-btn-small" onclick="copyScriptCompact(this)">📋</button>
-                    </div>
-                    <pre class="script-code-compact">loadstring(game:HttpGet("https://raw.githubusercontent.com/sapoqluwu/Jbuscador/refs/heads/main/Jbuscador"))()</pre>
-                </div>
-            </div>
-
-            <!-- Script 3: Speed & Jump Enhancer -->
-            <div class="script-compact-card">
-                <div class="script-compact-header">
-                    <h4 class="script-compact-title">J99</h4>
-                    <span class="script-compact-category utility">Utilidad</span>
-                </div>
-                
-                <p class="script-compact-description">
-                    Hub Tp a objetos y traer objetos
-                </p>
-                
-                <div class="script-compact-code">
-                    <div class="code-compact-header">
-                        <span class="code-language-small">Lua Script</span>
-                        <button class="copy-btn-small" onclick="copyScriptCompact(this)">📋</button>
-                    </div>
-                    <pre class="script-code-compact">loadstring(game:HttpGet("https://pastebin.com/raw/hdkk5grs"))()</pre>
-                </div>
-            </div>
-
-            <!-- Script 4: Fly Script -->
-            <div class="script-compact-card">
-                <div class="script-compact-header">
-                    <h4 class="script-compact-title">AutoBuy NullModer</h4>
-                    <span class="script-compact-category fun">Diversión</span>
-                </div>
-                
-                <p class="script-compact-description">
-                    Script para Steal a brainrot que permite comprar de forma automatica e instantanea el bainrot que aparezca o este disponible para comprar. by: NullModer
-                </p>
-                
-                <div class="script-compact-code">
-                    <div class="code-compact-header">
-                        <span class="code-language-small">Lua Script</span>
-                        <button class="copy-btn-small" onclick="copyScriptCompact(this)">📋</button>
-                    </div>
-                    <pre class="script-code-compact">loadstring(game:HttpGet("https://raw.githubusercontent.com/ZZZZZZZZNULL/Hshsjsjses/refs/heads/main/Sisksk"))()</pre>
-                </div>
-            </div>
-        </div>
-
-
-            <!-- Script 3: Speed & Jump Enhancer -->
-            <div class="script-compact-card">
-                <div class="script-compact-header">
-                    <h4 class="script-compact-title">AnimSpoofer Jmods</h4>
-                    <span class="script-compact-category utility">Animaciones</span>
-                </div>
-                
-                <p class="script-compact-description">
-                    Con esto peudes poner las id del catalogo y se ejecutara, tambien aparece la asset id para poder usarla en scripts o juegos. by: joao_mods
-                </p>
-                
-                <div class="script-compact-code">
-                    <div class="code-compact-header">
-                        <span class="code-language-small">Lua Script</span>
-                        <button class="copy-btn-small" onclick="copyScriptCompact(this)">📋</button>
-                    </div>
-                    <pre class="script-code-compact">loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-AnimSpoofer-Jmods-48380"))()</pre>
-                </div>
-            </div>
-
-        
-
-            <!-- Script 4: Fly Script -->
-            <div class="script-compact-card">
-                <div class="script-compact-header">
-                    <h4 class="script-compact-title">JChat SpyMods</h4>
-                    <span class="script-compact-category fun">Diversión</span>
-                </div>
-                
-                <p class="script-compact-description">
-                    Esto te permitira ver el chat de roblox en tu servidor actual y ver incluso los chats privados. by: joao_mods
-                </p>
-                
-                <div class="script-compact-code">
-                    <div class="code-compact-header">
-                        <span class="code-language-small">Lua Script</span>
-                        <button class="copy-btn-small" onclick="copyScriptCompact(this)">📋</button>
-                    </div>
-                    <pre class="script-code-compact">loadstring(game:HttpGet("https://raw.githubusercontent.com/sapoqluwu/dumb/refs/heads/main/JChat%20SpyMods"))()()</pre>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-
-        <!-- Publicidad Native Bar al final de los scripts -->
-<!-- Contenedor del primer anuncio -->
-<h3 style="text-align:center; font-weight:bold; margin-top:30px;">
-  Anuncios (ignorar)
-</h3>
-
-<div class="ad-container" id="ad-container-1">
-  <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
-  <div id="container-4525df450d44613469633168ded413cf"></div>
-</div>
-
-<!-- Contenedor del segundo anuncio -->
-<div class="ad-container" id="ad-container-2">
-  <div id="container-believableordinary"></div>
-</div>
-
-<script type="text/javascript">
-  atOptions = {
-    'key' : 'd1a9332ab68f936abaa310ff142b94ef',
-    'format' : 'iframe',
-    'height' : 90,
-    'width' : 728,
-    'params' : {}
-  };
-
-  // Cargar el segundo anuncio en su contenedor
-  var adScript2 = document.createElement('script');
-  adScript2.src = "//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js";
-  document.getElementById("container-believableordinary").appendChild(adScript2);
-</script>
-
-<style>
-  .ad-container {
-    width: 90%;
-    max-width: 800px;
-    min-height: 100px;
-    margin: 30px auto;
-    padding: 20px;
-    background: transparent;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    text-align: center;
-  }
-</style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<style>
-/* Estilos para la sección de scripts compacta */
-.scripts-section {
-    margin: 3rem auto 4rem auto;
-    padding: 0 2rem;
-    max-width: 1200px;
-}
-
-.scripts-container {
-    width: 100%;
-}
-
-.scripts-main-title {
-    font-size: 2.5rem;
-    font-weight: 900;
-    text-align: center;
-    margin-bottom: 0.5rem;
-    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-transform: uppercase;
-    letter-spacing: -1px;
-}
-
-.scripts-subtitle {
-    text-align: center;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 2.5rem;
-    font-size: 1.1rem;
-    line-height: 1.5;
-}
-
-.scripts-compact-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 1.5rem;
-}
-
-.script-compact-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.script-compact-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
-    border-radius: 1rem 1rem 0 0;
-}
-
-.script-compact-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--color-accent);
-    box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15);
-}
-
-.script-compact-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.script-compact-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--color-white);
-    margin: 0;
-}
-
-.script-compact-category {
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.script-compact-category.gui { 
-    background: linear-gradient(45deg, #8b5cf6, #a855f7); 
-    color: white;
-}
-
-.script-compact-category.utility { 
-    background: linear-gradient(45deg, #06b6d4, #0891b2); 
-    color: white;
-}
-
-.script-compact-category.fun { 
-    background: linear-gradient(45deg, #ec4899, #be185d); 
-    color: white;
-}
-
-.script-compact-description {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin-bottom: 1rem;
-}
-
-.script-compact-code {
-    background: #1a1a2e;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.5rem;
-    overflow: hidden;
-    margin-bottom: 1rem;
-}
-
-.code-compact-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    background: rgba(0, 0, 0, 0.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.code-language-small {
-    font-size: 0.75rem;
-    color: var(--color-accent);
-    font-weight: 600;
-}
-
-.copy-btn-small {
-    background: linear-gradient(45deg, var(--color-success), #059669);
-    border: none;
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.copy-btn-small:hover {
-    background: linear-gradient(45deg, #059669, #047857);
-    transform: translateY(-1px);
-}
-
-.script-code-compact {
-    padding: 1rem;
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    font-size: 0.75rem;
-    line-height: 1.4;
-    color: #e2e8f0;
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    max-height: 200px;
-    overflow-y: auto;
-    margin: 0;
-}
-
-.script-code-compact::-webkit-scrollbar {
-    width: 6px;
-}
-
-.script-code-compact::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-}
-
-.script-code-compact::-webkit-scrollbar-thumb {
-    background: var(--color-accent);
-    border-radius: 3px;
-}
-
-/* Contenedor para publicidad al final de los scripts */
-.script-ad-container-final {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem 1rem;
-    margin: 2rem auto 0 auto;
-    background: var(--glass-bg);
-    backdrop-filter: blur(5px);
-    border: 1px solid var(--glass-border);
-    border-radius: 0.75rem;
-    min-height: 120px;
-    max-width: 800px;
-}
-
-.script-ad-container-final div {
-    max-width: 100%;
-}
-
-/* Responsive para móviles */
-@media (max-width: 768px) {
-    .scripts-section {
-        padding: 0 1rem;
-        margin: 2rem auto 3rem auto;
-    }
-    
-    .scripts-main-title {
-        font-size: 2rem;
-    }
-    
-    .scripts-subtitle {
-        font-size: 1rem;
-        margin-bottom: 2rem;
-    }
-    
-    .scripts-compact-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .script-compact-card {
-        padding: 1.25rem;
-    }
-    
-    .script-compact-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    
-    .script-compact-category {
-        align-self: flex-end;
-    }
-    
-    .script-code-compact {
-        font-size: 0.7rem;
-        max-height: 150px;
-    }
-}
-
-/* Animación para las tarjetas */
-/*@keyframes slideUpCompact {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}*/
-
-.script-compact-card {
-   /* animation: slideUpCompact 0.6s ease forwards;*/
-}
-
-/*.script-compact-card:nth-child(2) { animation-delay: 0.1s; }
-.script-compact-card:nth-child(3) { animation-delay: 0.2s; }
-.script-compact-card:nth-child(4) { animation-delay: 0.3s; }*/
-</style>
-
-<script>
-// Funciones para la sección de scripts compacta
-        function copyScriptCompact(button) {
-            const codeBlock = button.closest('.script-compact-code').querySelector('.script-code-compact');
+    <script type="text/javascript">
+        // Configuración del segundo anuncio
+        atOptions = {
+            'key' : 'd1a9332ab68f936abaa310ff142b94ef',
+            'format' : 'iframe',
+            'height' : 90,
+            'width' : 728,
+            'params' : {}
+        };
+
+        var adScript2 = document.createElement('script');
+        adScript2.src = "//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js";
+        document.getElementById("container-believableordinary").appendChild(adScript2);
+
+        // Función para abrir exploits con publicidad
+        function openExploitsWithAd() {
+            // Enlace directo de Adsterra
+            var adsterraLink = "https://believableordinarygentlemen.com/dyu8b1deb?key=80412f8e209f66d84c8cdf48954ded97";
             
-            // Primero intentamos obtener el código desde el atributo data-script-code
-            let textToCopy = codeBlock.getAttribute('data-script-code');
+            // Abrir Adsterra en nueva pestaña
+            window.open(adsterraLink, "_blank");
             
-            // Si no existe el atributo, usamos el textContent
-            if (!textToCopy) {
-                textToCopy = codeBlock.textContent || codeBlock.innerText;
-            }
-            
-            // Limpiar el texto (quitar espacios extra y saltos de línea innecesarios)
-            textToCopy = textToCopy.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
-            
-            
-            
-            // Método moderno con Clipboard API
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    showCopySuccess(button, textToCopy);
-                }).catch(err => {
-                   
-                    fallbackCopy(textToCopy, button);
-                });
-            } else {
-                // Método de respaldo para navegadores más antiguos
-                fallbackCopy(textToCopy, button);
-            }
+            // Ir a la página de exploits después de 2 segundos
+            setTimeout(function(){
+                window.location.href = "exploits.html";
+            }, 2000);
         }
 
-        function fallbackCopy(text, button) {
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            textArea.style.opacity = '0';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    showCopySuccess(button, text);
-                } else {
-                    showCopyError(button);
-                }
-            } catch (err) {
-                
-                showCopyError(button);
-            }
-            
-            document.body.removeChild(textArea);
-        }
-
-        function showCopySuccess(button, text) {
-            // Cambiar el botón temporalmente
-            const originalText = button.innerHTML;
-            button.innerHTML = '✅ ¡Copiado!';
-            button.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
-            
-            // Mostrar notificación
-            showNotification(`Script copiado al portapapeles (${text.length} caracteres)`, 'success');
-            
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.style.background = 'linear-gradient(45deg, var(--color-success), #059669)';
-            }, 2500);
-        }
-
-        function showCopyError(button) {
-            const originalText = button.innerHTML;
-            button.innerHTML = '❌ Error';
-            button.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
-            
-            showNotification('Error al copiar el script', 'error');
-            
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.style.background = 'linear-gradient(45deg, var(--color-success), #059669)';
-            }, 2500);
-        }
-
-        function showNotification(message, type) {
-            // Crear elemento de notificación
-            const notification = document.createElement('div');
-            notification.className = 'copy-notification';
-            notification.textContent = message;
-            
-            if (type === 'error') {
-                notification.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
-            }
-            
-            document.body.appendChild(notification);
-            
-            // Mostrar con animación
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 100);
-            
-            // Ocultar después de 3 segundos
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        document.body.removeChild(notification);
-                    }
-                }, 300);
-            }, 3000);
-        }
-
-        // Agregar event listeners cuando la página cargue
+        // Event listener para el botón de exploits
         document.addEventListener('DOMContentLoaded', function() {
-            
-            
-            // Verificar que todos los botones tengan el event listener
-            const copyButtons = document.querySelectorAll('.copy-btn-small');
-            
+            const exploitsBtn = document.getElementById('exploits-btn');
+            exploitsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                openExploitsWithAd();
+            });
         });
-    </script>
-</body>
-</html>
 
+        // Sistema de partículas
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let mouse = { x: null, y: null };
+        let particlesArray = [];
+        const particleCount = 80;
 
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-
-
-
-<!-- AGREGAR ESTOS ESTILOS CSS DENTRO DE TU <style> -->
-
-
-
-
-<style>
-/* Sección de descargas compacta */
-.downloads-section {
-    margin-bottom: 2rem;
-    padding: 0 2rem;
-}
-
-.downloads-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.download-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-    text-align: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
-
-.download-card:hover {
-    transform: translateY(-4px) scale(1.01);
-    border-color: var(--color-accent);
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
-}
-
-.download-card h4 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin: 0 0 0.5rem 0;
-    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.download-card p {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8);
-    margin: 0 0 1rem 0;
-    line-height: 1.4;
-}
-
-.download-btn {
-    display: inline-block;
-    padding: 0.5rem 1.25rem;
-    background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
-    color: white;
-    text-decoration: none;
-    border-radius: 25px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
-}
-
-.download-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-    background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
-}
-
-/* Responsivo para móviles */
-@media (max-width: 768px) {
-    .downloads-section {
-        padding: 0 1rem;
-    }
-    
-    .downloads-container {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 0.75rem;
-    }
-    
-    .download-card {
-        padding: 1rem;
-    }
-    
-    .download-card h4 {
-        font-size: 1rem;
-    }
-    
-    .download-card p {
-        font-size: 0.8rem;
-    }
-    
-    .download-btn {
-        padding: 0.4rem 1rem;
-        font-size: 0.8rem;
-    }
-}
-</style>
-
-
-
-
-
-    <!-- Contenido principal -->
-    <main class="container">
-        <!-- Sección de actualizaciones de Roblox -->
-        <section id="roblox-updates" class="card-container">
-            <h2 style="text-align: center;">Actualizaciones de Roblox <span id="update-status-versions"></span></h2>
-            <div id="current-versions" class="glass-card">
-                <h3>Versiones Actuales</h3>
-                <p>Cargando datos...</p>
-            </div>
-            <div id="future-versions" class="glass-card">
-                <h3>Versiones Futuras</h3>
-                <p>Cargando datos...</p>
-            </div>
-            <div id="past-versions" class="glass-card">
-                <h3>Versiones Anteriores</h3>
-                <p>Cargando datos...</p>
-            </div>
-        </section>
-
-        <!-- Sección de estado de exploits -->
-        <section id="exploits-status" class="card-container">
-            <h2 style="text-align: center;">Estado de Exploits <span id="update-status-exploits"></span></h2>
-            
-            <!-- Navegación por pestañas -->
-            <div class="tab-navigation">
-                <button class="tab-button active" data-filter-by="all">Todos</button>
-                <button class="tab-button" data-filter-by="platform" data-filter-value="Windows">Windows</button>
-                <button class="tab-button" data-filter-by="platform" data-filter-value="Mac">Mac</button>
-                <button class="tab-button" data-filter-by="platform" data-filter-value="Mobile">Móvil</button>
-                <button class="tab-button" data-filter-by="cost" data-filter-value="free">Gratis</button>
-                <button class="tab-button" data-filter-by="cost" data-filter-value="paid">De pago</button>
-                <button class="tab-button" data-filter-by="status" data-filter-value="detected">Detectado</button>
-                <button class="tab-button" data-filter-by="status" data-filter-value="not-detected">No Detectado</button>
-                <button class="tab-button" data-filter-by="external" data-filter-value="external">External</button>
-            </div>
-
-            <!-- Contenedor del grid de exploits -->
-            <div id="exploits-grid" class="exploits-grid">
-                <p style="grid-column: 1 / -1; text-align: center;">Cargando datos...</p>
-            </div>
-        </section>
-    </main>
-
-    <!-- Script para APIs y animaciones -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Referencias a elementos del DOM
-            const logo = document.querySelector('.logo');
-            const currentVersionsCard = document.getElementById('current-versions');
-            const futureVersionsCard = document.getElementById('future-versions');
-            const pastVersionsCard = document.getElementById('past-versions');
-            const exploitsGrid = document.getElementById('exploits-grid');
-            const tabButtons = document.querySelectorAll('.tab-button');
-            const updateStatusVersions = document.getElementById('update-status-versions');
-            const updateStatusExploits = document.getElementById('update-status-exploits');
-            const warningModal = document.getElementById('warning-modal');
-            
-            // NUEVOS ELEMENTOS DEL DOM PARA LA NOTIFICACIÓN DE PANTALLA COMPLETA
-            const fullscreenNotification = document.getElementById('fullscreen-notification');
-            const fullscreenNotificationText = document.getElementById('fullscreen-notification-text');
-            
-            // URLs de las APIs
-            const API_BASE_URL = 'https://weao.xyz/api';
-            
-            // Almacenar todos los exploits y versiones una vez cargados
-            let allExploits = [];
-            let currentVersions = {};
-            let futureVersions = {};
-            let pastVersions = {};
-
-            // Variable para evitar múltiples peticiones concurrentes
-            let isUpdating = false;
-
-
-// ===== AGREGAR DESPUÉS DE "let isUpdating = false;" =====
-
-/**
- * Función para eliminar duplicados de exploits
- */
-const removeDuplicates = (exploits) => {
-    if (!exploits || !Array.isArray(exploits)) {
-       
-        return [];
-    }
-
-    const originalCount = exploits.length;
-    const uniqueExploits = [];
-    const seenTitles = new Map();
-    
-    exploits.forEach((exploit, index) => {
-        const normalizedTitle = (exploit.title || '').trim().toLowerCase();
-        
-        if (!normalizedTitle) {
-            ;
-            return;
-        }
-
-        if (seenTitles.has(normalizedTitle)) {
-            const existingExploit = seenTitles.get(normalizedTitle);
-            const currentDate = new Date(exploit.updatedDate || '1970-01-01');
-            const existingDate = new Date(existingExploit.updatedDate || '1970-01-01');
-            
-            if (currentDate > existingDate) {
-                const existingIndex = uniqueExploits.findIndex(e => 
-                    e.title.toLowerCase() === normalizedTitle
-                );
-                if (existingIndex !== -1) {
-                    uniqueExploits[existingIndex] = exploit;
-                    seenTitles.set(normalizedTitle, exploit);
-                }
-                
-            } else {
-                
-            }
-        } else {
-            seenTitles.set(normalizedTitle, exploit);
-            uniqueExploits.push(exploit);
-        }
-    });
-
-    const removedCount = originalCount - uniqueExploits.length;
-    if (removedCount > 0) {
-        
-        showDuplicateNotification(removedCount);
-    }
-
-    return uniqueExploits;
-};
-
-/**
- * Función para mostrar notificación de duplicados
- */
-const showDuplicateNotification = (count) => {
-    let notification = document.getElementById('duplicate-notification');
-    
-    if (!notification) {
-        notification = document.createElement('div');
-        notification.id = 'duplicate-notification';
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(23, 162, 184, 0.9);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            z-index: 1000;
-            transform: translateX(300px);
-            transition: transform 0.3s ease;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(23, 162, 184, 0.3);
-        `;
-        document.body.appendChild(notification);
-    }
-    
-    notification.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span>👍</span>
-            <span>Recuerda interactuar con mi canal</span>
-        </div>
-    `;
-    
-    setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-    }, 100);
-    
-    setTimeout(() => {
-        notification.style.transform = 'translateX(300px)';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-        }, 300);
-    }, 4000);
-};
-
-
-            /**
-             * #1: Funcionalidad de Intersection Observer
-             * Anima elementos al entrar en el viewport.
-             */
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-            observer.unobserve(entry.target);
-        }
-    });
-}, {
-    root: null,
-    threshold: 0.1
-});
-
-/*/ Observar las tarjetas de versiones
-observer.observe(currentVersionsCard);
-observer.observe(futureVersionsCard);
-observer.observe(pastVersionsCard);
-
-// ✅ Nueva línea para que se muestre la "Información Importante"
-const infoCard = document.querySelector('#downloads ~ div .glass-card');
-if (infoCard) observer.observe(infoCard);*/
-            /**
-             * #2: Efecto de scroll del logo
-             * Cambia la opacidad y la posición del logo al hacer scroll.
-             */
-            window.addEventListener('scroll', () => {
-                const scrollY = window.scrollY;
-                const heroHeight = window.innerHeight;
-                
-                if (scrollY > 0) {
-                    const scrollProgress = Math.min(scrollY / (heroHeight * 0.5), 1);
-                    logo.style.transform = `translateX(-${scrollProgress * 100}px)`;
-                    logo.style.opacity = 1 - scrollProgress;
-                } else {
-                    logo.style.transform = 'translateX(0)';
-                    logo.style.opacity = 1;
-                }
-            });
-
-            /**
-             * #3: Funcionalidad de APIs - Carga de datos con retry
-             * Usa `async/await` para fetching de datos, manejo de errores y retries.
-             */
-const fetchData = async (endpoint, retries = 3, delay = 1000) => {
-    try {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        
-        // APLICAR ANTI-DUPLICADOS A LA API DE EXPLOITS
-        if (endpoint === '/status/exploits') {
-            
-            const uniqueData = removeDuplicates(data);
-            
-            return uniqueData;
-        }
-        
-        return data;
-    } catch (error) {
-       
-        if (retries > 0) {
-            
-            await new Promise(res => setTimeout(res, delay));
-            return fetchData(endpoint, retries - 1, delay * 2);
-        } else {
-            return null;
-        }
-    }
-};
-
-            const renderVersions = (data, elementId) => {
-                const element = document.getElementById(elementId);
-                let title = '';
-                if (elementId === 'current-versions') title = 'Versiones Actuales';
-                if (elementId === 'future-versions') title = 'Versiones Futuras';
-                if (elementId === 'past-versions') title = 'Versiones Anteriores';
-
-                if (!data) {
-                    element.innerHTML = `<h3>${title}</h3><p>Error al cargar las versiones o API no disponible.</p>`;
-                    return;
-                }
-                
-                element.innerHTML = `
-                    <h3>${title}</h3>
-                    <p><strong>Windows:</strong> ${data.Windows} <br> <small>(${data.WindowsDate})</small></p>
-                    <p><strong>Mac:</strong> ${data.Mac} <br> <small>(${data.MacDate})</small></p>
-                `;
-            };
-
-            const displayExploits = (exploits) => {
-    exploitsGrid.innerHTML = ''; 
-
-    exploits.forEach((exploit, index) => {
-        const exploitCard = document.createElement('div');
-        exploitCard.className = 'exploit-card';
-        exploitCard.style.animationDelay = `${index * 0.1}s`;
-
-        let statusPill = '';
-        if (exploit.updateStatus) {
-            statusPill += `<span class="status-pill updated">Actualizado</span>`;
-        } else {
-            statusPill += `<span class="status-pill not-updated">No Actualizado</span>`;
-        }
-
-        if (exploit.detected) {
-            statusPill += `<span class="status-pill detected">Detectado</span>`;
-        } else {
-            statusPill += `<span class="status-pill not-detected">No Detectado</span>`;
-        }
-
-        if (exploit.free) {
-            statusPill += `<span class="status-pill free">Gratis</span>`;
-        } else {
-            statusPill += `<span class="status-pill paid">De pago</span>`;
-        }
-        
-        if (exploit.platform) {
-            const platformClass = exploit.platform.toLowerCase();
-            if (platformClass === 'ios' || platformClass === 'android') {
-                statusPill += `<span class="status-pill mobile">Móvil</span>`;
-            } else {
-                statusPill += `<span class="status-pill ${platformClass}">${exploit.platform}</span>`;
-            }
-        }
-
-        // 🔹 Enlaces con publicidad
-        const websiteLinkText = exploit.websitelink ? 
-            `<p><strong>Página Oficial:</strong> 
-                <a href="#" onclick="downloadWithAdsterra('${exploit.websitelink}')">
-                    Enlace a la web de ${exploit.title}
-                </a>
-            </p>` : '';
-
-        const discordLinkText = exploit.discordlink ? 
-            `<p><strong>Discord Oficial:</strong> 
-                <a href="#" onclick="downloadWithAdsterra('${exploit.discordlink}')">
-                    Discord de ${exploit.title}
-                </a>
-            </p>` : '';
-
-        exploitCard.innerHTML = `
-            <h3>${exploit.title} ${statusPill}</h3>
-            <p><strong>Versión:</strong> ${exploit.version}</p>
-            <p><strong>Última actualización:</strong> ${exploit.updatedDate}</p>
-            <p><strong>Plataforma:</strong> ${exploit.platform}</p>
-            ${websiteLinkText}
-            ${discordLinkText}
-        `;
-
-        exploitsGrid.appendChild(exploitCard);
-    });
-};
-
-
-            /**
-             * Función para mostrar una notificación de pantalla completa
-             * @ {string} message El mensaje a mostrar
-             * @ {number} duration La duración en milisegundos
-             */
-            const showFullscreenNotification = (message, duration = 3000) => {
-                fullscreenNotificationText.textContent = message;
-                fullscreenNotification.classList.add('show');
-                setTimeout(() => {
-                    fullscreenNotification.classList.remove('show');
-                }, duration);
-            };
-
-            const showWarningModal = (message, duration) => {
-                warningModal.querySelector('p').innerHTML = `<strong>${message}</strong>`;
-                warningModal.classList.add('show');
-                setTimeout(() => {
-                    warningModal.classList.remove('show');
-                }, duration);
-            };
-
-            const updateData = async () => {
-                if (isUpdating) return;
-                isUpdating = true;
-                
-                // Mostrar estado de carga
-                updateStatusVersions.innerHTML = '<span class="status-pill loading">Actualizando...</span>';
-                updateStatusExploits.innerHTML = '<span class="status-pill loading">Actualizando...</span>';
-                
-                const oldExploits = JSON.parse(JSON.stringify(allExploits));
-
-                try {
-                    const [current, future, past, newExploits] = await Promise.all([
-                        fetchData('/versions/current'),
-                        fetchData('/versions/future'),
-                        fetchData('/versions/past'),
-                        fetchData('/status/exploits')
-                    ]);
-                    
-                    if (!current || !future || !past || !newExploits) {
-                        throw new Error('No se pudieron obtener todos los datos de la API.');
-                    }
-                    
-                    // Comprobar si los datos de versiones han cambiado y mostrar notificación
-                    const versionsChanged = JSON.stringify(current) !== JSON.stringify(currentVersions) ||
-                                           JSON.stringify(future) !== JSON.stringify(futureVersions) ||
-                                           JSON.stringify(past) !== JSON.stringify(pastVersions);
-
-
-
-
-                    if (versionsChanged) {
-                        if (currentVersions.Windows !== current.Windows) {
-                           // showFullscreenNotification(`Actualización de Roblox: Windows a la versión ${current.Windows}`);
-                        } else if (currentVersions.Mac !== current.Mac) {
-                           // showFullscreenNotification(`Actualización de Roblox: Mac a la versión ${current.Mac}`);
-                        } else {
-                           // showFullscreenNotification('Actualización de Roblox: se detectaron nuevos datos de versiones.');
-                        }
-                        currentVersions = current;
-                        futureVersions = future;
-                        pastVersions = past;
-                        renderVersions(current, 'current-versions');
-                        renderVersions(future, 'future-versions');
-                        renderVersions(past, 'past-versions');
-                    }
-
-
-
-
-
-
-
-                    
-                    // Comprobar si los datos de exploits han cambiado
-                    if (JSON.stringify(newExploits) !== JSON.stringify(allExploits)) {
-                        
-                        // Detectar exploits actualizados y mostrar notificación
-                        if (oldExploits.length > 0) {
-                            newExploits.forEach(newExploit => {
-                                const oldExploit = oldExploits.find(e => e.title === newExploit.title);
-                                if (oldExploit && oldExploit.updateStatus !== newExploit.updateStatus && newExploit.updateStatus) {
-                                    showFullscreenNotification(`Actualización de exploit: ${newExploit.title} ha sido actualizado.`);
-                                }
-                            });
-                        }
-allExploits = newExploits; // Ya vienen sin duplicados desde fetchData
-                        
-                        const activeFilterButton = document.querySelector('.tab-button.active');
-                        if (activeFilterButton) {
-                            filterExploits(activeFilterButton);
-                        } else {
-                            displayExploits(allExploits);
-                        }
-                    }
-
-                } catch (error) {
-                    
-                    updateStatusVersions.innerHTML = '<span class="status-pill error">Error de carga</span>';
-                    updateStatusExploits.innerHTML = '<span class="status-pill error">Error de carga</span>';
-                } finally {
-                    // CORRECCIÓN DEL BUG: Reiniciar los indicadores de carga sin depender de isUpdating
-                    updateStatusVersions.innerHTML = '';
-                    updateStatusExploits.innerHTML = '';
-                    isUpdating = false;
-                }
-            };
-            
-            // Función para filtrar los exploits y mantener el estado de la pestaña
-            const filterExploits = (button) => {
-                const filterBy = button.dataset.filterBy;
-                const filterValue = button.dataset.filterValue;
-                let filteredExploits = [];
-                
-                if (filterBy === 'all') {
-                    filteredExploits = allExploits;
-                } else if (filterBy === 'platform') {
-                    if (filterValue === 'Mobile') {
-                        filteredExploits = allExploits.filter(e => e.platform && (e.platform.toLowerCase() === 'android' || e.platform.toLowerCase() === 'ios'));
-                    } else {
-                        filteredExploits = allExploits.filter(e => e.platform && e.platform === filterValue);
-                    }
-                } else if (filterBy === 'cost') {
-                    const isFree = filterValue === 'free';
-                    filteredExploits = allExploits.filter(e => e.free === isFree);
-                } else if (filterBy === 'status') {
-                    // Lógica para la pestaña "No Detectado"
-                    if (filterValue === 'not-detected') {
-                         // Mostrar advertencia y luego filtrar los exploits externos no detectados
-                        
-                         setTimeout(() => {
-                            filteredExploits = allExploits.filter(e => (e.websitelink || e.discordlink) && !e.detected);
-                            displayExploits(filteredExploits);
-                         }, 3200); // Pequeño retraso para que el usuario vea la advertencia
-                         return;
-                    } else if (filterValue === 'detected') {
-  showWarningModal("TODOS LOS EXPLOITS DE PC, SON DETECTADOS USA CUENTAS RECIEN CREADAS", 3000);
-                        filteredExploits = allExploits.filter(e => e.detected);
-                    }
-                } else if (filterBy === 'external') {
-                    // La pestaña 'external' ahora funciona correctamente
-                    filteredExploits = allExploits.filter(e => e.websitelink || e.discordlink);
-                }
-
-                displayExploits(filteredExploits);
-            };
-
-            /**
-             * #4: Sistema de pestañas para filtrar exploits
-             */
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    filterExploits(button);
-                });
-            });
-
-            /**
-             * #5: Sistema de partículas con Canvas
-             * Crea un fondo de partículas animadas con efecto parallax.
-             */
-            const canvas = document.getElementById('particles-canvas');
-            const ctx = canvas.getContext('2d');
-            let mouse = { x: null, y: null };
-            let particlesArray = [];
-            const particleCount = 50;
-
+        window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            particlesArray = [];
+            initParticles();
+        });
 
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                particlesArray = [];
-                initParticles();
-            });
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
 
-            window.addEventListener('mousemove', (event) => {
-                mouse.x = event.x;
-                mouse.y = event.y;
-            });
-            
-            window.addEventListener('touchmove', (event) => {
-                mouse.x = event.touches[0].clientX;
-                mouse.y = event.touches[0].clientY;
-            });
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                this.color = Math.random() < 0.5 ? 'rgba(59, 130, 246, 0.6)' : 'rgba(220, 38, 38, 0.6)';
+                this.life = Math.random() * 200 + 100;
+                this.decay = Math.random() * 0.02 + 0.005;
+            }
 
-            class Particle {
-                constructor(x, y) {
-                    this.x = x;
-                    this.y = y;
-                    this.size = Math.random() * 5 + 1;
-                    this.speedX = Math.random() * 3 - 1.5;
-                    this.speedY = Math.random() * 3 - 1.5;
-                    this.color = Math.random() < 0.5 ? 'rgba(255,0,0,0.5)' : 'rgba(0,114,255,0.5)';
-                }
-
-                update() {
-                    // Efecto de paralaje
-                    if (mouse.x && mouse.y) {
-                        const dx = mouse.x - this.x;
-                        const dy = mouse.y - this.y;
-                        const distance = Math.sqrt(dx*dx + dy*dy);
-                        const forceDirectionX = dx / distance;
-                        const forceDirectionY = dy / distance;
-                        const maxDistance = 150;
-                        const force = (maxDistance - distance) / maxDistance;
-                        if (force > 0) {
-                            this.x -= forceDirectionX * force * 5;
-                            this.y -= forceDirectionY * force * 5;
-                        }
+            update() {
+                // Interacción con el mouse
+                if (mouse.x && mouse.y) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distance = Math.sqrt(dx*dx + dy*dy);
+                    if (distance < 100) {
+                        const force = (100 - distance) / 100;
+                        this.x -= dx * force * 0.02;
+                        this.y -= dy * force * 0.02;
                     }
-
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
-                    if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
                 }
 
-                draw() {
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= this.decay;
+
+                // Rebotar en los bordes
+                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+
+                // Regenerar partícula si muere
+                if (this.life <= 0) {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.life = Math.random() * 200 + 100;
                 }
             }
 
-            const initParticles = () => {
-                for (let i = 0; i < particleCount; i++) {
-                    const x = Math.random() * canvas.width;
-                    const y = Math.random() * canvas.height;
-                    particlesArray.push(new Particle(x, y));
+            draw() {
+                ctx.globalAlpha = this.life / 200;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Efecto de brillo
+                ctx.shadowColor = this.color;
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        const initParticles = () => {
+            for (let i = 0; i < particleCount; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                particlesArray.push(new Particle(x, y));
+            }
+        };
+
+        const animateParticles = () => {
+            requestAnimationFrame(animateParticles);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particlesArray.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+        };
+
+        // Inicializar sistema de partículas
+        initParticles();
+        animateParticles();
+
+        // Auto-cerrar anuncios (si es posible)
+        (function(){
+            const interval = setInterval(() => {
+                const closeBtn = document.querySelector("button.close, .close, .x, #close-button");
+                if (closeBtn) {
+                    closeBtn.click();
                 }
-            };
+            }, 100);
 
-            const animateParticles = () => {
-                requestAnimationFrame(animateParticles);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particlesArray.forEach(particle => {
-                    particle.update();
-                    particle.draw();
-                });
-            };
-
-            initParticles();
-            animateParticles();
-
-            // Carga inicial de datos
-            updateData();
-
-            // Establecer intervalo para la actualización automática cada 30 segundos
-           // Actualizar cada 20 minutos
-setInterval(updateData, 620000);
-
-
-
-
-// ===== FUNCIONES DE NAVEGACIÓN =====
-window.scrollToTop = () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-};
-
-window.scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-        const navbar = document.getElementById('navbar');
-        const navbarHeight = navbar ? navbar.offsetHeight : 70;
-        const elementPosition = element.offsetTop - navbarHeight - 20;
-        
-        window.scrollTo({
-            top: elementPosition,
-            behavior: 'smooth'
-        });
-        
-        // Actualizar link activo
-        updateActiveNavLink(sectionId);
-    }
-};
-
-window.toggleMobileMenu = () => {
-    const mobileMenu = document.getElementById('mobileMenu');
-    mobileMenu.classList.toggle('show');
-};
-
-window.closeMobileMenu = () => {
-    const mobileMenu = document.getElementById('mobileMenu');
-    mobileMenu.classList.remove('show');
-};
-
-const updateActiveNavLink = (activeSection) => {
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${activeSection}`) {
-            link.classList.add('active');
-        }
-    });
-};
-
-// Efecto de scroll para la navbar
-window.addEventListener('scroll', () => {
-    const navbar = document.getElementById('navbar');
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
-    
-    // Detectar sección activa
-    const sections = ['home', 'links', 'downloads','scripts', 'roblox-updates', 'exploits-status'];
-    const navbarHeight = navbar.offsetHeight;
-    
-    for (let i = sections.length - 1; i >= 0; i--) {
-        const section = document.getElementById(sections[i]);
-        if (section && window.scrollY >= section.offsetTop - navbarHeight - 100) {
-            updateActiveNavLink(sections[i]);
-            break;
-        }
-    }
-});
-
-// Cerrar menú móvil al hacer clic fuera
-document.addEventListener('click', (e) => {
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    
-    if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-        mobileMenu.classList.remove('show');
-    }
-});
-
-
-        });
-
-
+            setTimeout(() => clearInterval(interval), 30000);
+        })();
     </script>
-
-
-
-
-
-
-
-<script>
-(function(){
-    // Intervalo rápido para detectar el anuncio
-    const interval = setInterval(() => {
-        // Ajusta el selector según el botón de cierre que aparezca
-        const closeBtn = document.querySelector("button.close, .close, .x, #close-button");
-        if (closeBtn) {
-            closeBtn.click();
-            console.log("Anuncio cerrado automáticamente");
-        }
-    }, 100); // 0.1 segundos
-
-    // Opcional: detenerlo después de un tiempo si no quieres que quede siempre activo
-    setTimeout(() => clearInterval(interval), 30000); // 30s
-})();
-</script>
-
-
-
-
-
-
-
-
-
-
 </body>
 </html>
