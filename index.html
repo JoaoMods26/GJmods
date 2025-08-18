@@ -276,24 +276,7 @@
             }
         }
 
-        /* Animaciones de entrada */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1s ease forwards;
-        }
 
-        .fade-in-delay-1 { animation-delay: 0.2s; }
-        .fade-in-delay-2 { animation-delay: 0.4s; }
-        .fade-in-delay-3 { animation-delay: 0.6s; }
-        .fade-in-delay-4 { animation-delay: 0.8s; }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
     </style>
 </head>
 
@@ -303,14 +286,14 @@
 
     <div class="hero-container">
         <!-- Logo y título principal -->
-        <h1 class="main-logo fade-in">GJMODS</h1>
-        <p class="subtitle fade-in fade-in-delay-1">
+        <h1 class="main-logo">GJMODS</h1>
+        <p class="subtitle">
             La mejor comunidad de exploits y scripts para Roblox.<br>
             Descarga gratis, sin publicidad molesta, actualizaciones constantes.
         </p>
 
         <!-- Botones principales -->
-        <div class="main-buttons fade-in fade-in-delay-2">
+        <div class="main-buttons">
             <a href="exploits.html" class="main-btn btn-primary" id="exploits-btn">
                 🚀 Ver Exploits
             </a>
@@ -320,7 +303,7 @@
         </div>
 
         <!-- Características principales -->
-        <div class="features fade-in fade-in-delay-3">
+        <div class="features">
             <div class="feature-card">
                 <span class="feature-icon">🛡️</span>
                 <h3 class="feature-title">Totalmente Seguro</h3>
