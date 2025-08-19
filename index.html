@@ -55,6 +55,44 @@
             position: relative;
         }
 
+        /* Contenedor del título con anuncios laterales */
+        .title-with-ads {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 1rem;
+        }
+
+        /* Anuncios laterales */
+        .side-ad {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 10px;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .side-ad:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .side-ad-left {
+            left: -200px;
+        }
+
+        .side-ad-right {
+            right: -200px;
+        }
+
         /* Logo principal */
         .main-logo {
             font-size: clamp(3rem, 10vw, 6rem);
@@ -66,8 +104,9 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: logoGlow 8s ease-in-out infinite, textGradient 10s ease-in-out infinite;
-            margin-bottom: 1rem;
             text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+            z-index: 5;
+            position: relative;
         }
 
         @keyframes logoGlow {
@@ -170,21 +209,9 @@
             border-radius: 1rem;
             padding: 2rem;
             text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             position: relative;
             overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, var(--color-accent), transparent);
-            animation: rotate 20s linear infinite;
-            z-index: -1;
         }
 
         .feature-card::after {
@@ -196,14 +223,9 @@
             z-index: -1;
         }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
         .feature-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
         }
 
         .feature-icon {
@@ -226,7 +248,7 @@
             line-height: 1.5;
         }
 
-        /* Contenedor de anuncios */
+        /* Contenedor de anuncios normales */
         .ad-container {
             width: 90%;
             max-width: 800px;
@@ -239,6 +261,26 @@
         }
 
         /* Responsive */
+        @media (max-width: 1200px) {
+            .side-ad-left {
+                left: -180px;
+            }
+            
+            .side-ad-right {
+                right: -180px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .side-ad {
+                display: none;
+            }
+            
+            .title-with-ads {
+                justify-content: center;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero-container {
                 padding: 1rem;
@@ -261,11 +303,17 @@
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
-            
-            .social-links {
-                flex-direction: column;
-                align-items: center;
-                gap: 1rem;
+        }
+
+        /* Animación simple de entrada para los anuncios laterales */
+        .side-ad-left, .side-ad-right {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
             }
         }
     </style>
@@ -276,8 +324,40 @@
     <canvas id="particles-canvas"></canvas>
 
     <div class="hero-container">
-        <!-- Logo y título principal -->
-        <h1 class="main-logo">GJMODS</h1>
+        <!-- Logo con anuncios laterales -->
+        <div class="title-with-ads">
+            <!-- Anuncio lateral izquierdo (160x300) -->
+            <div class="side-ad side-ad-left">
+                <script type="text/javascript">
+                    atOptions = {
+                        'key' : 'ab51e186a04576460b84ebe553be82ea',
+                        'format' : 'iframe',
+                        'height' : 300,
+                        'width' : 160,
+                        'params' : {}
+                    };
+                </script>
+                <script type="text/javascript" src="//believableordinarygentlemen.com/ab51e186a04576460b84ebe553be82ea/invoke.js"></script>
+            </div>
+
+            <!-- Logo principal -->
+            <h1 class="main-logo">GJMODS</h1>
+
+            <!-- Anuncio lateral derecho (300x250) -->
+            <div class="side-ad side-ad-right">
+                <script type="text/javascript">
+                    atOptions = {
+                        'key' : 'aa4b552f34e750eee2a4f60ed72cc416',
+                        'format' : 'iframe',
+                        'height' : 250,
+                        'width' : 300,
+                        'params' : {}
+                    };
+                </script>
+                <script type="text/javascript" src="//believableordinarygentlemen.com/aa4b552f34e750eee2a4f60ed72cc416/invoke.js"></script>
+            </div>
+        </div>
+
         <p class="subtitle">
             La mejor comunidad de exploits y scripts para Roblox.<br>
             Descarga gratis, sin publicidad molesta, actualizaciones constantes.
@@ -371,7 +451,7 @@
             </div>
         </div>
 
-        <!-- TODOS LOS ANUNCIOS AL FINAL -->
+        <!-- ANUNCIOS RESTANTES AL FINAL -->
         <!-- ANUNCIO 1: 320x50 (móvil) -->
         <div class="ad-container">
             <script type="text/javascript">
@@ -418,34 +498,6 @@
         <div class="ad-container">
             <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
             <div id="container-4525df450d44613469633168ded413cf"></div>
-        </div>
-
-        <!-- ANUNCIO 5: 160x300 -->
-        <div class="ad-container">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : 'ab51e186a04576460b84ebe553be82ea',
-                    'format' : 'iframe',
-                    'height' : 300,
-                    'width' : 160,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//believableordinarygentlemen.com/ab51e186a04576460b84ebe553be82ea/invoke.js"></script>
-        </div>
-
-        <!-- ANUNCIO 6: 300x250 -->
-        <div class="ad-container">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : 'aa4b552f34e750eee2a4f60ed72cc416',
-                    'format' : 'iframe',
-                    'height' : 250,
-                    'width' : 300,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//believableordinarygentlemen.com/aa4b552f34e750eee2a4f60ed72cc416/invoke.js"></script>
         </div>
     </div>
 
