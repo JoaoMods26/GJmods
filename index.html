@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>joao_mods</title>
@@ -34,8 +32,6 @@
             overflow-x: hidden;
             min-height: 100vh;
         }
-
-
 
         /* Canvas para partículas */
         #particles-canvas {
@@ -230,8 +226,6 @@
             line-height: 1.5;
         }
 
-
-
         /* Contenedor de anuncios */
         .ad-container {
             width: 90%;
@@ -242,6 +236,15 @@
             background: transparent;
             border-radius: 10px;
             text-align: center;
+        }
+
+        /* Anuncios específicos */
+        .ad-mobile {
+            display: none;
+        }
+
+        .ad-desktop {
+            display: block;
         }
 
         /* Responsive */
@@ -273,9 +276,15 @@
                 align-items: center;
                 gap: 1rem;
             }
+
+            .ad-mobile {
+                display: block;
+            }
+
+            .ad-desktop {
+                display: none;
+            }
         }
-
-
     </style>
 </head>
 
@@ -291,6 +300,20 @@
             Descarga gratis, sin publicidad molesta, actualizaciones constantes.
         </p>
 
+        <!-- ANUNCIO 1: 320x50 (móvil) -->
+        <div class="ad-container ad-mobile">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '3673085df22687e59379948e6eb888d9',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//believableordinarygentlemen.com/3673085df22687e59379948e6eb888d9/invoke.js"></script>
+        </div>
+
         <!-- Botones principales -->
         <div class="main-buttons">
             <a href="exploits.html" class="main-btn btn-primary" id="exploits-btn">
@@ -299,9 +322,23 @@
             <a href="https://discord.gg/ZTVC94ZmVZ" target="_blank" class="main-btn btn-secondary">
                 💬 Discord
             </a>
-  <a href="https://www.youtube.com/@joao_mods0" target="_blank" class="main-btn btn-secondary">
+            <a href="https://www.youtube.com/@joao_mods0" target="_blank" class="main-btn btn-secondary">
                 Youtube
             </a>
+        </div>
+
+        <!-- ANUNCIO 2: 468x60 (desktop) -->
+        <div class="ad-container ad-desktop">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '8c3ca771c13fd8624f87fdec4e5b7d29',
+                    'format' : 'iframe',
+                    'height' : 60,
+                    'width' : 468,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//believableordinarygentlemen.com/8c3ca771c13fd8624f87fdec4e5b7d29/invoke.js"></script>
         </div>
 
         <!-- Características principales -->
@@ -328,6 +365,20 @@
                 <p class="feature-description">
                     Acceso gratuito a todos nuestros exploits, scripts y herramientas.
                 </p>
+            </div>
+
+            <!-- ANUNCIO 3: 728x90 (desktop grande) -->
+            <div class="ad-container ad-desktop" style="grid-column: 1 / -1; max-width: 100%;">
+                <script type="text/javascript">
+                    atOptions = {
+                        'key' : 'd1a9332ab68f936abaa310ff142b94ef',
+                        'format' : 'iframe',
+                        'height' : 90,
+                        'width' : 728,
+                        'params' : {}
+                    };
+                </script>
+                <script type="text/javascript" src="//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js"></script>
             </div>
 
             <div class="feature-card">
@@ -374,35 +425,33 @@
                 <span class="feature-icon">🔥</span>
                 <h3 class="feature-title">Exploits Premium</h3>
                 <p class="feature-description">
-                    Informacion de Exploits de pago y sitios oficiales.
+                    Información de Exploits de pago y sitios oficiales.
                 </p>
             </div>
         </div>
 
-    <!-- Contenedores de anuncios -->
-    <div class="ad-container">
-        <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
-        <div id="container-4525df450d44613469633168ded413cf"></div>
-    </div>
+        <!-- ANUNCIO 4: Primer anuncio del código original (script directo) -->
+        <div class="ad-container">
+            <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
+            <div id="container-4525df450d44613469633168ded413cf"></div>
+        </div>
 
-    <div class="ad-container">
-        <div id="container-believableordinary"></div>
+        <!-- ANUNCIO 5: Segundo anuncio adicional móvil -->
+        <div class="ad-container ad-mobile">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '3673085df22687e59379948e6eb888d9',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//believableordinarygentlemen.com/3673085df22687e59379948e6eb888d9/invoke.js"></script>
+        </div>
     </div>
 
     <script type="text/javascript">
-        // Configuración del segundo anuncio
-        atOptions = {
-            'key' : 'd1a9332ab68f936abaa310ff142b94ef',
-            'format' : 'iframe',
-            'height' : 90,
-            'width' : 728,
-            'params' : {}
-        };
-
-        var adScript2 = document.createElement('script');
-        adScript2.src = "//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js";
-        document.getElementById("container-believableordinary").appendChild(adScript2);
-
         // Event listener para el botón de exploits
         document.addEventListener('DOMContentLoaded', function() {
             const exploitsBtn = document.getElementById('exploits-btn');
@@ -525,15 +574,5 @@
             setTimeout(() => clearInterval(interval), 30000);
         })();
     </script>
-
-
-
-
-
-
-
-
-
-
 </body>
 </html>
