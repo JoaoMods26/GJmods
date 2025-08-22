@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
@@ -7,7 +6,7 @@
 <title>GJMODS - Buscador de Scripts</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet"/>
 <style>
         /* Variables CSS para consistencia */
         :root {
@@ -825,28 +824,22 @@
         const modalTitle = document.getElementById('modalTitle');
 
         // ====== Config API ScriptBlox ======
-const SCRIPTBLOX_BASE = 'https://scriptblox.com';
-const API_BASE = 'https://workers-playground-curly-unit-2502.joao-lokofrank.workers.dev/api';
-const SCRIPTS_PER_PAGE = 20;
-
-
-
-
-
+        const API_BASE = 'https://workers-playground-curly-unit-2502.joao-lokofrank.workers.dev/api';
+        const SCRIPTS_PER_PAGE = 20;
 
         // Cache para evitar demasiadas requests
         const apiCache = new Map();
         const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
-            // Utilidad: debounce
-function debounce(fn, delay = 500) {
-    let t;
-    return (...args) => {
-        clearTimeout(t);
-        t = setTimeout(() => fn.apply(null, args), delay);
-    };
-}
-const debouncedRefresh = debounce(refreshCurrentSearch, 500);
+        // Utilidad: debounce
+        function debounce(fn, delay = 500) {
+            let t;
+            return (...args) => {
+                clearTimeout(t);
+                t = setTimeout(() => fn.apply(null, args), delay);
+            };
+        }
+        const debouncedRefresh = debounce(refreshCurrentSearch, 500);
 
         // ====== Inicio ======
         document.addEventListener('DOMContentLoaded', () => {
@@ -913,6 +906,7 @@ const debouncedRefresh = debounce(refreshCurrentSearch, 500);
             const cached = getCachedData(cacheKey);
             
             if (cached) {
+                console.log('Using cached data for:', endpoint);
                 return cached;
             }
 
@@ -923,14 +917,22 @@ const debouncedRefresh = debounce(refreshCurrentSearch, 500);
                 }
             });
 
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
+            console.log('Making API request to:', url.toString());
 
-            const data = await response.json();
-            setCachedData(cacheKey, data);
-            return data;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('API response:', data);
+                setCachedData(cacheKey, data);
+                return data;
+            } catch (error) {
+                console.error('API request failed:', error);
+                throw error;
+            }
         }
 
         // ====== Acciones de búsqueda ======
@@ -956,9 +958,7 @@ const debouncedRefresh = debounce(refreshCurrentSearch, 500);
 
         async function fetchScripts() {
             showLoading(true);
-            resultsHeader.style.display = 'none';
-            noResults.style.display = 'none';
-            scriptsGrid.innerHTML = '';
+            hideAllResults();
 
             try {
                 const params = {
@@ -975,11 +975,10 @@ const debouncedRefresh = debounce(refreshCurrentSearch, 500);
 
                 const data = await apiRequest(`${API_BASE}/search`, params);
                 
-                // Extraer scripts de la respuesta
-                const result = data?.result || {};
-                const scripts = result?.scripts || [];
-                const total = result?.total || scripts.length;
-                const totalPagesFromAPI = result?.totalPages || Math.ceil(total / SCRIPTS_PER_PAGE);
+                // Procesar respuesta
+                const scripts = extractScripts(data);
+                const total = extractTotal(data, scripts);
+                const totalPagesFromAPI = Math.ceil(total / SCRIPTS_PER_PAGE);
                 
                 totalPages = Math.max(1, totalPagesFromAPI);
 
@@ -1009,34 +1008,26 @@ const debouncedRefresh = debounce(refreshCurrentSearch, 500);
             currentPage = 1;
 
             showLoading(true);
-            resultsHeader.style.display = 'none';
-            noResults.style.display = 'none';
-            scriptsGrid.innerHTML = '';
+            hideAllResults();
 
             try {
                 const params = {
                     page: currentPage,
-                    max: SCRIPTS_PER_PAGE
+                    max: SCRIPTS_PER_PAGE,
+                    sortBy: currentSort,
+                    order: currentOrder
                 };
-
-                if (currentSort !== 'updated') {
-                    params.sortBy = currentSort;
-                    params.order = currentOrder;
-                }
 
                 if (currentVerified === 'true') {
                     params.verified = 1;
                 }
 
-                const data = await apiRequest(`${API_BASE}/scripts`, { 
-    ...params, 
-    isTrending: true 
-});
+                const data = await apiRequest(`${API_BASE}/scripts`, params);
                 
-                // Para trending, los scripts pueden estar directamente en result o en result.scripts
-                const scripts = data?.result?.scripts || data?.result || [];
-                const total = data?.result?.total || scripts.length;
-                const totalPagesFromAPI = data?.result?.totalPages || Math.ceil(total / SCRIPTS_PER_PAGE);
+                // Procesar respuesta
+                const scripts = extractScripts(data);
+                const total = extractTotal(data, scripts);
+                const totalPagesFromAPI = Math.ceil(total / SCRIPTS_PER_PAGE);
                 
                 totalPages = Math.max(1, totalPagesFromAPI);
 
@@ -1059,6 +1050,29 @@ const debouncedRefresh = debounce(refreshCurrentSearch, 500);
             }
         }
 
+        // ====== Procesamiento de datos ======
+        function extractScripts(data) {
+            // Intentar diferentes estructuras de respuesta
+            if (data?.result?.scripts) return data.result.scripts;
+            if (data?.result && Array.isArray(data.result)) return data.result;
+            if (data?.scripts) return data.scripts;
+            if (Array.isArray(data)) return data;
+            return [];
+        }
+
+        function extractTotal(data, scripts) {
+            if (data?.result?.total) return data.result.total;
+            if (data?.total) return data.total;
+            return scripts.length;
+        }
+
+        function hideAllResults() {
+            resultsHeader.style.display = 'none';
+            noResults.style.display = 'none';
+            scriptsGrid.innerHTML = '';
+            pagination.style.display = 'none';
+        }
+
         // ====== Render ======
         function renderScripts(scripts) {
             scriptsGrid.innerHTML = scripts.map((script) => {
@@ -1076,7 +1090,7 @@ const debouncedRefresh = debounce(refreshCurrentSearch, 500);
                 // Tags del script
                 const tags = [];
                 if (isVerified) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #10b981, #059669);">✅ Verificado</span>');
-                if (isUniversal) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);">🌐 Universal</span>');
+                if (isUniversal) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);">🌍 Universal</span>');
                 if (isKeySystem) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">🔑 Key System</span>');
                 if (isPatched) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #ef4444, #dc2626);">⚠️ Parcheado</span>');
                 if (views > 0) tags.push(`<span class="script-tag">👁️ ${Number(views).toLocaleString()}</span>`);
@@ -1188,28 +1202,31 @@ const debouncedRefresh = debounce(refreshCurrentSearch, 500);
             try {
                 showNotification('Obteniendo script...', 'success');
                 
-                const data = await apiRequestRaw(`${API_BASE}/raw/${slug}`);
-                let scriptContent = '';
+                // Intentar primero el endpoint raw
+                const response = await fetch(`${API_BASE}/raw/${slug}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
 
-                // La API raw puede devolver directamente el texto o en una estructura
-                if (typeof data === 'string') {
-                    scriptContent = data;
-                } else if (data?.script) {
-                    scriptContent = data.script;
-                } else if (data?.result) {
-                    scriptContent = data.result;
+                let scriptContent = '';
+                const contentType = response.headers.get('Content-Type') || '';
+                
+                if (contentType.includes('application/json')) {
+                    const data = await response.json();
+                    scriptContent = data?.script || data?.result || data || '';
                 } else {
-                    // Fallback: intentar obtener desde el endpoint normal
+                    scriptContent = await response.text();
+                }
+
+                // Si no hay contenido, intentar el endpoint normal
+                if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined') {
                     const fallbackData = await apiRequest(`${API_BASE}/${slug}`);
                     const fallbackScript = fallbackData?.script || fallbackData?.result || {};
                     scriptContent = fallbackScript.script || fallbackScript.content || '';
                 }
 
-
-
-
-
-                if (!scriptContent) {
+                if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined') {
                     showNotification('Este script no tiene contenido disponible', 'error');
                     return;
                 }
@@ -1222,29 +1239,6 @@ const debouncedRefresh = debounce(refreshCurrentSearch, 500);
                 showNotification('Error al copiar el script', 'error');
             }
         }
-
-
-// ====== API RAW ======
-async function apiRequestRaw(url) {
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-
-    // El endpoint /raw devuelve texto plano, no JSON
-    const text = await response.text();
-
-    // Intentar parsear si parece JSON
-    try {
-        return JSON.parse(text);
-    } catch {
-        return text; // devolver como string si no es JSON
-    }
-}
-
-
-
-
 
         function closeModal() { 
             scriptModal.classList.remove('show'); 
