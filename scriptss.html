@@ -747,20 +747,20 @@
 
                 <div class="filters-container">
                     <select class="filter-select" id="sortFilter">
-                        <option value="date">Ordenar por fecha</option>
-                        <option value="views">Ordenar por vistas</option>
-                        <option value="title">Ordenar por título</option>
+                        <option value="updated">Más recientes</option>
+                        <option value="created">Fecha de creación</option>
+                        <option value="views">Más vistos</option>
+                        <option value="title">Por título</option>
                     </select>
 
-                    <select class="filter-select" id="modeFilter">
-                        <option value="">Todos los modos</option>
-                        <option value="free">Solo gratuitos</option>
-                        <option value="paid">Solo de pago</option>
+                    <select class="filter-select" id="orderFilter">
+                        <option value="desc">Descendente</option>
+                        <option value="asc">Ascendente</option>
                     </select>
 
                     <select class="filter-select" id="verifiedFilter">
                         <option value="">Todos</option>
-                        <option value="verified">Solo verificados</option>
+                        <option value="true">Solo verificados</option>
                     </select>
 
                     <button class="search-btn" onclick="clearSearch()" style="background: linear-gradient(45deg, #6c757d, #495057);">
@@ -822,8 +822,8 @@
         // ====== Estado global ======
         let currentPage = 1;
         let currentQuery = '';
-        let currentSort = 'date';
-        let currentMode = '';
+        let currentSort = 'updated';
+        let currentOrder = 'desc';
         let currentVerified = '';
         let totalPages = 1;
         let isShowingTrending = true;
@@ -832,7 +832,7 @@
         const searchForm = document.getElementById('searchForm');
         const searchInput = document.getElementById('searchInput');
         const sortFilter = document.getElementById('sortFilter');
-        const modeFilter = document.getElementById('modeFilter');
+        const orderFilter = document.getElementById('orderFilter');
         const verifiedFilter = document.getElementById('verifiedFilter');
         const scriptsGrid = document.getElementById('scriptsGrid');
         const loadingState = document.getElementById('loadingState');
@@ -846,10 +846,13 @@
         const modalTitle = document.getElementById('modalTitle');
 
         // ====== Config API ScriptBlox ======
-        const SCRIPTBLOX_API_SEARCH = 'https://scriptblox.com/api/script/search';
-        const SCRIPTBLOX_API_TRENDING = 'https://scriptblox.com/api/script/trending';
-        const SCRIPTBLOX_API_GET = 'https://scriptblox.com/api/script';
+        const SCRIPTBLOX_BASE = 'https://scriptblox.com';
+        const API_BASE = `${SCRIPTBLOX_BASE}/api/script`;
         const SCRIPTS_PER_PAGE = 20;
+
+        // Cache para evitar demasiadas requests
+        const apiCache = new Map();
+        const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
         // ====== Inicio ======
         document.addEventListener('DOMContentLoaded', () => {
@@ -860,28 +863,101 @@
 
         function setupEventListeners() {
             searchForm.addEventListener('submit', handleSearch);
-            sortFilter.addEventListener('change', () => { currentSort = sortFilter.value; isShowingTrending ? loadTrendingScripts() : fetchScripts(); });
-            modeFilter.addEventListener('change', () => { currentMode = modeFilter.value; isShowingTrending ? loadTrendingScripts() : fetchScripts(); });
-            verifiedFilter.addEventListener('change', () => { currentVerified = verifiedFilter.value; isShowingTrending ? loadTrendingScripts() : fetchScripts(); });
+            sortFilter.addEventListener('change', () => { 
+                currentSort = sortFilter.value; 
+                refreshCurrentSearch(); 
+            });
+            orderFilter.addEventListener('change', () => { 
+                currentOrder = orderFilter.value; 
+                refreshCurrentSearch(); 
+            });
+            verifiedFilter.addEventListener('change', () => { 
+                currentVerified = verifiedFilter.value; 
+                refreshCurrentSearch(); 
+            });
 
             // Cerrar modal clic afuera
-            scriptModal.addEventListener('click', (e) => { if (e.target === scriptModal) closeModal(); });
+            scriptModal.addEventListener('click', (e) => { 
+                if (e.target === scriptModal) closeModal(); 
+            });
+            
             // ESC para cerrar modal
-            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && scriptModal.classList.contains('show')) closeModal(); });
+            document.addEventListener('keydown', (e) => { 
+                if (e.key === 'Escape' && scriptModal.classList.contains('show')) closeModal(); 
+            });
+            
             // Efecto scroll navbar
             window.addEventListener('scroll', () => {
                 const navbar = document.getElementById('navbar');
-                if (window.scrollY > 50) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+                if (window.scrollY > 50) navbar.classList.add('scrolled'); 
+                else navbar.classList.remove('scrolled');
             });
+        }
+
+        // ====== Utilidades de Cache y API ======
+        function getCacheKey(endpoint, params = {}) {
+            return `${endpoint}?${new URLSearchParams(params).toString()}`;
+        }
+
+        function getCachedData(key) {
+            const cached = apiCache.get(key);
+            if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+                return cached.data;
+            }
+            return null;
+        }
+
+        function setCachedData(key, data) {
+            apiCache.set(key, {
+                data,
+                timestamp: Date.now()
+            });
+        }
+
+        async function apiRequest(endpoint, params = {}) {
+            const cacheKey = getCacheKey(endpoint, params);
+            const cached = getCachedData(cacheKey);
+            
+            if (cached) {
+                return cached;
+            }
+
+            const url = new URL(endpoint);
+            Object.entries(params).forEach(([key, value]) => {
+                if (value !== '' && value !== null && value !== undefined) {
+                    url.searchParams.set(key, value);
+                }
+            });
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            setCachedData(cacheKey, data);
+            return data;
         }
 
         // ====== Acciones de búsqueda ======
         async function handleSearch(e) {
             e.preventDefault();
             currentQuery = searchInput.value.trim();
+            if (!currentQuery) {
+                showNotification('Por favor ingresa un término de búsqueda', 'error');
+                return;
+            }
             currentPage = 1;
             isShowingTrending = false;
             await fetchScripts();
+        }
+
+        function refreshCurrentSearch() {
+            if (isShowingTrending) {
+                loadTrendingScripts();
+            } else {
+                fetchScripts();
+            }
         }
 
         async function fetchScripts() {
@@ -890,20 +966,31 @@
             noResults.style.display = 'none';
             scriptsGrid.innerHTML = '';
 
-            // Construir URL de búsqueda
-            let url = `${SCRIPTBLOX_API_SEARCH}?q=${encodeURIComponent(currentQuery || '')}&page=${currentPage}&sort=${encodeURIComponent(currentSort)}`;
-            if (currentMode) url += `&mode=${encodeURIComponent(currentMode)}`;
-            if (currentVerified) url += `&verified=true`;
-
             try {
-                const res = await fetch(url);
-                const data = await res.json();
+                const params = {
+                    q: currentQuery,
+                    page: currentPage,
+                    max: SCRIPTS_PER_PAGE,
+                    sortBy: currentSort,
+                    order: currentOrder
+                };
 
-                const scripts = (data?.result?.scripts) || (data?.result?.data) || (Array.isArray(data?.result) ? data.result : (data?.scripts || []));
-                const total = data?.result?.total ?? data?.total ?? scripts.length;
-                totalPages = data?.result?.totalPages ?? data?.totalPages ?? Math.max(1, Math.ceil(total / SCRIPTS_PER_PAGE));
+                if (currentVerified === 'true') {
+                    params.verified = true;
+                }
+
+                const data = await apiRequest(`${API_BASE}/search`, params);
+                
+                // Extraer scripts de la respuesta
+                const result = data?.result || {};
+                const scripts = result?.scripts || [];
+                const total = result?.total || scripts.length;
+                const totalPagesFromAPI = result?.totalPages || Math.ceil(total / SCRIPTS_PER_PAGE);
+                
+                totalPages = Math.max(1, totalPagesFromAPI);
 
                 showLoading(false);
+                
                 if (!scripts || scripts.length === 0) {
                     showNoResults();
                     return;
@@ -912,10 +999,12 @@
                 renderScripts(scripts);
                 updateHeader(total, currentPage, totalPages);
                 renderPagination(totalPages);
+                
             } catch (err) {
-                console.error(err);
+                console.error('Error fetching scripts:', err);
                 showLoading(false);
-                showNoResults('Error consultando la API');
+                showNoResults('Error al consultar la API. Intenta de nuevo en unos momentos.');
+                showNotification('Error de conexión con la API', 'error');
             }
         }
 
@@ -929,57 +1018,86 @@
             resultsHeader.style.display = 'none';
             noResults.style.display = 'none';
             scriptsGrid.innerHTML = '';
+
             try {
-                const res = await fetch(`${SCRIPTBLOX_API_TRENDING}?page=${currentPage}`);
-                const data = await res.json();
-                const scripts = (Array.isArray(data?.result) ? data.result : (data?.result?.scripts || data?.scripts || []));
-                totalPages = data?.result?.totalPages ?? data?.totalPages ?? 1;
+                const params = {
+                    page: currentPage,
+                    max: SCRIPTS_PER_PAGE
+                };
+
+                if (currentSort !== 'updated') {
+                    params.sortBy = currentSort;
+                    params.order = currentOrder;
+                }
+
+                if (currentVerified === 'true') {
+                    params.verified = true;
+                }
+
+                const data = await apiRequest(`${API_BASE}/trending`, params);
+                
+                // Para trending, los scripts pueden estar directamente en result o en result.scripts
+                const scripts = data?.result?.scripts || data?.result || [];
+                const total = data?.result?.total || scripts.length;
+                const totalPagesFromAPI = data?.result?.totalPages || Math.ceil(total / SCRIPTS_PER_PAGE);
+                
+                totalPages = Math.max(1, totalPagesFromAPI);
 
                 showLoading(false);
+                
                 if (!scripts || scripts.length === 0) {
-                    showNoResults();
+                    showNoResults('No hay scripts trending disponibles');
                     return;
                 }
 
                 renderScripts(scripts);
-                updateHeader(scripts.length, 1, totalPages);
+                updateHeader(total, currentPage, totalPages);
                 renderPagination(totalPages);
+                
             } catch (err) {
-                console.error(err);
+                console.error('Error loading trending:', err);
                 showLoading(false);
-                showNoResults('Error cargando trending');
+                showNoResults('Error al cargar scripts trending');
+                showNotification('Error cargando trending scripts', 'error');
             }
         }
 
         // ====== Render ======
         function renderScripts(scripts) {
-            scriptsGrid.innerHTML = scripts.map((s) => {
-                const id = s._id || s.id || s.slug || '';
-                const title = sanitize(s.title || s.scriptTitle || 'Script');
-                const gameName = sanitize((s.game && (s.game.name || s.game.title)) || s.game_name || 'Juego');
-                const desc = sanitize(s.description || s.desc || 'Sin descripción');
-                const isVerified = !!(s.verified || s.isVerified);
-                const mode = (s.mode || s.type || '').toString().toLowerCase(); // free | paid
-                const views = s.views || s.totalViews || 0;
-                const scriptContent = s.script || s.content || '';
+            scriptsGrid.innerHTML = scripts.map((script) => {
+                const slug = script.slug || script._id || script.id || '';
+                const title = sanitize(script.title || 'Script sin título');
+                const gameName = sanitize(script.game?.name || script.gameName || 'Juego desconocido');
+                const description = sanitize(script.description || 'Sin descripción disponible');
+                const isVerified = script.isVerified || script.verified || false;
+                const views = script.views || 0;
+                const likes = script.likes || 0;
+                const isPatched = script.isPatched || script.patched || false;
+                const isUniversal = script.isUniversal || script.universal || false;
+                const isKeySystem = script.isKeySystem || script.key || false;
 
-                const tags = [
-                    isVerified ? '<span class="script-tag">✅ Verificado</span>' : '',
-                    mode === 'paid' ? '<span class="script-tag">💎 Pago</span>' : (mode === 'free' ? '<span class="script-tag">🆓 Gratis</span>' : ''),
-                    views ? `<span class="script-tag">👁️ ${Number(views).toLocaleString()} vistas</span>` : ''
-                ].filter(Boolean).join('');
+                // Tags del script
+                const tags = [];
+                if (isVerified) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #10b981, #059669);">✅ Verificado</span>');
+                if (isUniversal) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);">🌐 Universal</span>');
+                if (isKeySystem) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">🔑 Key System</span>');
+                if (isPatched) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #ef4444, #dc2626);">⚠️ Parcheado</span>');
+                if (views > 0) tags.push(`<span class="script-tag">👁️ ${Number(views).toLocaleString()}</span>`);
+                if (likes > 0) tags.push(`<span class="script-tag">❤️ ${Number(likes).toLocaleString()}</span>`);
+
+                const tagsHtml = tags.join('');
 
                 return `
-                <div class="script-card">
+                <div class="script-card" data-slug="${slug}">
                     <div class="script-header">
                         <h3 class="script-title">${title}</h3>
                         <span class="script-game">${gameName}</span>
                     </div>
-                    <div class="script-tags">${tags}</div>
-                    <p class="script-description">${desc}</p>
+                    <div class="script-tags">${tagsHtml}</div>
+                    <p class="script-description">${description}</p>
                     <div class="script-actions">
-                        <button class="copy-btn" onclick="copyScript(${JSON.stringify(scriptContent)})">Copiar</button>
-                        <button class="view-btn" onclick="viewScript('${id}')">Ver</button>
+                        <button class="copy-btn" onclick="copyScriptBySlug('${slug}')">Copiar</button>
+                        <button class="view-btn" onclick="viewScript('${slug}')">Ver Script</button>
                     </div>
                 </div>`;
             }).join('');
@@ -1004,53 +1122,116 @@
                 btn.className = 'page-btn' + (active ? ' active' : '');
                 btn.textContent = label;
                 if (disabled) btn.disabled = true;
-                btn.addEventListener('click', () => goToPage(page));
+                else btn.addEventListener('click', () => goToPage(page));
                 pagination.appendChild(btn);
             };
 
+            // Botón anterior
             addBtn('« Anterior', Math.max(1, currentPage - 1), currentPage === 1);
+
+            // Páginas numéricas
             const start = Math.max(1, currentPage - 2);
             const end = Math.min(totalPagesLocal, start + 4);
-            for (let p = start; p <= end; p++) addBtn(String(p), p, false, p === currentPage);
+            
+            for (let p = start; p <= end; p++) {
+                addBtn(String(p), p, false, p === currentPage);
+            }
+
+            // Botón siguiente
             addBtn('Siguiente »', Math.min(totalPagesLocal, currentPage + 1), currentPage === totalPagesLocal);
         }
 
-        function goToPage(p) {
-            if (p === currentPage) return;
-            currentPage = p;
-            isShowingTrending ? loadTrendingScripts() : fetchScripts();
+        function goToPage(page) {
+            if (page === currentPage || page < 1 || page > totalPages) return;
+            currentPage = page;
+            refreshCurrentSearch();
         }
 
         // ====== Modal y copia ======
-        async function viewScript(id) {
-            if (!id) return showNotification('ID de script no válido', 'error');
+        async function viewScript(slug) {
+            if (!slug) {
+                showNotification('ID de script no válido', 'error');
+                return;
+            }
+
             try {
-                const res = await fetch(`${SCRIPTBLOX_API_GET}/${id}`);
-                const data = await res.json();
-                const result = data?.result || data?.data || {};
-                const title = result.title || result.scriptTitle || 'Vista previa del script';
-                const code = result.script || result.content || 'Sin contenido';
-                modalTitle.textContent = title;
-                modalCode.textContent = code;
+                modalTitle.textContent = 'Cargando...';
+                modalCode.textContent = 'Obteniendo contenido del script...';
                 scriptModal.classList.add('show');
-            } catch (e) {
-                console.error(e);
+
+                const data = await apiRequest(`${API_BASE}/${slug}`);
+                const script = data?.script || data?.result || {};
+                
+                const title = script.title || 'Script sin título';
+                const scriptContent = script.script || script.content || '';
+
+                modalTitle.textContent = title;
+                
+                if (!scriptContent) {
+                    modalCode.textContent = 'Este script no tiene contenido disponible para vista previa.';
+                    showNotification('Script sin contenido disponible', 'error');
+                } else {
+                    modalCode.textContent = scriptContent;
+                }
+                
+            } catch (err) {
+                console.error('Error viewing script:', err);
+                modalTitle.textContent = 'Error';
+                modalCode.textContent = 'Error al cargar el script. Intenta de nuevo.';
                 showNotification('Error al cargar el script', 'error');
             }
         }
 
-        function closeModal() { scriptModal.classList.remove('show'); }
+        async function copyScriptBySlug(slug) {
+            if (!slug) {
+                showNotification('ID de script no válido', 'error');
+                return;
+            }
 
-        function copyScript(code) {
-            const text = typeof code === 'string' ? code : '';
-            if (!text) return showNotification('Este resultado no contiene el código en la lista. Usa "Ver".', 'error');
-            copyToClipboard(text);
-            showNotification('Script copiado al portapapeles', 'success');
+            try {
+                showNotification('Obteniendo script...', 'success');
+                
+                const data = await apiRequest(`${API_BASE}/raw/${slug}`);
+                let scriptContent = '';
+
+                // La API raw puede devolver directamente el texto o en una estructura
+                if (typeof data === 'string') {
+                    scriptContent = data;
+                } else if (data?.script) {
+                    scriptContent = data.script;
+                } else if (data?.result) {
+                    scriptContent = data.result;
+                } else {
+                    // Fallback: intentar obtener desde el endpoint normal
+                    const fallbackData = await apiRequest(`${API_BASE}/${slug}`);
+                    const fallbackScript = fallbackData?.script || fallbackData?.result || {};
+                    scriptContent = fallbackScript.script || fallbackScript.content || '';
+                }
+
+                if (!scriptContent) {
+                    showNotification('Este script no tiene contenido disponible', 'error');
+                    return;
+                }
+
+                copyToClipboard(scriptContent);
+                showNotification('Script copiado al portapapeles', 'success');
+                
+            } catch (err) {
+                console.error('Error copying script:', err);
+                showNotification('Error al copiar el script', 'error');
+            }
+        }
+
+        function closeModal() { 
+            scriptModal.classList.remove('show'); 
         }
 
         function copyModalScript() {
             const text = modalCode.textContent || '';
-            if (!text) return showNotification('Nada para copiar', 'error');
+            if (!text || text.includes('Error') || text.includes('Cargando') || text.includes('no tiene contenido')) {
+                showNotification('Nada válido para copiar', 'error');
+                return;
+            }
             copyToClipboard(text);
             showNotification('Script copiado desde la vista previa', 'success');
         }
@@ -1064,104 +1245,137 @@
         }
 
         function fallbackCopy(text) {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.position = 'fixed';
-            ta.style.left = '-9999px';
-            document.body.appendChild(ta);
-            ta.focus();
-            ta.select();
-            try { document.execCommand('copy'); } catch (_) {}
-            document.body.removeChild(ta);
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try { 
+                document.execCommand('copy'); 
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+            }
+            document.body.removeChild(textarea);
         }
 
         // ====== Utilidades UI ======
         function sanitize(str) {
-            return String(str).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+            return String(str).replace(/[&<>"']/g, (char) => {
+                const entities = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                };
+                return entities[char];
+            });
         }
 
         function showLoading(show) {
             loadingState.style.display = show ? 'block' : 'none';
         }
 
-        function showNoResults(msg) {
-            noResults.querySelector('p').textContent = msg || 'No se encontraron scripts para tu búsqueda. Intenta con otros términos.';
+        function showNoResults(message) {
+            const defaultMessage = 'No se encontraron scripts para tu búsqueda. Intenta con otros términos.';
+            noResults.querySelector('p').textContent = message || defaultMessage;
             noResults.style.display = 'block';
             resultsHeader.style.display = 'none';
+            pagination.style.display = 'none';
         }
 
         function clearSearch() {
             searchInput.value = '';
             currentQuery = '';
-            currentSort = 'date';
-            currentMode = '';
+            currentSort = 'updated';
+            currentOrder = 'desc';
             currentVerified = '';
-            sortFilter.value = 'date';
-            modeFilter.value = '';
+            sortFilter.value = 'updated';
+            orderFilter.value = 'desc';
             verifiedFilter.value = '';
             currentPage = 1;
             loadTrendingScripts();
         }
 
         function showNotification(text, type = 'success') {
-            const n = document.createElement('div');
-            n.className = `notification ${type}`;
-            n.textContent = text;
-            document.body.appendChild(n);
-            requestAnimationFrame(() => n.classList.add('show'));
-            setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 300); }, 2500);
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = text;
+            document.body.appendChild(notification);
+            
+            requestAnimationFrame(() => {
+                notification.classList.add('show');
+            });
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 3000);
         }
 
         // ====== Partículas de fondo ======
         function initializeParticles() {
             const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
-            let w, h, particles;
+            let width, height, particles;
 
-            function resize() {
-                w = canvas.width = window.innerWidth;
-                h = canvas.height = window.innerHeight;
-                particles = Array.from({ length: Math.min(120, Math.floor(w * h / 12000)) }, () => makeParticle());
+            function resizeCanvas() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                const particleCount = Math.min(120, Math.floor(width * height / 12000));
+                particles = Array.from({ length: particleCount }, createParticle);
             }
 
-            function makeParticle() {
+            function createParticle() {
                 return {
-                    x: Math.random() * w,
-                    y: Math.random() * h,
+                    x: Math.random() * width,
+                    y: Math.random() * height,
                     vx: (Math.random() - 0.5) * 0.5,
                     vy: (Math.random() - 0.5) * 0.5,
-                    r: Math.random() * 1.5 + 0.3,
+                    radius: Math.random() * 1.5 + 0.3,
                 };
             }
 
-            function step() {
-                ctx.clearRect(0, 0, w, h);
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
                 ctx.globalAlpha = 0.8;
-                particles.forEach(p => {
-                    p.x += p.vx; p.y += p.vy;
-                    if (p.x < 0 || p.x > w) p.vx *= -1;
-                    if (p.y < 0 || p.y > h) p.vy *= -1;
+                
+                particles.forEach(particle => {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    
+                    if (particle.x < 0 || particle.x > width) particle.vx *= -1;
+                    if (particle.y < 0 || particle.y > height) particle.vy *= -1;
+                    
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
                     ctx.fillStyle = 'rgba(59,130,246,0.15)';
                     ctx.fill();
                 });
-                requestAnimationFrame(step);
+                
+                requestAnimationFrame(animate);
             }
 
-            window.addEventListener('resize', resize);
-            resize();
-            step();
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            animate();
         }
 
-        // Exponer funciones usadas en HTML inline
+        // Exponer funciones globales
         window.viewScript = viewScript;
-        window.copyScript = copyScript;
+        window.copyScriptBySlug = copyScriptBySlug;
         window.copyModalScript = copyModalScript;
         window.closeModal = closeModal;
         window.clearSearch = clearSearch;
         window.loadTrendingScripts = loadTrendingScripts;
         window.goToPage = goToPage;
+
     </script>
 </body>
 </html>
