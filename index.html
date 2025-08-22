@@ -363,6 +363,9 @@
             <a href="https://www.youtube.com/@joao_mods0" target="_blank" class="main-btn btn-secondary">
                 Youtube
             </a>
+            <a href="scripts.html" class="main-btn btn-primary" id="scripts-btn">
+                Scripts
+            </a>
         </div>
 
         <!-- Características principales -->
@@ -497,6 +500,16 @@
             exploitsBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 window.location.href = "exploits.html";
+            });
+        });
+
+    <script type="text/javascript">
+        // Event listener para el botón de exploits
+        document.addEventListener('DOMContentLoaded', function() {
+            const scriptsBtn = document.getElementById('scripts-btn');
+            scriptsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = "scripts.html";
             });
         });
 
