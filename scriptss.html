@@ -1103,31 +1103,35 @@
         }
 
         // ====== Render ======
-        function renderScripts(scripts) {
-            scriptsGrid.innerHTML = scripts.map((script) => {
-                const slug = script.slug || script._id || script.id || '';
-                const title = sanitize(script.title || 'Script sin título');
-                const gameName = sanitize(script.game?.name || script.gameName || 'Juego desconocido');
-                const description = sanitize(script.description || 'Sin descripción disponible');
-                const isVerified = script.verified || script.isVerified || false;
-                const views = script.views || 0;
-                const likes = script.likes || 0;
-                const isPatched = script.patched || script.isPatched || false;
-                const isUniversal = script.universal || script.isUniversal || false;
-                const isKeySystem = script.key || script.isKeySystem || script.keySystem || false;
-                const scriptType = script.scriptType || script.mode || 'free';
+function renderScripts(scripts) {
+    scriptsGrid.innerHTML = scripts.map((script) => {
+        const slug = script.slug || script._id || script.id || '';
+        const title = sanitize(script.title || 'Script sin título');
+        const gameName = sanitize(script.game?.name || script.gameName || 'Juego desconocido');
+        const description = sanitize(script.description || 'Sin descripción disponible');
+        const isVerified = script.verified || script.isVerified || false;
+        const views = script.views || 0;
+        const likes = script.likes || 0;
+        const isPatched = script.patched || script.isPatched || false;
+        const isUniversal = script.universal || script.isUniversal || false;
+        const isKeySystem = script.key || script.isKeySystem || script.keySystem || false;
+        const scriptType = script.scriptType || script.mode || 'free';
 
-                // Tags del script
-                const tags = [];
-                if (isVerified) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #10b981, #059669);">✅ Verificado</span>');
-                if (isUniversal) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);">🌍 Universal</span>');
-                if (isKeySystem) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">🔑 Key System</span>');
-                if (isPatched) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #ef4444, #dc2626);">⚠️ Parcheado</span>');
-                if (scriptType === 'paid') tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">💰 Premium</span>');
-                if (views > 0) tags.push(`<span class="script-tag">👁️ ${Number(views).toLocaleString()}</span>`);
-                if (likes > 0) tags.push(`<span class="script-tag">❤️ ${Number(likes).toLocaleString()}</span>`);
+        // Tags del script
+        const tags = [];
+        if (isVerified) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #10b981, #059669);">✅ Verificado</span>');
+        if (isUniversal) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);">🌍 Universal</span>');
+        if (isKeySystem) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">🔑 Key System</span>');
+        if (isPatched) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #ef4444, #dc2626);">⚠️ Parcheado</span>');
+        if (scriptType === 'paid') tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">💰 Premium</span>');
+        if (views > 0) tags.push(`<span class="script-tag">👁️ ${Number(views).toLocaleString()}</span>`);
+        if (likes > 0) tags.push(`<span class="script-tag">❤️ ${Number(likes).toLocaleString()}</span>`);
 
-                const tagsHtml = tags.join('');
+        // 🔹 Nuevo tag de fuente
+        const sourceTag = `<span class="script-tag" style="background: linear-gradient(45deg, #2563eb, #1d4ed8);">🌐 ${script.source || "desconocido"}</span>`;
+
+        const tagsHtml = tags.join('') + sourceTag;
+
 
                 return `
                 <div class="script-card" data-slug="${slug}">
