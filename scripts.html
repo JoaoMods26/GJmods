@@ -862,18 +862,20 @@
         });
 
         function setupEventListeners() {
+            const refreshDebounced = debounce(refreshCurrentSearch, 500);
+    
             searchForm.addEventListener('submit', handleSearch);
             sortFilter.addEventListener('change', () => { 
                 currentSort = sortFilter.value; 
-                refreshCurrentSearch(); 
+                refreshDebounced(); 
             });
             orderFilter.addEventListener('change', () => { 
                 currentOrder = orderFilter.value; 
-                refreshCurrentSearch(); 
+                refreshDebounced(); 
             });
             verifiedFilter.addEventListener('change', () => { 
                 currentVerified = verifiedFilter.value; 
-                refreshCurrentSearch(); 
+                refreshDebounced(); 
             });
 
             // Cerrar modal clic afuera
@@ -895,6 +897,21 @@
         }
 
         // ====== Utilidades de Cache y API ======
+        // ====== Anti-spam y control de peticiones ======
+        const MIN_INTERVAL = 800; // ms entre peticiones reales para evitar rate-limit/baneos
+        let lastRequestTime = 0;
+        let activeController = null;
+        let lastFetchKey = '';
+        function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+        function debounce(fn, delay = 450) {
+            let t;
+            return (...args) => {
+                clearTimeout(t);
+                t = setTimeout(() => fn(...args), delay);
+            };
+        }
+
         function getCacheKey(endpoint, params = {}) {
             return `${endpoint}?${new URLSearchParams(params).toString()}`;
         }
@@ -929,18 +946,29 @@
                 }
             });
 
-            const response = await fetch(url);
+            // Throttle para no spamear la API
+            const now = Date.now();
+            const wait = MIN_INTERVAL - (now - lastRequestTime);
+            if (wait > 0) { await sleep(wait); }
+            lastRequestTime = Date.now();
+
+            // Cancelar petición anterior (si existe)
+            if (activeController) { try { activeController.abort(); } catch(_){} }
+            activeController = new AbortController();
+
+            const response = await fetch(url, { signal: activeController.signal, headers: { 'accept': 'application/json' }});
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
             const data = await response.json();
+            activeController = null;
             setCachedData(cacheKey, data);
             return data;
         }
 
         // ====== Acciones de búsqueda ======
-        async function handleSearch(e) {
+        async async function handleSearch(e) {
             e.preventDefault();
             currentQuery = searchInput.value.trim();
             if (!currentQuery) {
@@ -960,11 +988,26 @@
             }
         }
 
-        async function fetchScripts() {
+        async async function fetchScripts() {
             showLoading(true);
             resultsHeader.style.display = 'none';
             noResults.style.display = 'none';
             scriptsGrid.innerHTML = '';
+            // Evitar peticiones duplicadas si los parámetros no cambiaron
+            const fetchKey = JSON.stringify({
+                t: 'search',
+                q: currentQuery,
+                page: currentPage,
+                sort: currentSort,
+                order: currentOrder,
+                verified: currentVerified
+            });
+            if (fetchKey === lastFetchKey) {
+                showLoading(false);
+                return;
+            }
+            lastFetchKey = fetchKey;
+        
 
             try {
                 const params = {
@@ -976,7 +1019,7 @@
                 };
 
                 if (currentVerified === 'true') {
-                    params.verified = true;
+                    params.verified = 1;
                 }
 
                 const data = await apiRequest(`${API_BASE}/search`, params);
@@ -1001,7 +1044,7 @@
                 renderPagination(totalPages);
                 
             } catch (err) {
-                console.error('Error fetching scripts:', err);
+                if (err && err.name === 'AbortError') return; console.error('Error fetching scripts:', err);
                 showLoading(false);
                 showNoResults('Error al consultar la API. Intenta de nuevo en unos momentos.');
                 showNotification('Error de conexión con la API', 'error');
@@ -1031,7 +1074,7 @@
                 }
 
                 if (currentVerified === 'true') {
-                    params.verified = true;
+                    params.verified = 1;
                 }
 
                 const data = await apiRequest(`${API_BASE}/trending`, params);
@@ -1144,11 +1187,11 @@
         function goToPage(page) {
             if (page === currentPage || page < 1 || page > totalPages) return;
             currentPage = page;
-            refreshCurrentSearch();
+            refreshDebounced();
         }
 
         // ====== Modal y copia ======
-        async function viewScript(slug) {
+        async async function viewScript(slug) {
             if (!slug) {
                 showNotification('ID de script no válido', 'error');
                 return;
@@ -1182,7 +1225,7 @@
             }
         }
 
-        async function copyScriptBySlug(slug) {
+        async async function copyScriptBySlug(slug) {
             if (!slug) {
                 showNotification('ID de script no válido', 'error');
                 return;
