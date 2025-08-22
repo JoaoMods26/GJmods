@@ -1,13 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GJMODS - Buscador de Scripts</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GJMODS - Buscador de Scripts</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&amp;display=swap" rel="stylesheet"/>
+<style>
         /* Variables CSS para consistencia */
         :root {
             --color-black: #0a0a0a;
@@ -687,138 +688,116 @@
         }
     </style>
 </head>
-
 <body>
-    <!-- Canvas para partículas -->
-    <canvas id="particles-canvas"></canvas>
-
-    <!-- Navbar -->
-    <nav class="navbar" id="navbar">
-        <div class="navbar-container">
-            <div class="navbar-logo" onclick="window.location.href='index.html'">GJMODS</div>
-            
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a href="index.html" class="nav-link">
-                        <svg class="nav-icon" viewBox="0 0 24 24">
-                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                        </svg>
+<!-- Canvas para partículas -->
+<canvas id="particles-canvas"></canvas>
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+<div class="navbar-container">
+<div class="navbar-logo" onclick="window.location.href='index.html'">GJMODS</div>
+<ul class="navbar-nav">
+<li class="nav-item">
+<a class="nav-link" href="index.html">
+<svg class="nav-icon" viewbox="0 0 24 24">
+<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+</svg>
                         Inicio
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#search" class="nav-link active">
-                        <svg class="nav-icon" viewBox="0 0 24 24">
-                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                        </svg>
+</li>
+<li class="nav-item">
+<a class="nav-link active" href="#search">
+<svg class="nav-icon" viewbox="0 0 24 24">
+<path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+</svg>
                         Buscar Scripts
                     </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Header -->
-    <header class="header">
-        <h1 class="logo">Buscador de Scripts</h1>
-        <p style="color: rgba(255, 255, 255, 0.7); font-size: 1.1rem;">Encuentra scripts para tus juegos favoritos de Roblox</p>
-    </header>
-
-    <!-- Contenido principal -->
-    <main class="container">
-        <!-- Sección de búsqueda -->
-        <section class="search-section" id="search">
-            <div class="search-container">
-                <form class="search-form" id="searchForm">
-                    <input 
-                        type="text" 
-                        class="search-input" 
-                        id="searchInput" 
-                        placeholder="Buscar scripts por nombre de juego..."
-                        autocomplete="off"
-                    >
-                    <button type="submit" class="search-btn" id="searchBtn">
+</li>
+</ul>
+</div>
+</nav>
+<!-- Header -->
+<header class="header">
+<h1 class="logo">Buscador de Scripts</h1>
+<p style="color: rgba(255, 255, 255, 0.7); font-size: 1.1rem;">Encuentra scripts para tus juegos favoritos de Roblox</p>
+</header>
+<!-- Contenido principal -->
+<main class="container">
+<!-- Sección de búsqueda -->
+<section class="search-section" id="search">
+<div class="search-container">
+<form class="search-form" id="searchForm">
+<input autocomplete="off" class="search-input" id="searchInput" placeholder="Buscar scripts por nombre de juego..." type="text"/>
+<button class="search-btn" id="searchBtn" type="submit">
                         Buscar Scripts
                     </button>
-                    <button type="button" class="trending-btn" onclick="loadTrendingScripts()">
+<button class="trending-btn" onclick="loadTrendingScripts()" type="button">
                         🔥 Trending
                     </button>
-                </form>
-
-                <div class="filters-container">
-                    <select class="filter-select" id="sortFilter">
-                        <option value="updated">Más recientes</option>
-                        <option value="created">Fecha de creación</option>
-                        <option value="views">Más vistos</option>
-                        <option value="title">Por título</option>
-                    </select>
-
-                    <select class="filter-select" id="orderFilter">
-                        <option value="desc">Descendente</option>
-                        <option value="asc">Ascendente</option>
-                    </select>
-
-                    <select class="filter-select" id="verifiedFilter">
-                        <option value="">Todos</option>
-                        <option value="true">Solo verificados</option>
-                    </select>
-
-                    <button class="search-btn" onclick="clearSearch()" style="background: linear-gradient(45deg, #6c757d, #495057);">
+</form>
+<div class="filters-container">
+<select class="filter-select" id="sortFilter">
+<option value="updated">Más recientes</option>
+<option value="created">Fecha de creación</option>
+<option value="views">Más vistos</option>
+<option value="title">Por título</option>
+</select>
+<select class="filter-select" id="orderFilter">
+<option value="desc">Descendente</option>
+<option value="asc">Ascendente</option>
+</select>
+<select class="filter-select" id="verifiedFilter">
+<option value="">Todos</option>
+<option value="true">Solo verificados</option>
+</select>
+<button class="search-btn" onclick="clearSearch()" style="background: linear-gradient(45deg, #6c757d, #495057);">
                         Limpiar
                     </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Sección de resultados -->
-        <section class="results-section" id="results">
-            <div class="results-header" id="resultsHeader" style="display: none;">
-                <div class="results-count" id="resultsCount"></div>
-                <div class="sort-container">
-                    <span style="color: rgba(255, 255, 255, 0.6); margin-right: 0.5rem;">Página:</span>
-                    <span id="pageInfo" style="color: var(--color-accent); font-weight: 600;"></span>
-                </div>
-            </div>
-
-            <div id="loadingState" class="loading" style="display: none;">
-                <div class="spinner"></div>
-                <p>Buscando scripts...</p>
-            </div>
-
-            <div id="noResults" class="no-results" style="display: none;">
-                <h3>Sin resultados</h3>
-                <p>No se encontraron scripts para tu búsqueda. Intenta con otros términos.</p>
-            </div>
-
-            <div class="scripts-grid" id="scriptsGrid">
-                <!-- Los scripts se cargarán aquí dinámicamente -->
-            </div>
-
-            <div class="pagination" id="pagination" style="display: none;">
-                <!-- La paginación se generará dinámicamente -->
-            </div>
-        </section>
-    </main>
-
-    <!-- Modal para vista previa de script -->
-    <div class="modal" id="scriptModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Vista previa del script</h3>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-            </div>
-            <div id="modalBody">
-                <div class="script-code" id="modalCode"></div>
-                <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                    <button class="copy-btn" onclick="copyModalScript()" style="flex: 1;">
+</div>
+</div>
+</section>
+<!-- Sección de resultados -->
+<section class="results-section" id="results">
+<div class="results-header" id="resultsHeader" style="display: none;">
+<div class="results-count" id="resultsCount"></div>
+<div class="sort-container">
+<span style="color: rgba(255, 255, 255, 0.6); margin-right: 0.5rem;">Página:</span>
+<span id="pageInfo" style="color: var(--color-accent); font-weight: 600;"></span>
+</div>
+</div>
+<div class="loading" id="loadingState" style="display: none;">
+<div class="spinner"></div>
+<p>Buscando scripts...</p>
+</div>
+<div class="no-results" id="noResults" style="display: none;">
+<h3>Sin resultados</h3>
+<p>No se encontraron scripts para tu búsqueda. Intenta con otros términos.</p>
+</div>
+<div class="scripts-grid" id="scriptsGrid">
+<!-- Los scripts se cargarán aquí dinámicamente -->
+</div>
+<div class="pagination" id="pagination" style="display: none;">
+<!-- La paginación se generará dinámicamente -->
+</div>
+</section>
+</main>
+<!-- Modal para vista previa de script -->
+<div class="modal" id="scriptModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3 id="modalTitle">Vista previa del script</h3>
+<button class="close-btn" onclick="closeModal()">×</button>
+</div>
+<div id="modalBody">
+<div class="script-code" id="modalCode"></div>
+<div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+<button class="copy-btn" onclick="copyModalScript()" style="flex: 1;">
                         Copiar Script
                     </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
+</div>
+</div>
+</div>
+</div>
+<script>
         // ====== Estado global ======
         let currentPage = 1;
         let currentQuery = '';
@@ -854,6 +833,16 @@
         const apiCache = new Map();
         const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
+            // Utilidad: debounce
+function debounce(fn, delay = 500) {
+    let t;
+    return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(null, args), delay);
+    };
+}
+const debouncedRefresh = debounce(refreshCurrentSearch, 500);
+
         // ====== Inicio ======
         document.addEventListener('DOMContentLoaded', () => {
             initializeParticles();
@@ -862,20 +851,18 @@
         });
 
         function setupEventListeners() {
-            const refreshDebounced = debounce(refreshCurrentSearch, 500);
-    
             searchForm.addEventListener('submit', handleSearch);
             sortFilter.addEventListener('change', () => { 
                 currentSort = sortFilter.value; 
-                refreshDebounced(); 
+                debouncedRefresh(); 
             });
             orderFilter.addEventListener('change', () => { 
                 currentOrder = orderFilter.value; 
-                refreshDebounced(); 
+                debouncedRefresh(); 
             });
             verifiedFilter.addEventListener('change', () => { 
                 currentVerified = verifiedFilter.value; 
-                refreshDebounced(); 
+                debouncedRefresh(); 
             });
 
             // Cerrar modal clic afuera
@@ -897,21 +884,6 @@
         }
 
         // ====== Utilidades de Cache y API ======
-        // ====== Anti-spam y control de peticiones ======
-        const MIN_INTERVAL = 800; // ms entre peticiones reales para evitar rate-limit/baneos
-        let lastRequestTime = 0;
-        let activeController = null;
-        let lastFetchKey = '';
-        function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
-
-        function debounce(fn, delay = 450) {
-            let t;
-            return (...args) => {
-                clearTimeout(t);
-                t = setTimeout(() => fn(...args), delay);
-            };
-        }
-
         function getCacheKey(endpoint, params = {}) {
             return `${endpoint}?${new URLSearchParams(params).toString()}`;
         }
@@ -946,29 +918,18 @@
                 }
             });
 
-            // Throttle para no spamear la API
-            const now = Date.now();
-            const wait = MIN_INTERVAL - (now - lastRequestTime);
-            if (wait > 0) { await sleep(wait); }
-            lastRequestTime = Date.now();
-
-            // Cancelar petición anterior (si existe)
-            if (activeController) { try { activeController.abort(); } catch(_){} }
-            activeController = new AbortController();
-
-            const response = await fetch(url, { signal: activeController.signal, headers: { 'accept': 'application/json' }});
+            const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
 
             const data = await response.json();
-            activeController = null;
             setCachedData(cacheKey, data);
             return data;
         }
 
         // ====== Acciones de búsqueda ======
-        async async function handleSearch(e) {
+        async function handleSearch(e) {
             e.preventDefault();
             currentQuery = searchInput.value.trim();
             if (!currentQuery) {
@@ -988,26 +949,11 @@
             }
         }
 
-        async async function fetchScripts() {
+        async function fetchScripts() {
             showLoading(true);
             resultsHeader.style.display = 'none';
             noResults.style.display = 'none';
             scriptsGrid.innerHTML = '';
-            // Evitar peticiones duplicadas si los parámetros no cambiaron
-            const fetchKey = JSON.stringify({
-                t: 'search',
-                q: currentQuery,
-                page: currentPage,
-                sort: currentSort,
-                order: currentOrder,
-                verified: currentVerified
-            });
-            if (fetchKey === lastFetchKey) {
-                showLoading(false);
-                return;
-            }
-            lastFetchKey = fetchKey;
-        
 
             try {
                 const params = {
@@ -1044,7 +990,7 @@
                 renderPagination(totalPages);
                 
             } catch (err) {
-                if (err && err.name === 'AbortError') return; console.error('Error fetching scripts:', err);
+                console.error('Error fetching scripts:', err);
                 showLoading(false);
                 showNoResults('Error al consultar la API. Intenta de nuevo en unos momentos.');
                 showNotification('Error de conexión con la API', 'error');
@@ -1187,11 +1133,11 @@
         function goToPage(page) {
             if (page === currentPage || page < 1 || page > totalPages) return;
             currentPage = page;
-            refreshDebounced();
+            debouncedRefresh();
         }
 
         // ====== Modal y copia ======
-        async async function viewScript(slug) {
+        async function viewScript(slug) {
             if (!slug) {
                 showNotification('ID de script no válido', 'error');
                 return;
@@ -1225,7 +1171,7 @@
             }
         }
 
-        async async function copyScriptBySlug(slug) {
+        async function copyScriptBySlug(slug) {
             if (!slug) {
                 showNotification('ID de script no válido', 'error');
                 return;
@@ -1234,7 +1180,7 @@
             try {
                 showNotification('Obteniendo script...', 'success');
                 
-                const data = await apiRequest(`${API_BASE}/raw/${slug}`);
+                const data = await apiRequestRaw(`${API_BASE}/raw/${slug}`);
                 let scriptContent = '';
 
                 // La API raw puede devolver directamente el texto o en una estructura
