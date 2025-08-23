@@ -791,7 +791,7 @@
                         Buscar Scripts
                     </button>
 <button class="trending-btn" onclick="loadTrendingScripts()" type="button">
-                        🔥 Trending
+                        Recientes
                     </button>
 </form>
 <div class="filters-container">
@@ -863,7 +863,6 @@
 </div>
 </div>
 <script>
-
         // ====== Estado global ======
         let currentPage = 1;
         let currentQuery = '';
@@ -873,10 +872,6 @@
         let currentSource = 'all';
         let totalPages = 1;
         let isShowingTrending = true;
-
-        // Totales por API para paginación combinada
-        let SB_totalPages = 1;
-        let RS_totalPages = 1;
 
         // ====== Referencias DOM ======
         const searchForm = document.getElementById('searchForm');
@@ -906,7 +901,17 @@
 
         // Cache para evitar demasiadas requests
         const apiCache = new Map();
-        const CACHE_DURATION = 3 * 60 * 1000; // 3 minutos
+        const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+
+        // Utilidad: debounce
+        function debounce(fn, delay = 500) {
+            let t;
+            return (...args) => {
+                clearTimeout(t);
+                t = setTimeout(() => fn.apply(null, args), delay);
+            };
+        }
+        const debouncedRefresh = debounce(refreshCurrentSearch, 500);
 
         // ====== Inicio ======
         document.addEventListener('DOMContentLoaded', () => {
@@ -919,19 +924,19 @@
             searchForm.addEventListener('submit', handleSearch);
             sortFilter.addEventListener('change', () => { 
                 currentSort = sortFilter.value; 
-                refreshCurrentSearch(); 
+                debouncedRefresh(); 
             });
             orderFilter.addEventListener('change', () => { 
                 currentOrder = orderFilter.value; 
-                refreshCurrentSearch(); 
+                debouncedRefresh(); 
             });
             verifiedFilter.addEventListener('change', () => { 
                 currentVerified = verifiedFilter.value; 
-                refreshCurrentSearch(); 
+                debouncedRefresh(); 
             });
             sourceFilter.addEventListener('change', () => { 
                 currentSource = sourceFilter.value; 
-                refreshCurrentSearch(); 
+                debouncedRefresh(); 
             });
 
             // Cerrar modal clic afuera
@@ -978,10 +983,14 @@
             });
         }
 
-        async function apiRequest(endpoint, params = {}, { raw = false } = {}) {
+        async function apiRequest(endpoint, params = {}) {
             const cacheKey = getCacheKey(endpoint, params);
             const cached = getCachedData(cacheKey);
-            if (cached) return cached;
+            
+            if (cached) {
+                console.log('Using cached data for:', endpoint);
+                return cached;
+            }
 
             const url = new URL(endpoint);
             Object.entries(params).forEach(([key, value]) => {
@@ -990,14 +999,16 @@
                 }
             });
 
-            try {
-                const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(), 8000); // 8s timeout
-                const response = await fetch(url.toString(), { signal: controller.signal });
-                clearTimeout(timeout);
+            console.log('Making API request to:', url.toString());
 
-                if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                const data = raw ? await response.text() : await response.json();
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('API response:', data);
                 setCachedData(cacheKey, data);
                 return data;
             } catch (error) {
@@ -1009,13 +1020,12 @@
         // ====== API Calls - ScriptBlox ======
         async function fetchScriptBloxScripts(query = '', page = 1) {
             updateAPIStatus('scriptblox', 'loading');
-            SB_totalPages = 1;
             
             try {
                 const endpoint = query ? 'search' : 'fetch';
                 const params = {
                     page: page,
-                    max: 20 // pedir más para no quedarnos cortos
+                    max: Math.floor(SCRIPTS_PER_PAGE / 2) // Dividir entre las dos APIs
                 };
 
                 if (query) params.q = query;
@@ -1030,14 +1040,18 @@
                 } else if (currentSort === 'title') {
                     params.sortBy = 'title';
                 }
+                
                 params.order = currentOrder;
 
-                if (currentVerified === 'true') params.verified = 1;
+                if (currentVerified === 'true') {
+                    params.verified = 1;
+                } else if (currentVerified === 'false') {
+                    params.verified = 0;
+                }
 
                 const data = await apiRequest(`${SCRIPTBLOX_API}/${endpoint}`, params);
                 const result = data?.result || data;
                 const scripts = result?.scripts || [];
-                SB_totalPages = Math.max(1, result?.totalPages || 1);
                 
                 updateAPIStatus('scriptblox', 'success');
                 
@@ -1059,7 +1073,7 @@
                     rawScript: script.script || script.content || '',
                     createdAt: script.createdAt || script.created || new Date().toISOString(),
                     updatedAt: script.updatedAt || script.updated || new Date().toISOString(),
-                    priority: 1
+                    priority: 1 // ScriptBlox tiene prioridad
                 }));
 
             } catch (error) {
@@ -1069,37 +1083,55 @@
             }
         }
 
-        // ====== API Calls - RScripts (api.rscripts.net) ======
+        // ====== API Calls - RScripts ======
         async function fetchRScriptsScripts(query = '', page = 1) {
             updateAPIStatus('rscripts', 'loading');
-            RS_totalPages = 1;
             
             try {
-                const params = { page: page, limit: 20 };
+                const params = {
+                    page: page,
+                    limit: Math.floor(SCRIPTS_PER_PAGE / 2) // Dividir entre las dos APIs
+                };
+
                 if (query) params.q = query;
 
-                let endpoint;
-                if (isShowingTrending && !query) {
-                    endpoint = 'scripts/trending';
-                } else if (query) {
-                    endpoint = 'scripts/search';
-                } else {
-                    endpoint = 'scripts';
+                // Parámetros de ordenamiento para RScripts
+                if (currentSort === 'updated') {
+                    params.sort = 'updated_at';
+                } else if (currentSort === 'created') {
+                    params.sort = 'created_at';
+                } else if (currentSort === 'views') {
+                    params.sort = 'views';
+                } else if (currentSort === 'title') {
+                    params.sort = 'title';
                 }
+                
+                params.order = currentOrder;
 
+                const endpoint = query ? 'scripts/search' : 'scripts';
                 const data = await apiRequest(`${RSCRIPTS_API}/${endpoint}`, params);
-                const meta = data?.meta || {};
-                RS_totalPages = Math.max(1, meta.last_page || meta.totalPages || 1);
-
+                
                 updateAPIStatus('rscripts', 'success');
-
+                
+                // Normalizar scripts de RScripts - CORREGIDO
                 const scripts = data?.data || data?.scripts || data || [];
+                
                 return scripts.map(script => {
+                    // Extraer el nombre del juego correctamente
                     let gameName = 'Juego desconocido';
                     if (script.game) {
-                        if (typeof script.game === 'string') gameName = script.game;
-                        else if (typeof script.game === 'object') gameName = script.game.name || script.game.title || gameName;
-                    } else if (script.game_name) gameName = script.game_name;
+                        if (typeof script.game === 'string') {
+                            gameName = script.game;
+                        } else if (typeof script.game === 'object' && script.game.name) {
+                            gameName = script.game.name;
+                        } else if (typeof script.game === 'object' && script.game.title) {
+                            gameName = script.game.title;
+                        }
+                    } else if (script.game_name) {
+                        gameName = script.game_name;
+                    } else if (script.gameName) {
+                        gameName = script.gameName;
+                    }
 
                     return {
                         id: script.id || script.slug || script._id,
@@ -1118,7 +1150,7 @@
                         rawScript: script.script || script.content || script.code || '',
                         createdAt: script.created_at || script.createdAt || new Date().toISOString(),
                         updatedAt: script.updated_at || script.updatedAt || new Date().toISOString(),
-                        priority: 2
+                        priority: 2 // RScripts tiene menor prioridad
                     };
                 });
 
@@ -1131,38 +1163,58 @@
 
         // ====== Funciones combinadas ======
         async function fetchCombinedScripts(query = '', page = 1) {
-            const combined = [];
+            const promises = [];
+            
+            if (currentSource === 'all' || currentSource === 'scriptblox') {
+                promises.push(fetchScriptBloxScripts(query, page));
+            }
+            
+            if (currentSource === 'all' || currentSource === 'rscripts') {
+                promises.push(fetchRScriptsScripts(query, page));
+            }
 
-            // Cargar ScriptBlox primero (para que se vea algo rápido)
-            const sbPromise = fetchScriptBloxScripts(query, page).then(sb => {
-                combined.push(...sb);
-                renderScripts(combined, false); // render parcial
-                updateHeader(combined.length, currentPage, Math.max(SB_totalPages, RS_totalPages));
+            const results = await Promise.all(promises);
+            let combinedScripts = [];
+            
+            // Combinar resultados de ambas APIs
+            results.forEach(apiScripts => {
+                combinedScripts = combinedScripts.concat(apiScripts);
             });
 
-            // Cargar RScripts luego
-            const rsPromise = fetchRScriptsScripts(query, page).then(rs => {
-                combined.push(...rs);
-            });
-
-            await Promise.allSettled([sbPromise, rsPromise]);
-            // Orden final por prioridad + sort seleccionado
-            const sorted = sortScripts(combined);
-            return sorted;
+            // Ordenar por prioridad primero (ScriptBlox primero), luego por otros criterios
+            combinedScripts = sortScripts(combinedScripts);
+            
+            return combinedScripts;
         }
 
         // ====== Utilidades de ordenamiento ======
         function sortScripts(scripts) {
             return scripts.sort((a, b) => {
-                if (a.priority !== b.priority) return a.priority - b.priority;
-                let comparison = 0;
-                switch (currentSort) {
-                    case 'updated': comparison = new Date(b.updatedAt) - new Date(a.updatedAt); break;
-                    case 'created': comparison = new Date(b.createdAt) - new Date(a.createdAt); break;
-                    case 'views': comparison = (b.views || 0) - (a.views || 0); break;
-                    case 'title': comparison = (a.title || '').localeCompare(b.title || ''); break;
-                    default: comparison = new Date(b.updatedAt) - new Date(a.updatedAt);
+                // Primero ordenar por prioridad (ScriptBlox primero)
+                if (a.priority !== b.priority) {
+                    return a.priority - b.priority;
                 }
+                
+                // Luego aplicar el ordenamiento seleccionado
+                let comparison = 0;
+                
+                switch (currentSort) {
+                    case 'updated':
+                        comparison = new Date(b.updatedAt) - new Date(a.updatedAt);
+                        break;
+                    case 'created':
+                        comparison = new Date(b.createdAt) - new Date(a.createdAt);
+                        break;
+                    case 'views':
+                        comparison = b.views - a.views;
+                        break;
+                    case 'title':
+                        comparison = a.title.localeCompare(b.title);
+                        break;
+                    default:
+                        comparison = new Date(b.updatedAt) - new Date(a.updatedAt);
+                }
+                
                 return currentOrder === 'asc' ? -comparison : comparison;
             });
         }
@@ -1181,7 +1233,11 @@
         }
 
         function refreshCurrentSearch() {
-            fetchScripts();
+            if (isShowingTrending) {
+                loadTrendingScripts();
+            } else {
+                fetchScripts();
+            }
         }
 
         async function fetchScripts() {
@@ -1193,8 +1249,11 @@
                 
                 // Filtrar por verificación si es necesario
                 let filteredScripts = scripts;
-                if (currentVerified === 'true') filteredScripts = scripts.filter(s => s.verified);
-                else if (currentVerified === 'false') filteredScripts = scripts.filter(s => !s.verified);
+                if (currentVerified === 'true') {
+                    filteredScripts = scripts.filter(script => script.verified);
+                } else if (currentVerified === 'false') {
+                    filteredScripts = scripts.filter(script => !script.verified);
+                }
 
                 showLoading(false);
                 
@@ -1204,9 +1263,7 @@
                 }
 
                 renderScripts(filteredScripts);
-                totalPages = Math.max(SB_totalPages, RS_totalPages);
-                updateHeader(filteredScripts.length, currentPage, totalPages);
-                renderPagination(totalPages);
+                updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
                 
             } catch (err) {
                 console.error('Error fetching combined scripts:', err);
@@ -1222,7 +1279,36 @@
             searchInput.value = '';
             currentPage = 1;
 
-            await fetchScripts();
+            showLoading(true);
+            hideAllResults();
+
+            try {
+                const scripts = await fetchCombinedScripts('', currentPage);
+                
+                // Filtrar por verificación si es necesario
+                let filteredScripts = scripts;
+                if (currentVerified === 'true') {
+                    filteredScripts = scripts.filter(script => script.verified);
+                } else if (currentVerified === 'false') {
+                    filteredScripts = scripts.filter(script => !script.verified);
+                }
+
+                showLoading(false);
+                
+                if (!filteredScripts || filteredScripts.length === 0) {
+                    showNoResults('No hay scripts trending disponibles');
+                    return;
+                }
+
+                renderScripts(filteredScripts);
+                updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
+                
+            } catch (err) {
+                console.error('Error loading trending:', err);
+                showLoading(false);
+                showNoResults('Error al cargar scripts trending');
+                showNotification('Error cargando trending scripts', 'error');
+            }
         }
 
         function hideAllResults() {
@@ -1233,9 +1319,8 @@
         }
 
         // ====== Render ======
-        function renderScripts(scripts, clear = true) {
-            if (clear) scriptsGrid.innerHTML = '';
-            const cards = scripts.map((script) => {
+        function renderScripts(scripts) {
+            scriptsGrid.innerHTML = scripts.map((script) => {
                 const id = script.id || '';
                 const title = sanitize(script.title || 'Script sin título');
                 const gameName = sanitize(script.game || 'Juego desconocido');
@@ -1250,6 +1335,7 @@
                 const source = script.source || 'Desconocido';
                 const apiSource = script.apiSource || 'unknown';
 
+                // Tags del script
                 const tags = [];
                 if (isVerified) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #10b981, #059669);">✅ Verificado</span>');
                 if (isUniversal) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);">🌍 Universal</span>');
@@ -1259,6 +1345,7 @@
                 if (views > 0) tags.push(`<span class="script-tag">👁️ ${Number(views).toLocaleString()}</span>`);
                 if (likes > 0) tags.push(`<span class="script-tag">❤️ ${Number(likes).toLocaleString()}</span>`);
 
+                // Tag de fuente con colores específicos
                 const sourceColors = {
                     'ScriptBlox': 'background: linear-gradient(45deg, #2563eb, #1d4ed8);',
                     'RScripts': 'background: linear-gradient(45deg, #dc2626, #b91c1c);'
@@ -1281,49 +1368,20 @@
                     </div>
                 </div>`;
             }).join('');
-            scriptsGrid.insertAdjacentHTML('beforeend', cards);
         }
 
         function updateHeader(total, page, totalPagesLocal) {
             resultsHeader.style.display = 'flex';
-            resultsCount.textContent = `Resultados visibles: ${Number(total).toLocaleString()} | Páginas totales: ${totalPagesLocal}`;
+            resultsCount.textContent = `Resultados: ${Number(total).toLocaleString()}`;
             pageInfo.textContent = `${page} / ${Math.max(1, totalPagesLocal)}`;
-        }
-
-        // ====== Paginación ======
-        function renderPagination(totalPagesLocal) {
-            pagination.style.display = 'flex';
-            pagination.innerHTML = '';
-
-            const createBtn = (label, page, disabled = false, active = false) => {
-                const btn = document.createElement('button');
-                btn.className = 'page-btn' + (active ? ' active' : '');
-                btn.textContent = label;
-                btn.disabled = disabled;
-                btn.onclick = () => {
-                    currentPage = page;
-                    fetchScripts();
-                };
-                return btn;
-            };
-
-            // Prev
-            pagination.appendChild(createBtn('«', Math.max(1, currentPage - 1), currentPage === 1));
-
-            const windowSize = 5;
-            const start = Math.max(1, currentPage - Math.floor(windowSize/2));
-            const end = Math.min(totalPagesLocal, start + windowSize - 1);
-            for (let p = start; p <= end; p++) {
-                pagination.appendChild(createBtn(String(p), p, false, p === currentPage));
-            }
-
-            // Next
-            pagination.appendChild(createBtn('»', Math.min(totalPagesLocal, currentPage + 1), currentPage === totalPagesLocal));
         }
 
         // ====== Modal y copia ======
         async function viewScript(id, apiSource) {
-            if (!id) return showNotification('ID de script no válido', 'error');
+            if (!id) {
+                showNotification('ID de script no válido', 'error');
+                return;
+            }
 
             try {
                 modalTitle.textContent = 'Cargando...';
@@ -1334,38 +1392,25 @@
                 let title = 'Script sin título';
 
                 if (apiSource === 'scriptblox') {
-                    // primero intentar detalle
                     const data = await apiRequest(`${SCRIPTBLOX_API}/${id}`);
                     const script = data?.script || data?.result || {};
                     title = script.title || 'Script sin título';
                     scriptContent = script.script || script.content || '';
-
-                    // fallback a raw
-                    if (!scriptContent) {
-                        const res = await fetch(`${SCRIPTBLOX_API}/raw/${id}`);
-                        if (res.ok) scriptContent = await res.text();
-                    }
                 } else if (apiSource === 'rscripts') {
-                    // intentar raw como texto directamente
-                    try {
-                        const raw = await apiRequest(`${RSCRIPTS_API}/scripts/${id}/raw`, {}, { raw: true });
-                        if (raw && typeof raw === 'string' && raw.trim() !== '') {
-                            scriptContent = raw;
-                        }
-                    } catch (e) {}
-
-                    // fallback a detalle JSON
-                    if (!scriptContent) {
-                        const data = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
-                        const script = data?.data || data?.script || data || {};
-                        title = script.title || script.name || title;
-                        scriptContent = script.script || script.content || script.code || script.raw_content || '';
-                    }
+                    const data = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
+                    const script = data?.data || data?.script || data || {};
+                    title = script.title || script.name || 'Script sin título';
+                    scriptContent = script.script || script.content || script.code || script.raw_content || '';
                 }
 
-                modalTitle.textContent = title || id;
-                modalCode.textContent = scriptContent || 'Este script no tiene contenido disponible para vista previa.';
-                if (!scriptContent) showNotification('Script sin contenido disponible', 'error');
+                modalTitle.textContent = title;
+                
+                if (!scriptContent) {
+                    modalCode.textContent = 'Este script no tiene contenido disponible para vista previa.';
+                    showNotification('Script sin contenido disponible', 'error');
+                } else {
+                    modalCode.textContent = scriptContent;
+                }
                 
             } catch (err) {
                 console.error('Error viewing script:', err);
@@ -1376,43 +1421,55 @@
         }
 
         async function copyScriptById(id, apiSource) {
-            if (!id) return showNotification('ID de script no válido', 'error');
+            if (!id) {
+                showNotification('ID de script no válido', 'error');
+                return;
+            }
+
             try {
                 showNotification('Obteniendo script...', 'success');
+                
                 let scriptContent = '';
 
                 if (apiSource === 'scriptblox') {
+                    // Intentar primero el endpoint raw de ScriptBlox
                     try {
                         const response = await fetch(`${SCRIPTBLOX_API}/raw/${id}`);
                         if (response.ok) {
                             const contentType = response.headers.get('Content-Type') || '';
                             if (contentType.includes('application/json')) {
                                 const data = await response.json();
-                                scriptContent = data?.script || data?.result || '';
+                                scriptContent = data?.script || data?.result || data || '';
                             } else {
                                 scriptContent = await response.text();
                             }
                         }
-                    } catch (e) {}
+                    } catch (e) {
+                        console.log('Raw endpoint failed, trying regular endpoint');
+                    }
 
+                    // Si no hay contenido, intentar el endpoint normal
                     if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined') {
                         const fallbackData = await apiRequest(`${SCRIPTBLOX_API}/${id}`);
                         const fallbackScript = fallbackData?.script || fallbackData?.result || {};
                         scriptContent = fallbackScript.script || fallbackScript.content || '';
                     }
                 } else if (apiSource === 'rscripts') {
+                    // Para RScripts, intentar múltiples endpoints para obtener el contenido raw
                     try {
-                        const rawText = await apiRequest(`${RSCRIPTS_API}/scripts/${id}/raw`, {}, { raw: true });
-                        if (rawText && typeof rawText === 'string') scriptContent = rawText;
-                    } catch (e) {}
-                    if (!scriptContent) {
+                        // Intentar endpoint de contenido raw
+                        const rawData = await apiRequest(`${RSCRIPTS_API}/scripts/${id}/raw`);
+                        scriptContent = rawData?.content || rawData?.script || rawData || '';
+                    } catch (e) {
+                        console.log('Raw endpoint failed for RScripts, trying regular endpoint');
+                        // Fallback al endpoint normal
                         const data = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
                         const script = data?.data || data?.script || data || {};
                         scriptContent = script.script || script.content || script.code || script.raw_content || '';
                     }
                 }
 
-                if (!scriptContent || typeof scriptContent !== 'string' || scriptContent.trim() === '') {
+                if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined' || scriptContent.trim() === '') {
                     showNotification('Este script no tiene contenido disponible', 'error');
                     return;
                 }
@@ -1426,7 +1483,9 @@
             }
         }
 
-        function closeModal() { scriptModal.classList.remove('show'); }
+        function closeModal() { 
+            scriptModal.classList.remove('show'); 
+        }
 
         function copyModalScript() {
             const text = modalCode.textContent || '';
@@ -1454,14 +1513,24 @@
             document.body.appendChild(textarea);
             textarea.focus();
             textarea.select();
-            try { document.execCommand('copy'); } catch (err) {}
+            try { 
+                document.execCommand('copy'); 
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+            }
             document.body.removeChild(textarea);
         }
 
         // ====== Utilidades UI ======
         function sanitize(str) {
             return String(str).replace(/[&<>"']/g, (char) => {
-                const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+                const entities = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                };
                 return entities[char];
             });
         }
@@ -1498,13 +1567,76 @@
             notification.className = `notification ${type}`;
             notification.textContent = text;
             document.body.appendChild(notification);
-            requestAnimationFrame(() => { notification.classList.add('show'); });
+            
+            requestAnimationFrame(() => {
+                notification.classList.add('show');
+            });
+            
             setTimeout(() => {
                 notification.classList.remove('show');
-                setTimeout(() => { if (notification.parentNode) notification.remove(); }, 300);
-            }, 2500);
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 3000);
         }
 
-</script>
+        // ====== Partículas de fondo ======
+        function initializeParticles() {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height, particles;
+
+            function resizeCanvas() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                const particleCount = Math.min(120, Math.floor(width * height / 12000));
+                particles = Array.from({ length: particleCount }, createParticle);
+            }
+
+            function createParticle() {
+                return {
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 1.5 + 0.3,
+                };
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.globalAlpha = 0.8;
+                
+                particles.forEach(particle => {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    
+                    if (particle.x < 0 || particle.x > width) particle.vx *= -1;
+                    if (particle.y < 0 || particle.y > height) particle.vy *= -1;
+                    
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(59,130,246,0.15)';
+                    ctx.fill();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            animate();
+        }
+
+        // Exponer funciones globales
+        window.viewScript = viewScript;
+        window.copyScriptById = copyScriptById;
+        window.copyModalScript = copyModalScript;
+        window.closeModal = closeModal;
+        window.clearSearch = clearSearch;
+        window.loadTrendingScripts = loadTrendingScripts;
+    </script>
 </body>
 </html>
