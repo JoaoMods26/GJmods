@@ -894,8 +894,9 @@
         const rscriptsStatus = document.getElementById('rscriptsStatus');
 
         // ====== Config API ======
-        const SCRIPTBLOX_API = 'https://workers-playground-curly-unit-2502.joao-lokofrank.workers.dev/api';
-        const RSCRIPTS_API = 'https://rscripts.net/api';
+        const PROXY_BASE = 'https://workers-playground-curly-unit-2502.joao-lokofrank.workers.dev/api';
+        const SCRIPTBLOX_API = PROXY_BASE;
+        const RSCRIPTS_API = `${PROXY_BASE}/rscripts`;
         const SCRIPTS_PER_PAGE = 20;
 
         // Cache para evitar demasiadas requests
