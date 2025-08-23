@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>joao_mods</title>
+<title>GJMODS - Buscador de Scripts</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet"/>
@@ -988,7 +988,7 @@
             const cached = getCachedData(cacheKey);
             
             if (cached) {
-              //  .log('Using cached data for:', endpoint);
+                console.log('Using cached data for:', endpoint);
                 return cached;
             }
 
@@ -999,7 +999,7 @@
                 }
             });
 
-          //  .log('Making API request to:', url.toString());
+            console.log('Making API request to:', url.toString());
 
             try {
                 const response = await fetch(url);
@@ -1008,11 +1008,11 @@
                 }
 
                 const data = await response.json();
-              //  .log('API response:', data);
+                console.log('API response:', data);
                 setCachedData(cacheKey, data);
                 return data;
             } catch (error) {
-             //   .error('API request failed:', error);
+                console.error('API request failed:', error);
                 throw error;
             }
         }
@@ -1072,11 +1072,12 @@
                     apiSource: 'scriptblox',
                     rawScript: script.script || script.content || '',
                     createdAt: script.createdAt || script.created || new Date().toISOString(),
-                    updatedAt: script.updatedAt || script.updated || new Date().toISOString()
+                    updatedAt: script.updatedAt || script.updated || new Date().toISOString(),
+                    priority: 1 // ScriptBlox tiene prioridad
                 }));
 
             } catch (error) {
-            //    .error('ScriptBlox API error:', error);
+                console.error('ScriptBlox API error:', error);
                 updateAPIStatus('scriptblox', 'error');
                 return [];
             }
@@ -1112,30 +1113,49 @@
                 
                 updateAPIStatus('rscripts', 'success');
                 
-                // Normalizar scripts de RScripts
+                // Normalizar scripts de RScripts - CORREGIDO
                 const scripts = data?.data || data?.scripts || data || [];
                 
-                return scripts.map(script => ({
-                    id: script.id || script.slug || script._id,
-                    title: script.title || script.name || 'Script sin título',
-                    game: script.game || script.game_name || script.gameName || 'Juego desconocido',
-                    description: script.description || script.desc || 'Sin descripción disponible',
-                    verified: script.verified || script.is_verified || false,
-                    views: script.views || script.view_count || 0,
-                    likes: script.likes || script.like_count || script.upvotes || 0,
-                    patched: script.patched || script.is_patched || false,
-                    universal: script.universal || script.is_universal || false,
-                    keySystem: script.key_system || script.keySystem || script.has_key || false,
-                    scriptType: script.type || script.script_type || 'free',
-                    source: 'RScripts',
-                    apiSource: 'rscripts',
-                    rawScript: script.script || script.content || script.code || '',
-                    createdAt: script.created_at || script.createdAt || new Date().toISOString(),
-                    updatedAt: script.updated_at || script.updatedAt || new Date().toISOString()
-                }));
+                return scripts.map(script => {
+                    // Extraer el nombre del juego correctamente
+                    let gameName = 'Juego desconocido';
+                    if (script.game) {
+                        if (typeof script.game === 'string') {
+                            gameName = script.game;
+                        } else if (typeof script.game === 'object' && script.game.name) {
+                            gameName = script.game.name;
+                        } else if (typeof script.game === 'object' && script.game.title) {
+                            gameName = script.game.title;
+                        }
+                    } else if (script.game_name) {
+                        gameName = script.game_name;
+                    } else if (script.gameName) {
+                        gameName = script.gameName;
+                    }
+
+                    return {
+                        id: script.id || script.slug || script._id,
+                        title: script.title || script.name || 'Script sin título',
+                        game: gameName,
+                        description: script.description || script.desc || 'Sin descripción disponible',
+                        verified: script.verified || script.is_verified || false,
+                        views: script.views || script.view_count || 0,
+                        likes: script.likes || script.like_count || script.upvotes || 0,
+                        patched: script.patched || script.is_patched || false,
+                        universal: script.universal || script.is_universal || false,
+                        keySystem: script.key_system || script.keySystem || script.has_key || false,
+                        scriptType: script.type || script.script_type || 'free',
+                        source: 'RScripts',
+                        apiSource: 'rscripts',
+                        rawScript: script.script || script.content || script.code || '',
+                        createdAt: script.created_at || script.createdAt || new Date().toISOString(),
+                        updatedAt: script.updated_at || script.updatedAt || new Date().toISOString(),
+                        priority: 2 // RScripts tiene menor prioridad
+                    };
+                });
 
             } catch (error) {
-          //      .error('RScripts API error:', error);
+                console.error('RScripts API error:', error);
                 updateAPIStatus('rscripts', 'error');
                 return [];
             }
@@ -1161,27 +1181,21 @@
                 combinedScripts = combinedScripts.concat(apiScripts);
             });
 
-            // Mezclar los resultados para que no aparezcan agrupados por API
-            combinedScripts = shuffleArray(combinedScripts);
-            
-            // Aplicar ordenamiento final
+            // Ordenar por prioridad primero (ScriptBlox primero), luego por otros criterios
             combinedScripts = sortScripts(combinedScripts);
             
             return combinedScripts;
         }
 
         // ====== Utilidades de ordenamiento ======
-        function shuffleArray(array) {
-            const shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
-
         function sortScripts(scripts) {
             return scripts.sort((a, b) => {
+                // Primero ordenar por prioridad (ScriptBlox primero)
+                if (a.priority !== b.priority) {
+                    return a.priority - b.priority;
+                }
+                
+                // Luego aplicar el ordenamiento seleccionado
                 let comparison = 0;
                 
                 switch (currentSort) {
@@ -1252,7 +1266,7 @@
                 updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
                 
             } catch (err) {
-              //  .error('Error fetching combined scripts:', err);
+                console.error('Error fetching combined scripts:', err);
                 showLoading(false);
                 showNoResults('Error al consultar las APIs. Intenta de nuevo en unos momentos.');
                 showNotification('Error de conexión con las APIs', 'error');
@@ -1290,7 +1304,7 @@
                 updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
                 
             } catch (err) {
-               // .error('Error loading trending:', err);
+                console.error('Error loading trending:', err);
                 showLoading(false);
                 showNoResults('Error al cargar scripts trending');
                 showNotification('Error cargando trending scripts', 'error');
@@ -1384,9 +1398,9 @@
                     scriptContent = script.script || script.content || '';
                 } else if (apiSource === 'rscripts') {
                     const data = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
-                    const script = data?.data || data || {};
+                    const script = data?.data || data?.script || data || {};
                     title = script.title || script.name || 'Script sin título';
-                    scriptContent = script.script || script.content || script.code || '';
+                    scriptContent = script.script || script.content || script.code || script.raw_content || '';
                 }
 
                 modalTitle.textContent = title;
@@ -1399,7 +1413,7 @@
                 }
                 
             } catch (err) {
-               // .error('Error viewing script:', err);
+                console.error('Error viewing script:', err);
                 modalTitle.textContent = 'Error';
                 modalCode.textContent = 'Error al cargar el script. Intenta de nuevo.';
                 showNotification('Error al cargar el script', 'error');
@@ -1431,7 +1445,7 @@
                             }
                         }
                     } catch (e) {
-                      //  .log('Raw endpoint failed, trying regular endpoint');
+                        console.log('Raw endpoint failed, trying regular endpoint');
                     }
 
                     // Si no hay contenido, intentar el endpoint normal
@@ -1441,12 +1455,21 @@
                         scriptContent = fallbackScript.script || fallbackScript.content || '';
                     }
                 } else if (apiSource === 'rscripts') {
-                    const data = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
-                    const script = data?.data || data || {};
-                    scriptContent = script.script || script.content || script.code || '';
+                    // Para RScripts, intentar múltiples endpoints para obtener el contenido raw
+                    try {
+                        // Intentar endpoint de contenido raw
+                        const rawData = await apiRequest(`${RSCRIPTS_API}/scripts/${id}/raw`);
+                        scriptContent = rawData?.content || rawData?.script || rawData || '';
+                    } catch (e) {
+                        console.log('Raw endpoint failed for RScripts, trying regular endpoint');
+                        // Fallback al endpoint normal
+                        const data = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
+                        const script = data?.data || data?.script || data || {};
+                        scriptContent = script.script || script.content || script.code || script.raw_content || '';
+                    }
                 }
 
-                if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined') {
+                if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined' || scriptContent.trim() === '') {
                     showNotification('Este script no tiene contenido disponible', 'error');
                     return;
                 }
@@ -1455,7 +1478,7 @@
                 showNotification('Script copiado al portapapeles', 'success');
                 
             } catch (err) {
-               // .error('Error copying script:', err);
+                console.error('Error copying script:', err);
                 showNotification('Error al copiar el script', 'error');
             }
         }
@@ -1493,7 +1516,7 @@
             try { 
                 document.execCommand('copy'); 
             } catch (err) {
-              //  .error('Fallback copy failed:', err);
+                console.error('Fallback copy failed:', err);
             }
             document.body.removeChild(textarea);
         }
