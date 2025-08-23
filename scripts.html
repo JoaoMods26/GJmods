@@ -992,64 +992,30 @@
                 return cached;
             }
 
+            const url = new URL(endpoint);
+            Object.entries(params).forEach(([key, value]) => {
+                if (value !== '' && value !== null && value !== undefined) {
+                    url.searchParams.set(key, value);
+                }
+            });
 
+            console.log('Making API request to:', url.toString());
 
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
 
-
-
-async function apiRequest(endpoint, params = {}) {
-    const cacheKey = getCacheKey(endpoint, params);
-    const cached = getCachedData(cacheKey);
-    
-    if (cached) {
-        console.log('Using cached data for:', endpoint);
-        return cached;
-    }
-
-    let query = '';
-    if (params && Object.keys(params).length > 0) {
-        query = '?' + new URLSearchParams(params).toString();
-    }
-
-    const url = `${endpoint}${query}`;
-
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                const data = await response.json();
+                console.log('API response:', data);
+                setCachedData(cacheKey, data);
+                return data;
+            } catch (error) {
+                console.error('API request failed:', error);
+                throw error;
+            }
         }
-
-        const ct = (response.headers.get('Content-Type') || '').toLowerCase();
-        const data = ct.includes('application/json') ? await response.json() : await response.text();
-
-        console.log('API response:', data);
-        setCachedData(cacheKey, data);
-        return data;
-    } catch (error) {
-        console.error('API request failed:', error);
-        throw error;
-    }
-}
-
-
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         // ====== API Calls - ScriptBlox ======
         async function fetchScriptBloxScripts(query = '', page = 1) {
