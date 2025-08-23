@@ -988,7 +988,7 @@
             const cached = getCachedData(cacheKey);
             
             if (cached) {
-                console.log('Using cached data for:', endpoint);
+              //  .log('Using cached data for:', endpoint);
                 return cached;
             }
 
@@ -999,7 +999,7 @@
                 }
             });
 
-            console.log('Making API request to:', url.toString());
+          //  .log('Making API request to:', url.toString());
 
             try {
                 const response = await fetch(url);
@@ -1008,11 +1008,11 @@
                 }
 
                 const data = await response.json();
-                console.log('API response:', data);
+              //  .log('API response:', data);
                 setCachedData(cacheKey, data);
                 return data;
             } catch (error) {
-                console.error('API request failed:', error);
+             //   .error('API request failed:', error);
                 throw error;
             }
         }
@@ -1076,7 +1076,7 @@
                 }));
 
             } catch (error) {
-                console.error('ScriptBlox API error:', error);
+            //    .error('ScriptBlox API error:', error);
                 updateAPIStatus('scriptblox', 'error');
                 return [];
             }
@@ -1135,7 +1135,7 @@
                 }));
 
             } catch (error) {
-                console.error('RScripts API error:', error);
+          //      .error('RScripts API error:', error);
                 updateAPIStatus('rscripts', 'error');
                 return [];
             }
@@ -1252,7 +1252,7 @@
                 updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
                 
             } catch (err) {
-                console.error('Error fetching combined scripts:', err);
+              //  .error('Error fetching combined scripts:', err);
                 showLoading(false);
                 showNoResults('Error al consultar las APIs. Intenta de nuevo en unos momentos.');
                 showNotification('Error de conexión con las APIs', 'error');
@@ -1290,7 +1290,7 @@
                 updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
                 
             } catch (err) {
-                console.error('Error loading trending:', err);
+               // .error('Error loading trending:', err);
                 showLoading(false);
                 showNoResults('Error al cargar scripts trending');
                 showNotification('Error cargando trending scripts', 'error');
@@ -1399,7 +1399,7 @@
                 }
                 
             } catch (err) {
-                console.error('Error viewing script:', err);
+               // .error('Error viewing script:', err);
                 modalTitle.textContent = 'Error';
                 modalCode.textContent = 'Error al cargar el script. Intenta de nuevo.';
                 showNotification('Error al cargar el script', 'error');
@@ -1431,7 +1431,7 @@
                             }
                         }
                     } catch (e) {
-                        console.log('Raw endpoint failed, trying regular endpoint');
+                      //  .log('Raw endpoint failed, trying regular endpoint');
                     }
 
                     // Si no hay contenido, intentar el endpoint normal
@@ -1455,7 +1455,7 @@
                 showNotification('Script copiado al portapapeles', 'success');
                 
             } catch (err) {
-                console.error('Error copying script:', err);
+               // .error('Error copying script:', err);
                 showNotification('Error al copiar el script', 'error');
             }
         }
@@ -1493,7 +1493,7 @@
             try { 
                 document.execCommand('copy'); 
             } catch (err) {
-                console.error('Fallback copy failed:', err);
+              //  .error('Fallback copy failed:', err);
             }
             document.body.removeChild(textarea);
         }
