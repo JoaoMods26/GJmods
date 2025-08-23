@@ -983,39 +983,18 @@
             });
         }
 
-async function apiRequest(endpoint, params = {}) {
-    const cacheKey = getCacheKey(endpoint, params);
-    const cached = getCachedData(cacheKey);
-    
-    if (cached) {
-        console.log('Using cached data for:', endpoint);
-        return cached;
-    }
+        async function apiRequest(endpoint, params = {}) {
+            const cacheKey = getCacheKey(endpoint, params);
+            const cached = getCachedData(cacheKey);
+            
+            if (cached) {
+                console.log('Using cached data for:', endpoint);
+                return cached;
+            }
 
-    let query = '';
-    if (params && Object.keys(params).length > 0) {
-        query = '?' + new URLSearchParams(params).toString();
-    }
 
-    const url = `${endpoint}${query}`;
 
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
 
-        const ct = (response.headers.get('Content-Type') || '').toLowerCase();
-        const data = ct.includes('application/json') ? await response.json() : await response.text();
-
-        console.log('API response:', data);
-        setCachedData(cacheKey, data);
-        return data;
-    } catch (error) {
-        console.error('API request failed:', error);
-        throw error;
-    }
-}
 
 
 async function apiRequest(endpoint, params = {}) {
@@ -1052,7 +1031,25 @@ async function apiRequest(endpoint, params = {}) {
     }
 }
 
-        }
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // ====== API Calls - ScriptBlox ======
         async function fetchScriptBloxScripts(query = '', page = 1) {
@@ -1433,25 +1430,12 @@ async function apiRequest(endpoint, params = {}) {
                     const script = data?.script || data?.result || {};
                     title = script.title || 'Script sin título';
                     scriptContent = script.script || script.content || '';
-} else if (apiSource === 'rscripts') {
-    // 1) Intentar RAW (puede venir como text/plain)
-    try {
-        const rawData = await apiRequest(`${RSCRIPTS_API}/scripts/${id}/raw`);
-        scriptContent = typeof rawData === 'string'
-            ? rawData
-            : (rawData?.content || rawData?.script || rawData || '');
-    } catch (e) {
-        console.log('Raw endpoint failed for RScripts, trying regular endpoint');
-    }
-
-    // 2) Fallback al detalle si aún no hay contenido
-    if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined' || String(scriptContent).trim() === '') {
-        const data = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
-        const script = data?.data || data?.script || data || {};
-        scriptContent = script.script || script.content || script.code || script.raw_content || '';
-    }
-}
-
+                } else if (apiSource === 'rscripts') {
+                    const data = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
+                    const script = data?.data || data?.script || data || {};
+                    title = script.title || script.name || 'Script sin título';
+                    scriptContent = script.script || script.content || script.code || script.raw_content || '';
+                }
 
                 modalTitle.textContent = title;
                 
@@ -1504,23 +1488,20 @@ async function apiRequest(endpoint, params = {}) {
                         const fallbackScript = fallbackData?.script || fallbackData?.result || {};
                         scriptContent = fallbackScript.script || fallbackScript.content || '';
                     }
-} else if (apiSource === 'rscripts') {
-    const data = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
-    const script = data?.data || data?.script || data || {};
-    title = script.title || script.name || 'Script sin título';
-    scriptContent = script.script || script.content || script.code || script.raw_content || '';
-
-    // Fallback al RAW si el detalle no trae contenido
-    if (!scriptContent || String(scriptContent).trim() === '' || scriptContent === 'null' || scriptContent === 'undefined') {
-        try {
-            const rawData = await apiRequest(`${RSCRIPTS_API}/scripts/${id}/raw`);
-            scriptContent = typeof rawData === 'string'
-                ? rawData
-                : (rawData?.content || rawData?.script || rawData || '');
-        } catch (_) {}
-    }
-}
-
+                } else if (apiSource === 'rscripts') {
+                    // Para RScripts, intentar múltiples endpoints para obtener el contenido raw
+                    try {
+                        // Intentar endpoint de contenido raw
+                        const rawData = await apiRequest(`${RSCRIPTS_API}/scripts/${id}/raw`);
+                        scriptContent = rawData?.content || rawData?.script || rawData || '';
+                    } catch (e) {
+                        console.log('Raw endpoint failed for RScripts, trying regular endpoint');
+                        // Fallback al endpoint normal
+                        const data = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
+                        const script = data?.data || data?.script || data || {};
+                        scriptContent = script.script || script.content || script.code || script.raw_content || '';
+                    }
+                }
 
                 if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined' || scriptContent.trim() === '') {
                     showNotification('Este script no tiene contenido disponible', 'error');
