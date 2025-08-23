@@ -1,398 +1,88 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rscripts Proxy App</title>
-  <meta name="description" content="Viewer para Rscripts API con soporte de proxy, paginación y copia de scripts." />
-  <style>
-    :root{
-      --bg: #0b0f14; --panel:#10161d; --card:#131b23; --muted:#8aa0b2; --text:#e6eef5; --accent:#5cc8ff; --stroke:#203040;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial; background:linear-gradient(180deg, #0b0f14, #0d141c); color:var(--text)}
-    header{position:sticky;top:0;z-index:20;background:rgba(16,22,29,.8);backdrop-filter:saturate(140%) blur(8px); border-bottom:1px solid var(--stroke)}
-    .wrap{max-width:1100px;margin:auto;padding:16px}
-    h1{margin:0;font-size:clamp(18px,3.5vw,28px);letter-spacing:.3px}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
-    input,select,button{background:#0e141b;color:var(--text);border:1px solid var(--stroke);border-radius:12px;padding:10px 12px;font:inherit;outline:none}
-    input:focus,select:focus,button:focus{border-color:var(--accent); box-shadow:0 0 0 3px #5cc8ff33}
-    .btn{cursor:pointer}
-    .btn.accent{background:linear-gradient(180deg,#0ea5e9,#0284c7);border-color:#0284c7}
-    .btn.ghost{background:transparent}
-    .pill{padding:8px 10px;border-radius:999px;border:1px solid var(--stroke);display:inline-flex;gap:8px;align-items:center}
-
-    main .grid{display:grid;gap:14px;padding:16px}
-    @media(min-width:640px){ main .grid{grid-template-columns:repeat(2,1fr)} }
-    @media(min-width:960px){ main .grid{grid-template-columns:repeat(3,1fr)} }
-
-    .card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:180px}
-    .thumb{aspect-ratio:16/9;background:#0b1117;display:block;width:100%;object-fit:cover}
-    .body{padding:12px;display:flex;flex-direction:column;gap:8px}
-    .title{font-size:16px;font-weight:600;line-height:1.2}
-    .desc{font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-    .author{display:flex;align-items:center;gap:8px;margin-top:4px}
-    .pfp{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--stroke)}
-    .row-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-    .meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:2px}
-    textarea{width:100%;min-height:160px;resize:vertical;border-radius:12px;background:#0b1117;color:#dbe7f3;border:1px solid var(--stroke);padding:10px;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
-    .footer{display:flex;justify-content:center;padding:20px}
-    .empty{border:1px dashed var(--stroke);padding:24px;border-radius:16px;text-align:center;color:var(--muted)}
-    .toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0b1117;border:1px solid var(--stroke);color:var(--text);padding:10px 14px;border-radius:12px;opacity:0;transition:.25s;z-index:40}
-    .toast.show{opacity:1}
-    .badge{font-size:11px;border:1px solid var(--stroke);border-radius:999px;padding:2px 8px;color:var(--muted)}
-    .kbd{font-family:ui-monospace,Menlo,Monaco,Consolas,"Courier New",monospace;font-size:12px;border:1px solid var(--stroke);padding:2px 6px;border-radius:6px;background:#0b1117;color:#cfe6f7}
-  </style>
-</head>
-<body>
-  <header>
-    <div class="wrap">
-      <h1>Rscripts App <span class="badge" id="version">v2</span></h1>
-      <div class="row">
-        <span class="pill" title="Base del proxy o API">
-          <span>Base URL</span>
-          <input id="baseUrl" placeholder="https://tu-proxy.tld/api/v2" style="min-width:280px" />
-          <button class="btn" id="btnSaveBase">Guardar</button>
-        </span>
-        <select id="endpoint">
-          <option value="latest" selected>Últimos (por fecha desc)</option>
-          <option value="trending">Tendencias</option>
-          <option value="byId">Por ID específico</option>
-        </select>
-        <input id="inputId" placeholder="ID de script (para Por ID)" style="min-width:220px;display:none" />
-        <button class="btn accent" id="btnLoad">Cargar</button>
-        <button class="btn ghost" id="btnClearCache" title="Borrar caché local">Borrar caché</button>
-        <span class="badge">Consejo: usa <span class="kbd">L</span> para cargar + más</span>
-      </div>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <div id="info" class="meta"></div>
-    <div id="grid" class="grid"></div>
-    <div id="empty" class="empty" style="display:none">Sin resultados</div>
-    <div class="footer">
-      <button id="btnMore" class="btn">Cargar más</button>
-    </div>
-  </main>
-
-  <div id="toast" class="toast"></div>
-
-  <script>
-  // ==========================
-  // Config + Utilidades
-  // ==========================
-  const DEFAULT_BASE = 'https://rscripts.net/api/v2'; // reemplázalo por tu proxy
-  const LS_KEY_BASE = 'rs_base_url_v2';
-  const LS_CACHE = 'rs_cache_v2';
-
-  const state = {
-    base: localStorage.getItem(LS_KEY_BASE) || DEFAULT_BASE,
-    mode: 'latest',
-    page: 1,
-    maxPages: 1,
-    loading: false,
-    abort: null,
-    cache: JSON.parse(localStorage.getItem(LS_CACHE) || '{}'), // { url: {ts,data} }
-    dedupe: new Map(), // url -> Promise
-  };
-
-  const el = (sel) => document.querySelector(sel);
-  const $grid = el('#grid');
-  const $more = el('#btnMore');
-  const $empty = el('#empty');
-  const $info = el('#info');
-  const $toast = el('#toast');
-  const $baseInput = el('#baseUrl');
-  const $endpoint = el('#endpoint');
-  const $inputId = el('#inputId');
-
-  $baseInput.value = state.base;
-
-  function showToast(msg){
-    $toast.textContent = msg; $toast.classList.add('show');
-    setTimeout(()=> $toast.classList.remove('show'), 1800);
-  }
-
-  function saveCache(){
-    try { localStorage.setItem(LS_CACHE, JSON.stringify(state.cache)); } catch(e) {}
-  }
-
-  function cacheGet(url, maxAgeMs=60_000){ // 1 min por defecto
-    const rec = state.cache[url];
-    if(!rec) return null;
-    if(Date.now() - rec.ts > maxAgeMs) return null;
-    return rec.data;
-  }
-
-  function cacheSet(url, data){
-    state.cache[url] = { ts: Date.now(), data };
-    saveCache();
-  }
-
-  function buildUrl(path, params={}){
-    const base = state.base.replace(/\/$/, '');
-    const sp = new URLSearchParams(params);
-    return `${base}${path}${sp.toString() ? ('?' + sp.toString()) : ''}`;
-  }
-
-  async function safeFetch(url, opts={}){
-    // De-dupe: mismas URLs comparten la misma promesa
-    if(state.dedupe.has(url)) return state.dedupe.get(url);
-
-    // Cache rápida
-    const cached = cacheGet(url, 90_000); // 90s
-    if(cached){ return Promise.resolve(cached); }
-
-    // Abort previo
-    if(opts.exclusive){ if(state.abort) { try { state.abort.abort(); } catch(e){} } state.abort = new AbortController(); opts.signal = state.abort.signal; }
-
-    const p = fetch(url, { ...opts })
-      .then(async (r)=>{
-        if(!r.ok) throw new Error(`HTTP ${r.status}`);
-        const ct = r.headers.get('content-type')||'';
-        if(ct.includes('application/json')) return r.json();
-        return r.text();
-      })
-      .then(data=>{ cacheSet(url, data); return data; })
-      .finally(()=>{ state.dedupe.delete(url); });
-
-    state.dedupe.set(url, p);
-    return p;
-  }
-
-  function sanitize(s){
-    if(s == null) return '';
-    return String(s).replace(/[&<>\"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m] ));
-  }
-
-  // ==========================
-  // Render
-  // ==========================
-  function cardTpl(item){
-    const hasUser = !!item.user;
-    const username = sanitize(hasUser ? (item.user.username || item.creator) : (item.creator || 'Desconocido'));
-    const pfp = sanitize(hasUser && item.user.image ? item.user.image : 'https://i.pravatar.cc/100');
-    const title = sanitize(item.title || 'Sin título');
-    const desc = sanitize(item.description || '');
-    const img = sanitize(item.image || '');
-    const id = sanitize(item._id || item.id || '');
-
-    return `
-      <article class="card" data-id="${id}">
-        ${img ? `<img class="thumb" loading="lazy" src="${img}" alt="${title}">` : `<div class="thumb"></div>`}
-        <div class="body">
-          <div class="title">${title}</div>
-          <div class="author">
-            <img class="pfp" src="${pfp}" alt="${username}">
-            <div>
-              <div style="font-size:13px">${username}</div>
-              <div class="meta">${item.game?.name ? sanitize(item.game.name) : 'Juego desconocido'}</div>
-            </div>
-          </div>
-          <div class="desc">${desc}</div>
-          <div class="row-btns">
-            <button class="btn" data-action="toggle">Ver script</button>
-            ${item.rawScript ? `<a class="btn" data-action="raw" href="#" rel="noreferrer">Raw</a>` : ''}
-            <button class="btn" data-action="copy">Copiar</button>
-            <button class="btn" data-action="download">Descargar .lua</button>
-          </div>
-          <section class="panel" style="display:none;gap:8px;flex-direction:column">
-            <textarea spellcheck="false" placeholder="Cargando script..."></textarea>
-          </section>
-        </div>
-      </article>
-    `;
-  }
-
-  function renderList(list=[], {append=false}={}){
-    if(!append) $grid.innerHTML = '';
-    if(!list.length){ $empty.style.display='block'; $more.style.display='none'; return; }
-    $empty.style.display='none';
-    const frag = document.createDocumentFragment();
-    list.forEach(item => {
-      const div = document.createElement('div');
-      div.innerHTML = cardTpl(item);
-      frag.appendChild(div.firstElementChild);
-    });
-    $grid.appendChild(frag);
-    bindCardEvents();
-  }
-
-  function updateInfo(){
-    $info.innerHTML = `Modo: <strong>${state.mode}</strong> · Página <strong>${state.page}</strong> de <strong>${state.maxPages}</strong>`;
-    $more.style.display = state.page < state.maxPages ? 'inline-block' : 'none';
-  }
-
-  // ==========================
-  // Carga de datos (endpoints)
-  // ==========================
-  async function loadLatest({reset=false}={}){
-    if(reset){ state.page = 1; }
-    const url = buildUrl('/scripts', { page: state.page, orderBy:'date', sort:'desc' });
-    const data = await safeFetch(url, { exclusive: reset });
-    const list = Array.isArray(data?.scripts) ? data.scripts : [];
-    state.maxPages = Number(data?.info?.maxPages || 1);
-    renderList(list, {append: !reset && state.page>1});
-    updateInfo();
-  }
-
-  async function loadTrending(){
-    const url = buildUrl('/trending');
-    const data = await safeFetch(url, { exclusive: true });
-    const list = Array.isArray(data?.success) ? data.success : [];
-    state.page = 1; state.maxPages = 1;
-    renderList(list, {append:false});
-    updateInfo();
-  }
-
-  async function loadById(){
-    const id = $inputId.value.trim();
-    if(!id){ showToast('Ingresa un ID'); return; }
-    const url = buildUrl('/script', { id });
-    const data = await safeFetch(url, { exclusive: true });
-    const ok = data?.success;
-    const item = ok && (data.success.data || data.success); // manejo flexible
-    const list = item ? [item] : [];
-    state.page = 1; state.maxPages = 1;
-    renderList(list, {append:false});
-    updateInfo();
-  }
-
-  // ==========================
-  // Eventos de tarjeta (cargar raw a demanda)
-  // ==========================
-  function bindCardEvents(){
-    $grid.querySelectorAll('.card').forEach(card => {
-      const id = card.dataset.id;
-      const panel = card.querySelector('.panel');
-      const ta = card.querySelector('textarea');
-      const btns = card.querySelectorAll('[data-action]');
-
-      btns.forEach(btn => btn.addEventListener('click', async (e)=>{
-        e.preventDefault();
-        const action = btn.dataset.action;
-        if(action === 'toggle'){
-          if(panel.style.display==='none'){
-            panel.style.display='flex';
-            await ensureScriptLoaded(card, ta);
-          } else {
-            panel.style.display='none';
-          }
-        }
-        if(action === 'raw'){
-          const raw = await getRawUrl(card);
-          if(raw){ window.open(raw, '_blank', 'noreferrer'); }
-        }
-        if(action === 'copy'){
-          await ensureScriptLoaded(card, ta);
-          try { await navigator.clipboard.writeText(ta.value||''); showToast('Copiado ✅'); } catch(err){ showToast('No se pudo copiar'); }
-        }
-        if(action === 'download'){
-          await ensureScriptLoaded(card, ta);
-          const blob = new Blob([ta.value||''], {type:'text/plain'});
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(blob);
-          const title = (card.querySelector('.title')?.textContent || 'script').replace(/[^a-z0-9\-\_]+/gi,'_');
-          a.download = `${title}.lua`;
-          document.body.appendChild(a); a.click(); a.remove();
-          setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
-        }
-      }));
-    });
-  }
-
-  async function getRawUrl(card){
-    // Intenta leer del dataset original guardado en data-raw (si existe), si no buscamos en caché
-    const id = card.dataset.id;
-    const item = currentItems().find(x => (x._id||x.id) == id) || {};
-    return item.rawScript || null;
-  }
-
-  function currentItems(){
-    // Extrae los items renderizados desde el DOM almacenando breve snapshot
-    // (mejor: mantener un array global en cada llamada de carga)
-    const items = [];
-    $grid.querySelectorAll('.card').forEach(c => {
-      const id = c.dataset.id;
-      // No tenemos el objeto completo aquí, pero podemos usar dataset si hiciera falta
-      // Para raw usamos la lista del último fetch guardada en window.__lastList
-    });
-    return window.__lastList || [];
-  }
-
-  async function ensureScriptLoaded(card, textarea){
-    if(textarea.dataset.loaded === '1') return;
-    const id = card.dataset.id;
-    const baseList = window.__lastList || [];
-    const item = baseList.find(x => (x._id||x.id) == id) || {};
-    const raw = item.rawScript;
-    if(!raw){ textarea.value = '// No hay rawScript disponible para este ítem'; textarea.dataset.loaded='1'; return; }
-    try{
-      const data = await safeFetch(raw);
-      const content = typeof data === 'string' ? data : (JSON.stringify(data, null, 2));
-      textarea.value = content;
-      textarea.dataset.loaded = '1';
-    }catch(err){
-      textarea.value = `// Error cargando el contenido: ${err.message}`;
-      textarea.dataset.loaded = '1';
-    }
-  }
-
-  // ==========================
-  // Control de UI
-  // ==========================
-  async function load({reset=false}={}){
-    if(state.loading) return; state.loading = true; $more.disabled = true;
-    try{
-      let list = [];
-      if(state.mode === 'latest'){
-        await loadLatest({reset});
-      } else if(state.mode === 'trending'){
-        await loadTrending();
-      } else if(state.mode === 'byId'){
-        await loadById();
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rscripts App (via Cloudflare Worker)</title>
+    <style>
+      textarea {
+        width: 100%;
+        height: 200px;
       }
-    } finally {
-      state.loading = false; $more.disabled = false;
-    }
-  }
+      #scripts-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 10px;
+      }
+      #scripts-container div {
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Rscripts App (con Proxy Worker)</h1>
+    <div id="scripts-container"></div>
 
-  document.addEventListener('keydown', (e)=>{
-    if(e.key.toLowerCase()==='l'){ if(state.page < state.maxPages){ state.page++; load({reset:false}); } }
-  });
+    <script>
+      const baseUrl = "https://workers-playground-curly-unit-2502.joao-lokofrank.workers.dev";
 
-  $more.addEventListener('click', ()=>{
-    if(state.page < state.maxPages){ state.page++; load({reset:false}); }
-  });
+      // Helper: build URL
+      function buildUrl(path) {
+        return `${baseUrl}${path}`;
+      }
 
-  el('#btnLoad').addEventListener('click', ()=>{
-    if(state.mode==='latest'){ state.page = 1; }
-    load({reset:true});
-  });
+      // Fetch y mostrar scripts
+      fetch(buildUrl("/api/v2/scripts?page=1&orderBy=date&sort=desc"))
+        .then((response) => response.json())
+        .then((data) => {
+          const scriptsContainer = document.getElementById("scripts-container");
 
-  el('#btnSaveBase').addEventListener('click', ()=>{
-    const v = $baseInput.value.trim().replace(/\/$/, '');
-    if(!v){ showToast('Base inválida'); return; }
-    state.base = v; localStorage.setItem(LS_KEY_BASE, state.base); showToast('Base guardada');
-  });
+          const scripts = data.scripts.map((script) => {
+            const hasUser = script.user;
+            const profilePicture = hasUser && script.user.image ? script.user.image : "https://i.pravatar.cc/300";
+            const username = hasUser ? script.user.username : script.creator;
 
-  $endpoint.addEventListener('change', ()=>{
-    state.mode = $endpoint.value;
-    $inputId.style.display = state.mode==='byId' ? 'inline-block' : 'none';
-  });
+            const scriptElement = document.createElement("div");
+            scriptElement.innerHTML = `
+              <h2>${script.title}</h2>
+              <p>${script.description}</p>
+              <img style="width: 40px; height: 40px; border-radius: 50%;" src="${profilePicture}" alt="Profile picture of ${username}">
+              <p>Creator: ${username}</p>
+              <img src="${script.image}" alt="${script.title}">
+              <textarea id="script-${script._id}"></textarea>
+            `;
 
-  el('#btnClearCache').addEventListener('click', ()=>{
-    state.cache = {}; saveCache(); showToast('Caché limpiada');
-  });
+            const downloadUrl = script.rawScript;
 
-  // Hook para guardar el último listado para rawScript lookup
-  const _renderList = renderList;
-  renderList = function(list, opts){ window.__lastList = list || []; return _renderList(list, opts); };
+            // Obtener contenido del script
+            if (downloadUrl) {
+              fetch(downloadUrl)
+                .then((res) => res.text())
+                .then((scriptContent) => {
+                  const textArea = scriptElement.querySelector(`#script-${script._id}`);
+                  textArea.value = scriptContent;
+                })
+                .catch((err) => {
+                  console.error(`Error fetching script content for ${script.title}:`, err);
+                });
+            }
 
-  // Primera carga
-  load({reset:true});
-  </script>
-</body>
+            return scriptElement;
+          });
+
+          scripts.forEach((el) => scriptsContainer.appendChild(el));
+        })
+        .catch((error) => console.error("Error fetching scripts:", error));
+
+      // Registrar service worker para cache
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("sw.js")
+          .then(() => console.log("Service Worker registrado ✅"))
+          .catch((err) => console.error("SW Error:", err));
+      }
+    </script>
+  </body>
 </html>
