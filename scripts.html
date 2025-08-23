@@ -523,9 +523,11 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
+            min-width: 44px;
+            text-align: center;
         }
 
-        .page-btn:hover {
+        .page-btn:hover:not(:disabled) {
             background: rgba(255, 255, 255, 0.1);
             border-color: var(--color-accent);
         }
@@ -778,7 +780,7 @@
 </div>
 <div class="api-indicator" id="rscriptsStatus">
 <div class="status-dot"></div>
-<span>RScripts v2</span>
+<span>RScripts</span>
 </div>
 </div>
 
@@ -871,6 +873,8 @@
         let currentVerified = '';
         let currentSource = 'all';
         let totalPages = 1;
+        let totalScripts = 0;
+        let allScripts = [];
         let isShowingTrending = true;
 
         // ====== Referencias DOM ======
@@ -1002,7 +1006,10 @@
             console.log('Making API request to:', url.toString());
 
             try {
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                    signal: AbortSignal.timeout(15000) // 15 segundos timeout
+                });
+                
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
@@ -1017,7 +1024,7 @@
             }
         }
 
-        // ====== API Calls - ScriptBlox (SIN CAMBIOS) ======
+        // ====== API Calls - ScriptBlox ======
         async function fetchScriptBloxScripts(query = '', page = 1) {
             updateAPIStatus('scriptblox', 'loading');
             
@@ -1081,7 +1088,7 @@
             }
         }
 
-        // ====== API Calls - RScripts v2 (COMPLETAMENTE ACTUALIZADO) ======
+        // ====== API Calls - RScripts ACTUALIZADA ======
         async function fetchRScriptsScripts(query = '', page = 1) {
             updateAPIStatus('rscripts', 'loading');
             
@@ -1090,44 +1097,50 @@
                     page: page
                 };
 
-                // En RScripts v2, la búsqueda se hace con el parámetro 'q' en el mismo endpoint
-                if (query) params.q = query;
+                // Búsqueda en RScripts
+                if (query) params.search = query;
 
-                // Parámetros de ordenamiento para RScripts v2
-                if (currentSort === 'updated') {
-                    params.orderBy = 'date'; // En v2 usa 'date' para lastUpdated
-                } else if (currentSort === 'created') {
-                    params.orderBy = 'date'; // También usa 'date'
+                // Ordenamiento para RScripts actualizada
+                if (currentSort === 'updated' || currentSort === 'created') {
+                    params.sort = 'date';
                 } else if (currentSort === 'views') {
-                    params.orderBy = 'views';
+                    params.sort = 'views';
                 } else if (currentSort === 'title') {
-                    params.orderBy = 'id'; // v2 no tiene ordenamiento por título, usar ID
+                    params.sort = 'title';
                 }
                 
-                params.sort = currentOrder;
+                params.order = currentOrder;
 
-                // Filtros específicos de RScripts v2
+                // Filtros específicos de RScripts
                 if (currentVerified === 'true') {
-                    params.verifiedOnly = true;
+                    params.verified = true;
                 }
 
-                const endpoint = 'scripts'; // Un solo endpoint para ambos casos
-                const data = await apiRequest(`${RSCRIPTS_API}/${endpoint}`, params);
+                const data = await apiRequest(`${RSCRIPTS_API}/scripts`, params);
                 
                 updateAPIStatus('rscripts', 'success');
                 
-                // RScripts v2 devuelve los scripts en 'scripts' array
-                const scripts = data?.scripts || [];
+                // Manejar diferentes estructuras de respuesta
+                let scripts = [];
+                if (Array.isArray(data)) {
+                    scripts = data;
+                } else if (data.scripts && Array.isArray(data.scripts)) {
+                    scripts = data.scripts;
+                } else if (data.data && Array.isArray(data.data)) {
+                    scripts = data.data;
+                }
                 
                 return scripts.map(script => {
-                    // Extraer el nombre del juego de la nueva estructura v2
+                    // Extraer el nombre del juego de la estructura actualizada
                     let gameName = 'Juego desconocido';
                     if (script.game) {
                         if (typeof script.game === 'object') {
-                            gameName = script.game.title || script.game.name || 'Juego desconocido';
+                            gameName = script.game.name || script.game.title || script.gameName || 'Juego desconocido';
                         } else if (typeof script.game === 'string') {
                             gameName = script.game;
                         }
+                    } else if (script.gameName) {
+                        gameName = script.gameName;
                     }
 
                     return {
@@ -1135,19 +1148,19 @@
                         title: script.title || 'Script sin título',
                         game: gameName,
                         description: script.description || 'Sin descripción disponible',
-                        verified: script.user?.verified || false, // En v2, verified está en user object
+                        verified: script.verified || (script.user && script.user.verified) || false,
                         views: script.views || 0,
                         likes: script.likes || 0,
                         patched: script.patched || false,
                         universal: script.universal || false,
-                        keySystem: script.keySystem || false,
+                        keySystem: script.keySystem || script.key || false,
                         scriptType: script.paid ? 'paid' : 'free',
                         source: 'RScripts',
                         apiSource: 'rscripts',
-                        rawScriptUrl: script.rawScript || '', // Nueva estructura: URL directa al script raw
-                        rawScript: '', // Se llenará cuando se necesite
-                        createdAt: script.createdAt || new Date().toISOString(),
-                        updatedAt: script.lastUpdated || script.createdAt || new Date().toISOString(),
+                        rawScriptUrl: script.rawScript || script.script || '',
+                        rawScript: '',
+                        createdAt: script.createdAt || script.created || new Date().toISOString(),
+                        updatedAt: script.updatedAt || script.lastUpdated || script.createdAt || new Date().toISOString(),
                         priority: 2,
                         mobileReady: script.mobileReady || false
                     };
@@ -1228,6 +1241,7 @@
         }
 
         function refreshCurrentSearch() {
+            currentPage = 1; // Reset to first page when filters change
             if (isShowingTrending) {
                 loadTrendingScripts();
             } else {
@@ -1249,6 +1263,10 @@
                     filteredScripts = scripts.filter(script => !script.verified);
                 }
 
+                allScripts = filteredScripts;
+                totalScripts = filteredScripts.length;
+                totalPages = Math.ceil(totalScripts / SCRIPTS_PER_PAGE);
+
                 showLoading(false);
                 
                 if (!filteredScripts || filteredScripts.length === 0) {
@@ -1256,8 +1274,9 @@
                     return;
                 }
 
-                renderScripts(filteredScripts);
-                updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
+                renderCurrentPage();
+                updateHeader(totalScripts, currentPage, totalPages);
+                renderPagination();
                 
             } catch (err) {
                 console.error('Error fetching combined scripts:', err);
@@ -1286,6 +1305,10 @@
                     filteredScripts = scripts.filter(script => !script.verified);
                 }
 
+                allScripts = filteredScripts;
+                totalScripts = filteredScripts.length;
+                totalPages = Math.ceil(totalScripts / SCRIPTS_PER_PAGE);
+
                 showLoading(false);
                 
                 if (!filteredScripts || filteredScripts.length === 0) {
@@ -1293,14 +1316,85 @@
                     return;
                 }
 
-                renderScripts(filteredScripts);
-                updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
+                renderCurrentPage();
+                updateHeader(totalScripts, currentPage, totalPages);
+                renderPagination();
                 
             } catch (err) {
                 console.error('Error loading trending:', err);
                 showLoading(false);
                 showNoResults('Error al cargar scripts trending');
                 showNotification('Error cargando trending scripts', 'error');
+            }
+        }
+
+        // ====== Paginación ======
+        function renderCurrentPage() {
+            const startIndex = (currentPage - 1) * SCRIPTS_PER_PAGE;
+            const endIndex = startIndex + SCRIPTS_PER_PAGE;
+            const pageScripts = allScripts.slice(startIndex, endIndex);
+            
+            renderScripts(pageScripts);
+        }
+
+        function renderPagination() {
+            if (totalPages <= 1) {
+                pagination.style.display = 'none';
+                return;
+            }
+
+            pagination.style.display = 'flex';
+            
+            let paginationHTML = '';
+            
+            // Botón anterior
+            paginationHTML += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">‹</button>`;
+            
+            // Páginas
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            if (startPage > 1) {
+                paginationHTML += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+                if (startPage > 2) {
+                    paginationHTML += `<span class="page-btn" disabled>...</span>`;
+                }
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            }
+            
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    paginationHTML += `<span class="page-btn" disabled>...</span>`;
+                }
+                paginationHTML += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+            }
+            
+            // Botón siguiente
+            paginationHTML += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">›</button>`;
+            
+            pagination.innerHTML = paginationHTML;
+        }
+
+        function goToPage(page) {
+            if (page >= 1 && page <= totalPages && page !== currentPage) {
+                currentPage = page;
+                renderCurrentPage();
+                updateHeader(totalScripts, currentPage, totalPages);
+                renderPagination();
+                
+                // Scroll to top smoothly
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             }
         }
 
@@ -1404,29 +1498,18 @@
                     }
                     
                 } else if (apiSource === 'rscripts') {
-                    // RScripts v2: Primero obtener la información del script para conseguir rawScript URL
+                    // RScripts: usar el endpoint raw actualizado
                     try {
-                        const scriptInfo = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
-                        const script = scriptInfo?.script || scriptInfo;
+                        const rawResponse = await fetch(`${RSCRIPTS_API}/raw/${id}`);
                         
-                        if (script && script.rawScript) {
-                            console.log('RScripts rawScript URL:', script.rawScript);
-                            
-                            // Hacer fetch directo a la URL raw usando nuestro proxy
-                            const encodedRawUrl = encodeURIComponent(script.rawScript);
-                            const rawResponse = await fetch(`${RSCRIPTS_API}/raw/${encodedRawUrl}`);
-                            
-                            if (rawResponse.ok) {
-                                scriptContent = await rawResponse.text();
-                            } else {
-                                throw new Error(`Raw fetch failed: ${rawResponse.status}`);
-                            }
+                        if (rawResponse.ok) {
+                            scriptContent = await rawResponse.text();
                         } else {
-                            throw new Error('No rawScript URL found');
+                            throw new Error(`Raw fetch failed: ${rawResponse.status}`);
                         }
                         
                     } catch (e) {
-                        console.error('RScripts v2 raw fetch failed:', e);
+                        console.error('RScripts raw fetch failed:', e);
                         try {
                             const fallbackData = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
                             const script = fallbackData?.script || fallbackData;
@@ -1472,25 +1555,22 @@
                     scriptContent = script.script || script.content || '';
                     
                 } else if (apiSource === 'rscripts') {
-                    // RScripts v2: Obtener info del script y luego el contenido raw
+                    // RScripts: Obtener info del script y luego el contenido raw
                     const scriptInfo = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
                     const script = scriptInfo?.script || scriptInfo;
                     
                     title = script?.title || 'Script sin título';
                     
-                    if (script && script.rawScript) {
-                        try {
-                            const encodedRawUrl = encodeURIComponent(script.rawScript);
-                            const rawResponse = await fetch(`${RSCRIPTS_API}/raw/${encodedRawUrl}`);
-                            
-                            if (rawResponse.ok) {
-                                scriptContent = await rawResponse.text();
-                            }
-                        } catch (e) {
-                            console.error('Failed to fetch raw content:', e);
-                            scriptContent = script.script || script.content || '';
+                    try {
+                        const rawResponse = await fetch(`${RSCRIPTS_API}/raw/${id}`);
+                        
+                        if (rawResponse.ok) {
+                            scriptContent = await rawResponse.text();
+                        } else {
+                            scriptContent = script?.script || script?.content || '';
                         }
-                    } else {
+                    } catch (e) {
+                        console.error('Failed to fetch raw content:', e);
                         scriptContent = script?.script || script?.content || '';
                     }
                 }
@@ -1666,6 +1746,7 @@
         window.closeModal = closeModal;
         window.clearSearch = clearSearch;
         window.loadTrendingScripts = loadTrendingScripts;
+        window.goToPage = goToPage;
     </script>
 </body>
 </html>
