@@ -1084,73 +1084,75 @@
         }
 
         // ====== API Calls - RScripts ======
+// ====== API Calls - RScripts v2 (ACTUALIZADO) ======
         async function fetchRScriptsScripts(query = '', page = 1) {
             updateAPIStatus('rscripts', 'loading');
             
             try {
                 const params = {
-                    page: page,
-                    limit: Math.floor(SCRIPTS_PER_PAGE / 2) // Dividir entre las dos APIs
+                    page: page
                 };
 
+                // En RScripts v2, la búsqueda se hace con el parámetro 'q' en el mismo endpoint
                 if (query) params.q = query;
 
-                // Parámetros de ordenamiento para RScripts
+                // Parámetros de ordenamiento para RScripts v2
                 if (currentSort === 'updated') {
-                    params.sort = 'updated_at';
+                    params.orderBy = 'date'; // En v2 usa 'date' para lastUpdated
                 } else if (currentSort === 'created') {
-                    params.sort = 'created_at';
+                    params.orderBy = 'date'; // También usa 'date'
                 } else if (currentSort === 'views') {
-                    params.sort = 'views';
+                    params.orderBy = 'views';
                 } else if (currentSort === 'title') {
-                    params.sort = 'title';
+                    params.orderBy = 'id'; // v2 no tiene ordenamiento por título, usar ID
                 }
                 
-                params.order = currentOrder;
+                params.sort = currentOrder;
 
-                const endpoint = query ? 'scripts/search' : 'scripts';
+                // Filtros específicos de RScripts v2
+                if (currentVerified === 'true') {
+                    params.verifiedOnly = true;
+                }
+
+                const endpoint = 'scripts'; // Un solo endpoint para ambos casos
                 const data = await apiRequest(`${RSCRIPTS_API}/${endpoint}`, params);
                 
                 updateAPIStatus('rscripts', 'success');
                 
-                // Normalizar scripts de RScripts - CORREGIDO
-                const scripts = data?.data || data?.scripts || data || [];
+                // RScripts v2 devuelve los scripts en 'scripts' array
+                const scripts = data?.scripts || [];
                 
                 return scripts.map(script => {
-                    // Extraer el nombre del juego correctamente
+                    // Extraer el nombre del juego de la nueva estructura v2
                     let gameName = 'Juego desconocido';
                     if (script.game) {
-                        if (typeof script.game === 'string') {
+                        if (typeof script.game === 'object') {
+                            gameName = script.game.title || script.game.name || 'Juego desconocido';
+                        } else if (typeof script.game === 'string') {
                             gameName = script.game;
-                        } else if (typeof script.game === 'object' && script.game.name) {
-                            gameName = script.game.name;
-                        } else if (typeof script.game === 'object' && script.game.title) {
-                            gameName = script.game.title;
                         }
-                    } else if (script.game_name) {
-                        gameName = script.game_name;
-                    } else if (script.gameName) {
-                        gameName = script.gameName;
                     }
 
                     return {
-                        id: script.id || script.slug || script._id,
-                        title: script.title || script.name || 'Script sin título',
+                        id: script._id || script.id,
+                        title: script.title || 'Script sin título',
                         game: gameName,
-                        description: script.description || script.desc || 'Sin descripción disponible',
-                        verified: script.verified || script.is_verified || false,
-                        views: script.views || script.view_count || 0,
-                        likes: script.likes || script.like_count || script.upvotes || 0,
-                        patched: script.patched || script.is_patched || false,
-                        universal: script.universal || script.is_universal || false,
-                        keySystem: script.key_system || script.keySystem || script.has_key || false,
-                        scriptType: script.type || script.script_type || 'free',
+                        description: script.description || 'Sin descripción disponible',
+                        verified: script.user?.verified || false, // En v2, verified está en user object
+                        views: script.views || 0,
+                        likes: script.likes || 0,
+                        patched: script.patched || false,
+                        universal: script.universal || false,
+                        keySystem: script.keySystem || false,
+                        scriptType: script.paid ? 'paid' : 'free',
                         source: 'RScripts',
                         apiSource: 'rscripts',
-                        rawScript: script.script || script.content || script.code || '',
-                        createdAt: script.created_at || script.createdAt || new Date().toISOString(),
-                        updatedAt: script.updated_at || script.updatedAt || new Date().toISOString(),
-                        priority: 2 // RScripts tiene menor prioridad
+                        rawScriptUrl: script.rawScript || '', // Nueva estructura: URL directa al script raw
+                        rawScript: '', // Se llenará cuando se necesite
+                        createdAt: script.createdAt || new Date().toISOString(),
+                        updatedAt: script.lastUpdated || script.createdAt || new Date().toISOString(),
+                        priority: 2,
+                        mobileReady: script.mobileReady || false
                     };
                 });
 
@@ -1161,222 +1163,92 @@
             }
         }
 
-        // ====== Funciones combinadas ======
-        async function fetchCombinedScripts(query = '', page = 1) {
-            const promises = [];
-            
-            if (currentSource === 'all' || currentSource === 'scriptblox') {
-                promises.push(fetchScriptBloxScripts(query, page));
-            }
-            
-            if (currentSource === 'all' || currentSource === 'rscripts') {
-                promises.push(fetchRScriptsScripts(query, page));
-            }
-
-            const results = await Promise.all(promises);
-            let combinedScripts = [];
-            
-            // Combinar resultados de ambas APIs
-            results.forEach(apiScripts => {
-                combinedScripts = combinedScripts.concat(apiScripts);
-            });
-
-            // Ordenar por prioridad primero (ScriptBlox primero), luego por otros criterios
-            combinedScripts = sortScripts(combinedScripts);
-            
-            return combinedScripts;
-        }
-
-        // ====== Utilidades de ordenamiento ======
-        function sortScripts(scripts) {
-            return scripts.sort((a, b) => {
-                // Primero ordenar por prioridad (ScriptBlox primero)
-                if (a.priority !== b.priority) {
-                    return a.priority - b.priority;
-                }
-                
-                // Luego aplicar el ordenamiento seleccionado
-                let comparison = 0;
-                
-                switch (currentSort) {
-                    case 'updated':
-                        comparison = new Date(b.updatedAt) - new Date(a.updatedAt);
-                        break;
-                    case 'created':
-                        comparison = new Date(b.createdAt) - new Date(a.createdAt);
-                        break;
-                    case 'views':
-                        comparison = b.views - a.views;
-                        break;
-                    case 'title':
-                        comparison = a.title.localeCompare(b.title);
-                        break;
-                    default:
-                        comparison = new Date(b.updatedAt) - new Date(a.updatedAt);
-                }
-                
-                return currentOrder === 'asc' ? -comparison : comparison;
-            });
-        }
-
-        // ====== Acciones de búsqueda ======
-        async function handleSearch(e) {
-            e.preventDefault();
-            currentQuery = searchInput.value.trim();
-            if (!currentQuery) {
-                showNotification('Por favor ingresa un término de búsqueda', 'error');
+        // ====== Funciones de copia actualizadas ======
+        async function copyScriptById(id, apiSource) {
+            if (!id) {
+                showNotification('ID de script no válido', 'error');
                 return;
             }
-            currentPage = 1;
-            isShowingTrending = false;
-            await fetchScripts();
-        }
-
-        function refreshCurrentSearch() {
-            if (isShowingTrending) {
-                loadTrendingScripts();
-            } else {
-                fetchScripts();
-            }
-        }
-
-        async function fetchScripts() {
-            showLoading(true);
-            hideAllResults();
 
             try {
-                const scripts = await fetchCombinedScripts(currentQuery, currentPage);
+                showNotification('Obteniendo script...', 'success');
                 
-                // Filtrar por verificación si es necesario
-                let filteredScripts = scripts;
-                if (currentVerified === 'true') {
-                    filteredScripts = scripts.filter(script => script.verified);
-                } else if (currentVerified === 'false') {
-                    filteredScripts = scripts.filter(script => !script.verified);
+                let scriptContent = '';
+
+                if (apiSource === 'scriptblox') {
+                    // ScriptBlox sin cambios
+                    try {
+                        const response = await fetch(`${SCRIPTBLOX_API}/raw/${id}`);
+                        if (response.ok) {
+                            const contentType = response.headers.get('Content-Type') || '';
+                            if (contentType.includes('application/json')) {
+                                const data = await response.json();
+                                scriptContent = data?.script || data?.result || data || '';
+                            } else {
+                                scriptContent = await response.text();
+                            }
+                        }
+                    } catch (e) {
+                        console.log('Raw endpoint failed, trying regular endpoint');
+                    }
+
+                    if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined') {
+                        const fallbackData = await apiRequest(`${SCRIPTBLOX_API}/${id}`);
+                        const fallbackScript = fallbackData?.script || fallbackData?.result || {};
+                        scriptContent = fallbackScript.script || fallbackScript.content || '';
+                    }
+                    
+                } else if (apiSource === 'rscripts') {
+                    // RScripts v2: Primero obtener la información del script para conseguir rawScript URL
+                    try {
+                        const scriptInfo = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
+                        const script = scriptInfo?.script || scriptInfo;
+                        
+                        if (script && script.rawScript) {
+                            // Usar la URL directa del rawScript
+                            console.log('RScripts rawScript URL:', script.rawScript);
+                            
+                            // Hacer fetch directo a la URL raw usando nuestro proxy
+                            const encodedRawUrl = encodeURIComponent(script.rawScript);
+                            const rawResponse = await fetch(`${RSCRIPTS_API}/raw/${encodedRawUrl}`);
+                            
+                            if (rawResponse.ok) {
+                                scriptContent = await rawResponse.text();
+                            } else {
+                                throw new Error(`Raw fetch failed: ${rawResponse.status}`);
+                            }
+                        } else {
+                            throw new Error('No rawScript URL found');
+                        }
+                        
+                    } catch (e) {
+                        console.error('RScripts v2 raw fetch failed:', e);
+                        // Fallback: intentar obtener desde la respuesta del script info
+                        try {
+                            const fallbackData = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
+                            const script = fallbackData?.script || fallbackData;
+                            scriptContent = script?.script || script?.content || '';
+                        } catch (fallbackError) {
+                            console.error('RScripts fallback also failed:', fallbackError);
+                        }
+                    }
                 }
 
-                showLoading(false);
-                
-                if (!filteredScripts || filteredScripts.length === 0) {
-                    showNoResults();
+                if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined' || scriptContent.trim() === '') {
+                    showNotification('Este script no tiene contenido disponible', 'error');
                     return;
                 }
 
-                renderScripts(filteredScripts);
-                updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
+                copyToClipboard(scriptContent);
+                showNotification('Script copiado al portapapeles', 'success');
                 
             } catch (err) {
-                console.error('Error fetching combined scripts:', err);
-                showLoading(false);
-                showNoResults('Error al consultar las APIs. Intenta de nuevo en unos momentos.');
-                showNotification('Error de conexión con las APIs', 'error');
+                console.error('Error copying script:', err);
+                showNotification('Error al copiar el script', 'error');
             }
         }
 
-        async function loadTrendingScripts() {
-            isShowingTrending = true;
-            currentQuery = '';
-            searchInput.value = '';
-            currentPage = 1;
-
-            showLoading(true);
-            hideAllResults();
-
-            try {
-                const scripts = await fetchCombinedScripts('', currentPage);
-                
-                // Filtrar por verificación si es necesario
-                let filteredScripts = scripts;
-                if (currentVerified === 'true') {
-                    filteredScripts = scripts.filter(script => script.verified);
-                } else if (currentVerified === 'false') {
-                    filteredScripts = scripts.filter(script => !script.verified);
-                }
-
-                showLoading(false);
-                
-                if (!filteredScripts || filteredScripts.length === 0) {
-                    showNoResults('No hay scripts trending disponibles');
-                    return;
-                }
-
-                renderScripts(filteredScripts);
-                updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
-                
-            } catch (err) {
-                console.error('Error loading trending:', err);
-                showLoading(false);
-                showNoResults('Error al cargar scripts trending');
-                showNotification('Error cargando trending scripts', 'error');
-            }
-        }
-
-        function hideAllResults() {
-            resultsHeader.style.display = 'none';
-            noResults.style.display = 'none';
-            scriptsGrid.innerHTML = '';
-            pagination.style.display = 'none';
-        }
-
-        // ====== Render ======
-        function renderScripts(scripts) {
-            scriptsGrid.innerHTML = scripts.map((script) => {
-                const id = script.id || '';
-                const title = sanitize(script.title || 'Script sin título');
-                const gameName = sanitize(script.game || 'Juego desconocido');
-                const description = sanitize(script.description || 'Sin descripción disponible');
-                const isVerified = script.verified || false;
-                const views = script.views || 0;
-                const likes = script.likes || 0;
-                const isPatched = script.patched || false;
-                const isUniversal = script.universal || false;
-                const isKeySystem = script.keySystem || false;
-                const scriptType = script.scriptType || 'free';
-                const source = script.source || 'Desconocido';
-                const apiSource = script.apiSource || 'unknown';
-
-                // Tags del script
-                const tags = [];
-                if (isVerified) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #10b981, #059669);">✅ Verificado</span>');
-                if (isUniversal) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);">🌍 Universal</span>');
-                if (isKeySystem) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">🔑 Key System</span>');
-                if (isPatched) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #ef4444, #dc2626);">⚠️ Parcheado</span>');
-                if (scriptType === 'paid') tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">💰 Premium</span>');
-                if (views > 0) tags.push(`<span class="script-tag">👁️ ${Number(views).toLocaleString()}</span>`);
-                if (likes > 0) tags.push(`<span class="script-tag">❤️ ${Number(likes).toLocaleString()}</span>`);
-
-                // Tag de fuente con colores específicos
-                const sourceColors = {
-                    'ScriptBlox': 'background: linear-gradient(45deg, #2563eb, #1d4ed8);',
-                    'RScripts': 'background: linear-gradient(45deg, #dc2626, #b91c1c);'
-                };
-                const sourceTag = `<span class="script-tag" style="${sourceColors[source] || 'background: linear-gradient(45deg, #6b7280, #4b5563);'}">🌐 ${source}</span>`;
-
-                const tagsHtml = tags.join('') + sourceTag;
-
-                return `
-                <div class="script-card" data-id="${id}" data-source="${apiSource}">
-                    <div class="script-header">
-                        <h3 class="script-title">${title}</h3>
-                        <span class="script-game">${gameName}</span>
-                    </div>
-                    <div class="script-tags">${tagsHtml}</div>
-                    <p class="script-description">${description}</p>
-                    <div class="script-actions">
-                        <button class="copy-btn" onclick="copyScriptById('${id}', '${apiSource}')">Copiar</button>
-                        <button class="view-btn" onclick="viewScript('${id}', '${apiSource}')">Ver Script</button>
-                    </div>
-                </div>`;
-            }).join('');
-        }
-
-        function updateHeader(total, page, totalPagesLocal) {
-            resultsHeader.style.display = 'flex';
-            resultsCount.textContent = `Resultados: ${Number(total).toLocaleString()}`;
-            pageInfo.textContent = `${page} / ${Math.max(1, totalPagesLocal)}`;
-        }
-
-        // ====== Modal y copia ======
+        // ====== Vista previa actualizada ======
         async function viewScript(id, apiSource) {
             if (!id) {
                 showNotification('ID de script no válido', 'error');
@@ -1392,15 +1264,35 @@
                 let title = 'Script sin título';
 
                 if (apiSource === 'scriptblox') {
+                    // ScriptBlox sin cambios
                     const data = await apiRequest(`${SCRIPTBLOX_API}/${id}`);
                     const script = data?.script || data?.result || {};
                     title = script.title || 'Script sin título';
                     scriptContent = script.script || script.content || '';
+                    
                 } else if (apiSource === 'rscripts') {
-                    const data = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
-                    const script = data?.data || data?.script || data || {};
-                    title = script.title || script.name || 'Script sin título';
-                    scriptContent = script.script || script.content || script.code || script.raw_content || '';
+                    // RScripts v2: Obtener info del script y luego el contenido raw
+                    const scriptInfo = await apiRequest(`${RSCRIPTS_API}/scripts/${id}`);
+                    const script = scriptInfo?.script || scriptInfo;
+                    
+                    title = script?.title || 'Script sin título';
+                    
+                    if (script && script.rawScript) {
+                        try {
+                            // Fetch del contenido raw usando el proxy
+                            const encodedRawUrl = encodeURIComponent(script.rawScript);
+                            const rawResponse = await fetch(`${RSCRIPTS_API}/raw/${encodedRawUrl}`);
+                            
+                            if (rawResponse.ok) {
+                                scriptContent = await rawResponse.text();
+                            }
+                        } catch (e) {
+                            console.error('Failed to fetch raw content:', e);
+                            scriptContent = script.script || script.content || '';
+                        }
+                    } else {
+                        scriptContent = script?.script || script?.content || '';
+                    }
                 }
 
                 modalTitle.textContent = title;
