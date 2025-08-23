@@ -1018,29 +1018,40 @@ async function apiRequest(endpoint, params = {}) {
 }
 
 
-            const url = new URL(endpoint);
-            Object.entries(params).forEach(([key, value]) => {
-                if (value !== '' && value !== null && value !== undefined) {
-                    url.searchParams.set(key, value);
-                }
-            });
+async function apiRequest(endpoint, params = {}) {
+    const cacheKey = getCacheKey(endpoint, params);
+    const cached = getCachedData(cacheKey);
+    
+    if (cached) {
+        console.log('Using cached data for:', endpoint);
+        return cached;
+    }
 
-            console.log('Making API request to:', url.toString());
+    let query = '';
+    if (params && Object.keys(params).length > 0) {
+        query = '?' + new URLSearchParams(params).toString();
+    }
 
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
+    const url = `${endpoint}${query}`;
 
-                const data = await response.json();
-                console.log('API response:', data);
-                setCachedData(cacheKey, data);
-                return data;
-            } catch (error) {
-                console.error('API request failed:', error);
-                throw error;
-            }
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const ct = (response.headers.get('Content-Type') || '').toLowerCase();
+        const data = ct.includes('application/json') ? await response.json() : await response.text();
+
+        console.log('API response:', data);
+        setCachedData(cacheKey, data);
+        return data;
+    } catch (error) {
+        console.error('API request failed:', error);
+        throw error;
+    }
+}
+
         }
 
         // ====== API Calls - ScriptBlox ======
