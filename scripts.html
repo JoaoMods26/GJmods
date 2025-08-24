@@ -160,10 +160,9 @@
             min-width: 0;
         }
 
-.sidebar {
-    position: static; /* ya no sigue al hacer scroll */
-}
-
+        .sidebar {
+            position: static;
+        }
 
         /* Canvas para partículas */
         #particles-canvas {
@@ -518,16 +517,23 @@
             color: var(--color-accent);
         }
 
-        /* Paginación */
+        /* Paginación MEJORADA */
         .pagination {
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 0.5rem;
             margin-top: 2rem;
             flex-wrap: wrap;
+            padding: 1rem;
+            background: var(--glass-bg);
+            border-radius: 1rem;
+            border: 1px solid var(--glass-border);
         }
 
         .page-btn {
+            min-width: 40px;
+            height: 40px;
             padding: 0.5rem 1rem;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -536,21 +542,36 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: 500;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .page-btn:hover {
+        .page-btn:hover:not(:disabled) {
             background: rgba(255, 255, 255, 0.1);
             border-color: var(--color-accent);
+            transform: translateY(-2px);
         }
 
         .page-btn.active {
-            background: var(--color-accent);
+            background: linear-gradient(45deg, var(--color-accent), var(--color-primary));
             border-color: var(--color-accent);
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
 
         .page-btn:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
+            transform: none;
+        }
+
+        .pagination-dots {
+            color: rgba(255, 255, 255, 0.5);
+            padding: 0 0.5rem;
+            font-weight: bold;
         }
 
         /* Notificaciones */
@@ -730,29 +751,33 @@
             margin-top: 2rem;
         }
 
-        /* Responsive */
+        /* Responsive MEJORADO */
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
                 grid-template-columns: 1fr;
                 gap: 1rem;
-            }
-
-            .sidebar {
-                display: none; /* Ocultar anuncios laterales en móvil */
-            }
-
-            .main-content {
-                order: 1;
+                /* ORDEN CORREGIDO PARA MÓVIL */
+                display: flex;
+                flex-direction: column;
             }
 
             .header {
-                grid-column: 1;
+                order: 1;
+            }
+
+            .main-content {
+                order: 2;
+            }
+
+            /* ANUNCIOS AL FINAL EN MÓVIL */
+            .sidebar {
+                order: 3;
+                display: block;
             }
 
             .ad-bottom {
-                grid-column: 1;
-                /* Hacer anuncios más pequeños en móvil */
+                order: 4;
                 min-height: 60px;
                 padding: 0.5rem;
             }
@@ -797,6 +822,19 @@
                 margin: 1rem;
                 max-width: calc(100vw - 2rem);
                 max-height: calc(100vh - 2rem);
+            }
+
+            /* Paginación en móvil */
+            .pagination {
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+
+            .page-btn {
+                min-width: 35px;
+                height: 35px;
+                padding: 0.25rem 0.5rem;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -1120,13 +1158,9 @@
             
             try {
                 const endpoint = query ? 'search' : 'fetch';
-
-
-const params = new URLSearchParams({ 
-    page: page 
-});
-
-
+                const params = new URLSearchParams({ 
+                    page: page 
+                });
 
                 if (query) params.set('q', query);
 
@@ -1158,13 +1192,13 @@ const params = new URLSearchParams({
                 const result = data?.result || data;
                 const scripts = result?.scripts || [];
                 
-                // Calcular páginas máximas - corregido
-if (result?.info) {
-    maxPages = result.info.totalPages || 1;
-} else {
-    maxPages = currentPage; // fallback si no hay info
-}
-
+                // Calcular páginas máximas - CORREGIDO
+                if (result?.info) {
+                    maxPages = Math.max(1, result.info.totalPages || 1);
+                } else {
+                    // Si no hay info, asumimos que hay más páginas solo si recibimos resultados
+                    maxPages = scripts.length > 0 ? Math.max(currentPage + 1, maxPages) : currentPage;
+                }
                 
                 console.log(`[API] Got ${scripts.length} scripts, maxPages: ${maxPages}`);
                 
@@ -1283,8 +1317,10 @@ if (result?.info) {
             }
         }
 
-        // ====== Paginación ======
+        // ====== Paginación MEJORADA ======
         function setupPagination(totalPages) {
+            console.log(`[Pagination] Setting up pagination: currentPage=${currentPage}, totalPages=${totalPages}`);
+            
             if (totalPages <= 1) {
                 pagination.style.display = 'none';
                 return;
@@ -1294,70 +1330,81 @@ if (result?.info) {
             pagination.innerHTML = '';
 
             // Botón anterior
-            const prevBtn = document.createElement('button');
-            prevBtn.className = `page-btn ${currentPage <= 1 ? 'disabled' : ''}`;
-            prevBtn.textContent = '‹ Anterior';
-            prevBtn.disabled = currentPage <= 1;
-            prevBtn.onclick = () => changePage(currentPage - 1);
+            const prevBtn = createPaginationButton('‹ Anterior', currentPage - 1, currentPage <= 1);
             pagination.appendChild(prevBtn);
 
-            // Páginas numeradas (mostrar hasta 7)
-            const startPage = Math.max(1, currentPage - 3);
-            const endPage = Math.min(totalPages, startPage + 6);
+            // Páginas numeradas - lógica mejorada
+            const showPages = 5; // Mostrar 5 páginas como máximo
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + showPages - 1);
+            
+            // Ajustar si estamos cerca del final
+            if (endPage - startPage < showPages - 1) {
+                startPage = Math.max(1, endPage - showPages + 1);
+            }
 
+            // Primera página si no está en el rango
             if (startPage > 1) {
-                const firstBtn = document.createElement('button');
-                firstBtn.className = 'page-btn';
-                firstBtn.textContent = '1';
-                firstBtn.onclick = () => changePage(1);
+                const firstBtn = createPaginationButton('1', 1, false);
                 pagination.appendChild(firstBtn);
 
                 if (startPage > 2) {
                     const dots = document.createElement('span');
+                    dots.className = 'pagination-dots';
                     dots.textContent = '...';
-                    dots.style.padding = '0.5rem';
-                    dots.style.color = 'rgba(255, 255, 255, 0.5)';
                     pagination.appendChild(dots);
                 }
             }
 
+            // Páginas numeradas en el rango
             for (let i = startPage; i <= endPage; i++) {
-                const pageBtn = document.createElement('button');
-                pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-                pageBtn.textContent = i;
-                pageBtn.onclick = () => changePage(i);
+                const pageBtn = createPaginationButton(i.toString(), i, false, i === currentPage);
                 pagination.appendChild(pageBtn);
             }
 
+            // Última página si no está en el rango
             if (endPage < totalPages) {
                 if (endPage < totalPages - 1) {
                     const dots = document.createElement('span');
+                    dots.className = 'pagination-dots';
                     dots.textContent = '...';
-                    dots.style.padding = '0.5rem';
-                    dots.style.color = 'rgba(255, 255, 255, 0.5)';
                     pagination.appendChild(dots);
                 }
 
-                const lastBtn = document.createElement('button');
-                lastBtn.className = 'page-btn';
-                lastBtn.textContent = totalPages;
-                lastBtn.onclick = () => changePage(totalPages);
+                const lastBtn = createPaginationButton(totalPages.toString(), totalPages, false);
                 pagination.appendChild(lastBtn);
             }
 
             // Botón siguiente
-            const nextBtn = document.createElement('button');
-            nextBtn.className = `page-btn ${currentPage >= totalPages ? 'disabled' : ''}`;
-            nextBtn.textContent = 'Siguiente ›';
-            nextBtn.disabled = currentPage >= totalPages;
-            nextBtn.onclick = () => changePage(currentPage + 1);
+            const nextBtn = createPaginationButton('Siguiente ›', currentPage + 1, currentPage >= totalPages);
             pagination.appendChild(nextBtn);
         }
 
-        async function changePage(newPage) {
-            if (newPage === currentPage || isLoading) return;
+        function createPaginationButton(text, page, disabled = false, active = false) {
+            const btn = document.createElement('button');
+            btn.className = `page-btn ${active ? 'active' : ''}`;
+            btn.textContent = text;
+            btn.disabled = disabled;
             
-            if (newPage < 1 || newPage > maxPages) return;
+            if (!disabled) {
+                btn.onclick = () => changePage(page);
+            }
+            
+            return btn;
+        }
+
+        async function changePage(newPage) {
+            console.log(`[Pagination] Changing from page ${currentPage} to ${newPage}`);
+            
+            if (newPage === currentPage || isLoading) {
+                console.log('[Pagination] Skipping page change - same page or loading');
+                return;
+            }
+            
+            if (newPage < 1) {
+                console.log('[Pagination] Skipping - page < 1');
+                return;
+            }
             
             currentPage = newPage;
             
@@ -1365,9 +1412,9 @@ if (result?.info) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
             if (isShowingTrending) {
-                loadTrendingScripts();
+                await loadTrendingScripts();
             } else {
-                fetchScripts();
+                await fetchScripts();
             }
         }
 
@@ -1396,7 +1443,7 @@ if (result?.info) {
                 // Tags del script
                 const tags = [];
                 if (isVerified) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #10b981, #059669);">✅ Verificado</span>');
-                if (isUniversal) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);">🌍 Universal</span>');
+                if (isUniversal) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);">🌐 Universal</span>');
                 if (isKeySystem) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">🔑 Key System</span>');
                 if (isPatched) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #ef4444, #dc2626);">⚠️ Parcheado</span>');
                 if (scriptType === 'paid') tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">💰 Premium</span>');
