@@ -1156,10 +1156,11 @@ const params = new URLSearchParams({
                 
                 // Calcular páginas máximas - corregido
 if (result?.info) {
-    maxPages = result.info.totalPages || result.info.maxPages || 1;
+    maxPages = result.info.totalPages || 1;
 } else {
-    maxPages = currentPage; // si no devuelve info, asumimos que estamos en la última
+    maxPages = currentPage; // fallback si no hay info
 }
+
                 
                 console.log(`[API] Got ${scripts.length} scripts, maxPages: ${maxPages}`);
                 
