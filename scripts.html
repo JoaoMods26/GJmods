@@ -1480,10 +1480,12 @@
                 const scriptType = script.scriptType || 'free';
 
                 // IMAGEN DEL SCRIPT
-                const gameImage = script.gameImage || script.scriptImage || '';
-                const imageHtml = gameImage 
-                    ? `<img src="${gameImage}" alt="${gameName}" class="script-image" onerror="this.outerHTML='<div class=\\'script-image placeholder\\'>🎮</div>'">`
-                    : `<div class="script-image placeholder">🎮</div>`;
+// IMAGEN DEL SCRIPT (PRIORIDAD: script.image personalizado > game.image)
+const previewImage = script.scriptImage || script.gameImage || '';
+const imageHtml = previewImage 
+    ? `<img src="${previewImage}" alt="${gameName}" class="script-image" onerror="this.outerHTML='<div class=\\'script-image placeholder\\'>🎮</div>'">`
+    : `<div class="script-image placeholder">🎮</div>`;
+
 
                 // Tags del script
                 const tags = [];
