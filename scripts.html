@@ -368,6 +368,26 @@
             box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15);
         }
 
+        /* IMAGEN DEL SCRIPT */
+        .script-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            border: 1px solid var(--glass-border);
+        }
+
+        .script-image.placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 2rem;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
         .script-header {
             display: flex;
             justify-content: space-between;
@@ -677,7 +697,7 @@
             word-break: break-all;
         }
 
-        /* API status indicator */
+        /* API status indicator SIMPLIFICADO */
         .api-status {
             display: flex;
             justify-content: center;
@@ -685,38 +705,41 @@
         }
 
         .api-indicator {
-            padding: 0.25rem 0.75rem;
+            padding: 0.25rem 0.5rem;
             border-radius: 15px;
             font-size: 0.75rem;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            background: transparent;
+            border: none;
         }
 
-        .api-indicator.loading {
-            background: rgba(255, 193, 7, 0.2);
-            border: 1px solid #ffc107;
-            color: #ffc107;
+        .api-indicator.loading .status-dot {
+            background: #ffc107;
+            animation: pulse 1.5s infinite;
         }
 
-        .api-indicator.success {
-            background: rgba(40, 167, 69, 0.2);
-            border: 1px solid #28a745;
-            color: #28a745;
+        .api-indicator.success .status-dot {
+            background: #28a745;
         }
 
-        .api-indicator.error {
-            background: rgba(220, 53, 69, 0.2);
-            border: 1px solid #dc3545;
-            color: #dc3545;
+        .api-indicator.error .status-dot {
+            background: #dc3545;
+            animation: pulse 1.5s infinite;
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            background: currentColor;
+            transition: background 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         /* Estilos de anuncios */
@@ -878,11 +901,10 @@
 <main class="container">
     <!-- Contenido principal -->
     <div class="main-content">
-        <!-- API Status -->
+        <!-- API Status SOLO PUNTO -->
         <div class="api-status" id="apiStatus">
             <div class="api-indicator" id="scriptbloxStatus">
                 <div class="status-dot"></div>
-                <span>ScriptBlox API</span>
             </div>
         </div>
 
@@ -1192,20 +1214,37 @@
                 const result = data?.result || data;
                 const scripts = result?.scripts || [];
                 
-                // Calcular páginas máximas - CORREGIDO
-                if (result?.info) {
-                    maxPages = Math.max(1, result.info.totalPages || 1);
+                // CORRIGIENDO EL CÁLCULO DE PÁGINAS
+                if (result?.totalPages) {
+                    maxPages = Math.max(1, result.totalPages);
+                } else if (result?.info?.totalPages) {
+                    maxPages = Math.max(1, result.info.totalPages);
                 } else {
-                    // Si no hay info, asumimos que hay más páginas solo si recibimos resultados
-                    maxPages = scripts.length > 0 ? Math.max(currentPage + 1, maxPages) : currentPage;
+                    // Si no hay info de totalPages, detectar si hay más páginas
+                    // Si recibimos scripts y estamos en una página > 1, asumimos que hay al menos currentPage páginas
+                    if (scripts.length >= 20) {
+                        // Si recibimos 20 scripts (página completa), probablemente hay más páginas
+                        maxPages = Math.max(currentPage + 1, maxPages);
+                    } else if (scripts.length > 0 && scripts.length < 20) {
+                        // Si recibimos menos de 20 scripts, esta es probablemente la última página
+                        maxPages = currentPage;
+                    } else if (scripts.length === 0 && currentPage > 1) {
+                        // Si no hay scripts y estamos en página > 1, la anterior era la última
+                        maxPages = Math.max(1, currentPage - 1);
+                        currentPage = maxPages; // Regresar a la última página válida
+                    } else {
+                        maxPages = 1;
+                    }
                 }
                 
-                console.log(`[API] Got ${scripts.length} scripts, maxPages: ${maxPages}`);
+                console.log(`[API] Got ${scripts.length} scripts, currentPage: ${currentPage}, maxPages: ${maxPages}`);
                 
                 return scripts.map(script => ({
                     id: script.slug || script._id || script.id,
                     title: script.title || 'Script sin título',
                     game: script.game?.name || script.gameName || 'Juego desconocido',
+                    gameImage: script.game?.imageUrl || script.gameImage || '',
+                    scriptImage: script.image || script.imageUrl || '',
                     description: script.description || 'Sin descripción disponible',
                     verified: script.verified || script.isVerified || false,
                     views: script.views || 0,
@@ -1440,6 +1479,12 @@
                 const isKeySystem = script.keySystem || false;
                 const scriptType = script.scriptType || 'free';
 
+                // IMAGEN DEL SCRIPT
+                const gameImage = script.gameImage || script.scriptImage || '';
+                const imageHtml = gameImage 
+                    ? `<img src="${gameImage}" alt="${gameName}" class="script-image" onerror="this.outerHTML='<div class=\\'script-image placeholder\\'>🎮</div>'">`
+                    : `<div class="script-image placeholder">🎮</div>`;
+
                 // Tags del script
                 const tags = [];
                 if (isVerified) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #10b981, #059669);">✅ Verificado</span>');
@@ -1458,6 +1503,7 @@
                         <h3 class="script-title">${title}</h3>
                         <span class="script-game">${gameName}</span>
                     </div>
+                    ${imageHtml}
                     <div class="script-tags">${tagsHtml}</div>
                     <p class="script-description">${description}</p>
                     <div class="script-actions">
