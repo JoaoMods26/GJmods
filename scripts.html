@@ -151,6 +151,19 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 180px;
+            gap: 2rem;
+        }
+
+        .main-content {
+            min-width: 0;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
         }
 
         /* Canvas para partículas */
@@ -168,6 +181,7 @@
             text-align: center;
             padding: 2rem 0;
             margin-bottom: 2rem;
+            grid-column: 1 / -1;
         }
 
         .logo {
@@ -643,13 +657,11 @@
             word-break: break-all;
         }
 
-        /* API status indicators */
+        /* API status indicator */
         .api-status {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
             justify-content: center;
-            flex-wrap: wrap;
+            margin-bottom: 1rem;
         }
 
         .api-indicator {
@@ -687,10 +699,67 @@
             background: currentColor;
         }
 
+        /* Estilos de anuncios */
+        .ad-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.7rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .ad-top {
+            grid-column: 1 / -1;
+            margin-bottom: 2rem;
+        }
+
+        .ad-sidebar {
+            position: sticky;
+            top: 100px;
+        }
+
+        .ad-bottom {
+            grid-column: 1 / -1;
+            margin-top: 2rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .sidebar {
+                position: relative;
+                top: auto;
+                order: 2;
+            }
+
+            .main-content {
+                order: 1;
+            }
+
+            .header {
+                grid-column: 1;
+            }
+
+            .ad-top, .ad-bottom {
+                grid-column: 1;
             }
 
             .search-form {
@@ -728,17 +797,13 @@
                 max-width: calc(100vw - 2rem);
                 max-height: calc(100vh - 2rem);
             }
-
-            .api-status {
-                flex-direction: column;
-                align-items: center;
-            }
         }
     </style>
 </head>
 <body>
 <!-- Canvas para partículas -->
 <canvas id="particles-canvas"></canvas>
+
 <!-- Navbar -->
 <nav class="navbar" id="navbar">
 <div class="navbar-container">
@@ -763,87 +828,165 @@
 </ul>
 </div>
 </nav>
+
 <!-- Header -->
 <header class="header">
 <h1 class="logo">Buscador de Scripts</h1>
 <p style="color: rgba(255, 255, 255, 0.7); font-size: 1.1rem;">Encuentra scripts para tus juegos favoritos de Roblox</p>
 </header>
+
 <!-- Contenido principal -->
 <main class="container">
-<!-- API Status -->
-<div class="api-status" id="apiStatus">
-<div class="api-indicator" id="scriptbloxStatus">
-<div class="status-dot"></div>
-<span>ScriptBlox</span>
-</div>
-<div class="api-indicator" id="rscriptsStatus">
-<div class="status-dot"></div>
-<span>RScripts</span>
-</div>
-</div>
+    <!-- Anuncio superior -->
+    <div class="ad-container ad-top">
+        <div>
+            <div class="ad-label">Publicidad</div>
+            <script type="text/javascript"> 
+                atOptions = { 
+                    'key' : 'd1a9332ab68f936abaa310ff142b94ef', 
+                    'format' : 'iframe', 
+                    'height' : 90, 
+                    'width' : 728, 
+                    'params' : {} 
+                }; 
+            </script>
+            <script type="text/javascript" src="//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js"></script>
+        </div>
+    </div>
 
-<!-- Sección de búsqueda -->
-<section class="search-section" id="search">
-<div class="search-container">
-<form class="search-form" id="searchForm">
-<input autocomplete="off" class="search-input" id="searchInput" placeholder="Buscar scripts por nombre de juego..." type="text"/>
-<button class="search-btn" id="searchBtn" type="submit">
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <!-- API Status -->
+        <div class="api-status" id="apiStatus">
+            <div class="api-indicator" id="scriptbloxStatus">
+                <div class="status-dot"></div>
+                <span>ScriptBlox API</span>
+            </div>
+        </div>
+
+        <!-- Sección de búsqueda -->
+        <section class="search-section" id="search">
+            <div class="search-container">
+                <form class="search-form" id="searchForm">
+                    <input autocomplete="off" class="search-input" id="searchInput" placeholder="Buscar scripts por nombre de juego..." type="text"/>
+                    <button class="search-btn" id="searchBtn" type="submit">
                         Buscar Scripts
                     </button>
-<button class="trending-btn" onclick="loadTrendingScripts()" type="button">
+                    <button class="trending-btn" onclick="loadTrendingScripts()" type="button">
                         Recientes
                     </button>
-</form>
-<div class="filters-container">
-<select class="filter-select" id="sortFilter">
-<option value="date">Más recientes</option>
-<option value="views">Más vistos</option>
-<option value="likes">Más gustados</option>
-</select>
-<select class="filter-select" id="orderFilter">
-<option value="desc">Descendente</option>
-<option value="asc">Ascendente</option>
-</select>
-<select class="filter-select" id="verifiedFilter">
-<option value="">Todos</option>
-<option value="true">Solo verificados</option>
-</select>
-<select class="filter-select" id="sourceFilter">
-<option value="all">Ambas APIs</option>
-<option value="scriptblox">Solo ScriptBlox</option>
-<option value="rscripts">Solo RScripts</option>
-</select>
-<button class="search-btn" onclick="clearSearch()" style="background: linear-gradient(45deg, #6c757d, #495057);">
+                </form>
+                <div class="filters-container">
+                    <select class="filter-select" id="sortFilter">
+                        <option value="date">Más recientes</option>
+                        <option value="views">Más vistos</option>
+                        <option value="likes">Más gustados</option>
+                    </select>
+                    <select class="filter-select" id="orderFilter">
+                        <option value="desc">Descendente</option>
+                        <option value="asc">Ascendente</option>
+                    </select>
+                    <select class="filter-select" id="verifiedFilter">
+                        <option value="">Todos</option>
+                        <option value="true">Solo verificados</option>
+                    </select>
+                    <button class="search-btn" onclick="clearSearch()" style="background: linear-gradient(45deg, #6c757d, #495057);">
                         Limpiar
                     </button>
-</div>
-</div>
-</section>
-<!-- Sección de resultados -->
-<section class="results-section" id="results">
-<div class="results-header" id="resultsHeader" style="display: none;">
-<div class="results-count" id="resultsCount"></div>
-<div class="sort-container">
-<span style="color: rgba(255, 255, 255, 0.6); margin-right: 0.5rem;">Página:</span>
-<span id="pageInfo" style="color: var(--color-accent); font-weight: 600;"></span>
-</div>
-</div>
-<div class="loading" id="loadingState" style="display: none;">
-<div class="spinner"></div>
-<p>Buscando scripts en múltiples fuentes...</p>
-</div>
-<div class="no-results" id="noResults" style="display: none;">
-<h3>Sin resultados</h3>
-<p>No se encontraron scripts para tu búsqueda. Intenta con otros términos.</p>
-</div>
-<div class="scripts-grid" id="scriptsGrid">
-<!-- Los scripts se cargarán aquí dinámicamente -->
-</div>
-<div class="pagination" id="pagination" style="display: none;">
-<!-- La paginación se generará dinámicamente -->
-</div>
-</section>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de resultados -->
+        <section class="results-section" id="results">
+            <div class="results-header" id="resultsHeader" style="display: none;">
+                <div class="results-count" id="resultsCount"></div>
+                <div class="sort-container">
+                    <span style="color: rgba(255, 255, 255, 0.6); margin-right: 0.5rem;">Página:</span>
+                    <span id="pageInfo" style="color: var(--color-accent); font-weight: 600;"></span>
+                </div>
+            </div>
+            <div class="loading" id="loadingState" style="display: none;">
+                <div class="spinner"></div>
+                <p>Buscando scripts...</p>
+            </div>
+            <div class="no-results" id="noResults" style="display: none;">
+                <h3>Sin resultados</h3>
+                <p>No se encontraron scripts para tu búsqueda. Intenta con otros términos.</p>
+            </div>
+            <div class="scripts-grid" id="scriptsGrid">
+                <!-- Los scripts se cargarán aquí dinámicamente -->
+            </div>
+            <div class="pagination" id="pagination" style="display: none;">
+                <!-- La paginación se generará dinámicamente -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Sidebar con anuncios -->
+    <aside class="sidebar">
+        <!-- Anuncio lateral 160x300 -->
+        <div class="ad-container ad-sidebar">
+            <div>
+                <div class="ad-label">Anuncio</div>
+                <script type="text/javascript"> 
+                    atOptions = { 
+                        'key' : 'ab51e186a04576460b84ebe553be82ea', 
+                        'format' : 'iframe', 
+                        'height' : 300, 
+                        'width' : 160, 
+                        'params' : {} 
+                    }; 
+                </script>
+                <script type="text/javascript" src="//believableordinarygentlemen.com/ab51e186a04576460b84ebe553be82ea/invoke.js"></script>
+            </div>
+        </div>
+
+        <!-- Anuncio lateral 160x600 -->
+        <div class="ad-container ad-sidebar">
+            <div>
+                <div class="ad-label">Patrocinado</div>
+                <script type="text/javascript"> 
+                    atOptions = { 
+                        'key' : '09ebe62ec20777f91a14e0029e2f92a4', 
+                        'format' : 'iframe', 
+                        'height' : 600, 
+                        'width' : 160, 
+                        'params' : {} 
+                    }; 
+                </script>
+                <script type="text/javascript" src="//believableordinarygentlemen.com/09ebe62ec20777f91a14e0029e2f92a4/invoke.js"></script>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Anuncio inferior -->
+    <div class="ad-container ad-bottom">
+        <div>
+            <div class="ad-label">Publicidad</div>
+            <script type="text/javascript"> 
+                atOptions = { 
+                    'key' : 'aa4b552f34e750eee2a4f60ed72cc416', 
+                    'format' : 'iframe', 
+                    'height' : 250, 
+                    'width' : 300, 
+                    'params' : {} 
+                }; 
+            </script>
+            <script type="text/javascript" src="//believableordinarygentlemen.com/aa4b552f34e750eee2a4f60ed72cc416/invoke.js"></script>
+        </div>
+    </div>
+
+    <!-- Anuncio nativo -->
+    <div class="ad-container ad-bottom">
+        <div>
+            <div class="ad-label">Contenido patrocinado</div>
+            <script async="async" data-cfasync="false" src="//believableordinarygentlemen.com/4525df450d44613469633168ded413cf/invoke.js"></script> 
+            <div id="container-4525df450d44613469633168ded413cf"></div>
+        </div>
+    </div>
 </main>
+
 <!-- Modal para vista previa de script -->
 <div class="modal" id="scriptModal">
 <div class="modal-content">
@@ -861,6 +1004,7 @@
 </div>
 </div>
 </div>
+
 <script>
         // ====== Estado global ======
         let currentPage = 1;
@@ -868,9 +1012,8 @@
         let currentSort = 'date';
         let currentOrder = 'desc';
         let currentVerified = '';
-        let currentSource = 'all';
-        let maxPages = { scriptblox: 1, rscripts: 1 };
-        let allScripts = []; // Mantener todos los scripts cargados
+        let maxPages = 1;
+        let allScripts = [];
         let isShowingTrending = true;
         let isLoading = false;
 
@@ -880,7 +1023,6 @@
         const sortFilter = document.getElementById('sortFilter');
         const orderFilter = document.getElementById('orderFilter');
         const verifiedFilter = document.getElementById('verifiedFilter');
-        const sourceFilter = document.getElementById('sourceFilter');
         const scriptsGrid = document.getElementById('scriptsGrid');
         const loadingState = document.getElementById('loadingState');
         const noResults = document.getElementById('noResults');
@@ -892,13 +1034,10 @@
         const modalCode = document.getElementById('modalCode');
         const modalTitle = document.getElementById('modalTitle');
         const scriptbloxStatus = document.getElementById('scriptbloxStatus');
-        const rscriptsStatus = document.getElementById('rscriptsStatus');
 
         // ====== Config API ======
         const PROXY_BASE = 'https://workers-playground-curly-unit-2502.joao-lokofrank.workers.dev/api';
         const SCRIPTBLOX_API = PROXY_BASE;
-        const RSCRIPTS_API = `${PROXY_BASE}/rscripts`;
-        const SCRIPTS_PER_PAGE = 30;
 
         // ====== Inicio ======
         document.addEventListener('DOMContentLoaded', () => {
@@ -924,11 +1063,6 @@
                 currentPage = 1;
                 refreshCurrentSearch(); 
             });
-            sourceFilter.addEventListener('change', () => { 
-                currentSource = sourceFilter.value; 
-                currentPage = 1;
-                refreshCurrentSearch(); 
-            });
 
             // Cerrar modal clic afuera
             scriptModal.addEventListener('click', (e) => { 
@@ -948,9 +1082,9 @@
             });
         }
 
-        // ====== API Status Indicators ======
-        function updateAPIStatus(api, status) {
-            const element = api === 'scriptblox' ? scriptbloxStatus : rscriptsStatus;
+        // ====== API Status ======
+        function updateAPIStatus(status) {
+            const element = scriptbloxStatus;
             element.className = `api-indicator ${status}`;
         }
 
@@ -982,18 +1116,18 @@
 
         // ====== ScriptBlox API ======
         async function fetchScriptBloxScripts(query = '', page = 1) {
-            updateAPIStatus('scriptblox', 'loading');
+            updateAPIStatus('loading');
             
             try {
                 const endpoint = query ? 'search' : 'fetch';
                 const params = new URLSearchParams({
                     page: page,
-                    max: 15 // Mitad para cada API
+                    max: 30
                 });
 
                 if (query) params.set('q', query);
 
-                // Mapeo de ordenamiento para ScriptBlox
+                // Mapeo de ordenamiento
                 const sortMap = {
                     'date': 'updatedAt',
                     'views': 'views', 
@@ -1013,14 +1147,14 @@
                 const url = `${SCRIPTBLOX_API}/${endpoint}?${params.toString()}`;
                 const data = await makeAPIRequest(url);
                 
-                updateAPIStatus('scriptblox', 'success');
+                updateAPIStatus('success');
                 
                 const result = data?.result || data;
                 const scripts = result?.scripts || [];
                 
                 // Calcular páginas máximas
                 if (result?.info?.maxPages) {
-                    maxPages.scriptblox = result.info.maxPages;
+                    maxPages = result.info.maxPages;
                 }
                 
                 return scripts.map(script => ({
@@ -1036,162 +1170,16 @@
                     keySystem: script.key || script.isKeySystem || script.keySystem || false,
                     scriptType: script.scriptType || script.mode || 'free',
                     source: 'ScriptBlox',
-                    apiSource: 'scriptblox',
                     rawScript: script.script || script.content || '',
                     createdAt: script.createdAt || script.created || new Date().toISOString(),
-                    updatedAt: script.updatedAt || script.updated || new Date().toISOString(),
-                    priority: 1
+                    updatedAt: script.updatedAt || script.updated || new Date().toISOString()
                 }));
 
             } catch (error) {
                 console.error('[ScriptBlox] Error:', error);
-                updateAPIStatus('scriptblox', 'error');
+                updateAPIStatus('error');
                 return [];
             }
-        }
-
-        // ====== RScripts API (CORREGIDO) ======
-        async function fetchRScriptsScripts(query = '', page = 1) {
-            updateAPIStatus('rscripts', 'loading');
-            
-            try {
-                const params = new URLSearchParams({
-                    page: page
-                });
-
-                if (query) {
-                    params.set('q', query);
-                }
-
-                // Mapeo de ordenamiento para RScripts (igual que en pagina de prueba)
-                const sortMap = {
-                    'date': 'date',
-                    'views': 'views',
-                    'likes': 'likes'
-                };
-                
-                if (sortMap[currentSort]) {
-                    params.set('orderBy', sortMap[currentSort]);
-                }
-                
-                params.set('sort', currentOrder);
-
-                if (currentVerified === 'true') {
-                    params.set('verifiedOnly', 'true');
-                }
-
-                const url = `${RSCRIPTS_API}/scripts?${params.toString()}`;
-                const data = await makeAPIRequest(url);
-                
-                updateAPIStatus('rscripts', 'success');
-                
-                // Estructura de respuesta RScripts (como en página de prueba)
-                const scripts = data?.scripts || [];
-                const info = data?.info || {};
-                
-                // Calcular páginas máximas
-                if (info.maxPages) {
-                    maxPages.rscripts = info.maxPages;
-                }
-                
-                return scripts.map(script => {
-                    // Extraer nombre del juego correctamente
-                    let gameName = 'Juego desconocido';
-                    if (script.game?.name) {
-                        gameName = script.game.name;
-                    } else if (typeof script.game === 'string') {
-                        gameName = script.game;
-                    }
-
-                    return {
-                        id: script._id || script.id,
-                        title: script.title || 'Script sin título',
-                        game: gameName,
-                        description: script.description || 'Sin descripción disponible',
-                        verified: script.verified || false,
-                        views: script.views || 0,
-                        likes: script.likes || 0,
-                        patched: script.patched || false,
-                        universal: script.universal || false,
-                        keySystem: script.keySystem || false,
-                        scriptType: script.scriptType || 'free',
-                        source: 'RScripts',
-                        apiSource: 'rscripts',
-                        rawScript: script.rawScript || '',
-                        createdAt: script.createdAt || new Date().toISOString(),
-                        updatedAt: script.updatedAt || new Date().toISOString(),
-                        priority: 2,
-                        user: script.user // Mantener info del usuario para raw script
-                    };
-                });
-
-            } catch (error) {
-                console.error('[RScripts] Error:', error);
-                updateAPIStatus('rscripts', 'error');
-                return [];
-            }
-        }
-
-        // ====== Funciones combinadas ======
-        async function fetchCombinedScripts(query = '', page = 1) {
-            if (isLoading) return [];
-            isLoading = true;
-
-            const promises = [];
-            
-            if (currentSource === 'all' || currentSource === 'scriptblox') {
-                promises.push(fetchScriptBloxScripts(query, page));
-            }
-            
-            if (currentSource === 'all' || currentSource === 'rscripts') {
-                promises.push(fetchRScriptsScripts(query, page));
-            }
-
-            try {
-                const results = await Promise.all(promises);
-                let combinedScripts = [];
-                
-                // Combinar resultados de ambas APIs
-                results.forEach(apiScripts => {
-                    combinedScripts = combinedScripts.concat(apiScripts);
-                });
-
-                // Ordenar scripts
-                combinedScripts = sortScripts(combinedScripts);
-                
-                return combinedScripts;
-            } finally {
-                isLoading = false;
-            }
-        }
-
-        // ====== Utilidades de ordenamiento ======
-        function sortScripts(scripts) {
-            return scripts.sort((a, b) => {
-                // Primero ordenar por prioridad (ScriptBlox primero)
-                if (a.priority !== b.priority) {
-                    return a.priority - b.priority;
-                }
-                
-                // Luego aplicar el ordenamiento seleccionado
-                let comparison = 0;
-                
-                switch (currentSort) {
-                    case 'date':
-                        comparison = new Date(b.updatedAt) - new Date(a.updatedAt);
-                        break;
-                    case 'views':
-                        comparison = b.views - a.views;
-                        break;
-                    case 'likes':
-                        comparison = b.likes - a.likes;
-                        break;
-                    default:
-                        comparison = new Date(b.updatedAt) - new Date(a.updatedAt);
-                }
-                
-                return currentOrder === 'asc' ? -comparison : comparison;
-            });
         }
 
         // ====== Acciones de búsqueda ======
@@ -1220,7 +1208,7 @@
             hideAllResults();
 
             try {
-                const scripts = await fetchCombinedScripts(currentQuery, currentPage);
+                const scripts = await fetchScriptBloxScripts(currentQuery, currentPage);
                 
                 // Filtrar por verificación si es necesario
                 let filteredScripts = scripts;
@@ -1230,7 +1218,7 @@
                     filteredScripts = scripts.filter(script => !script.verified);
                 }
 
-                allScripts = filteredScripts; // Guardar para paginación
+                allScripts = filteredScripts;
                 showLoading(false);
                 
                 if (!filteredScripts || filteredScripts.length === 0) {
@@ -1239,17 +1227,14 @@
                 }
 
                 renderScripts(filteredScripts);
-                
-                // Calcular total de páginas basado en la API con más páginas
-                const totalMaxPages = Math.max(maxPages.scriptblox || 1, maxPages.rscripts || 1);
-                updateHeader(filteredScripts.length, currentPage, totalMaxPages);
-                setupPagination(totalMaxPages);
+                updateHeader(filteredScripts.length, currentPage, maxPages);
+                setupPagination(maxPages);
                 
             } catch (err) {
-                console.error('Error fetching combined scripts:', err);
+                console.error('Error fetching scripts:', err);
                 showLoading(false);
-                showNoResults('Error al consultar las APIs. Intenta de nuevo en unos momentos.');
-                showNotification('Error de conexión con las APIs', 'error');
+                showNoResults('Error al consultar la API. Intenta de nuevo en unos momentos.');
+                showNotification('Error de conexión con la API', 'error');
             }
         }
 
@@ -1263,7 +1248,7 @@
             hideAllResults();
 
             try {
-                const scripts = await fetchCombinedScripts('', currentPage);
+                const scripts = await fetchScriptBloxScripts('', currentPage);
                 
                 // Filtrar por verificación si es necesario
                 let filteredScripts = scripts;
@@ -1273,7 +1258,7 @@
                     filteredScripts = scripts.filter(script => !script.verified);
                 }
 
-                allScripts = filteredScripts; // Guardar para paginación
+                allScripts = filteredScripts;
                 showLoading(false);
                 
                 if (!filteredScripts || filteredScripts.length === 0) {
@@ -1282,11 +1267,8 @@
                 }
 
                 renderScripts(filteredScripts);
-                
-                // Calcular total de páginas basado en la API con más páginas
-                const totalMaxPages = Math.max(maxPages.scriptblox || 1, maxPages.rscripts || 1);
-                updateHeader(filteredScripts.length, currentPage, totalMaxPages);
-                setupPagination(totalMaxPages);
+                updateHeader(filteredScripts.length, currentPage, maxPages);
+                setupPagination(maxPages);
                 
             } catch (err) {
                 console.error('Error loading trending:', err);
@@ -1296,7 +1278,7 @@
             }
         }
 
-        // ====== Paginación (CORREGIDA) ======
+        // ====== Paginación ======
         function setupPagination(totalPages) {
             if (totalPages <= 1) {
                 pagination.style.display = 'none';
@@ -1370,8 +1352,7 @@
         async function changePage(newPage) {
             if (newPage === currentPage || isLoading) return;
             
-            const totalMaxPages = Math.max(maxPages.scriptblox || 1, maxPages.rscripts || 1);
-            if (newPage < 1 || newPage > totalMaxPages) return;
+            if (newPage < 1 || newPage > maxPages) return;
             
             currentPage = newPage;
             
@@ -1406,8 +1387,6 @@
                 const isUniversal = script.universal || false;
                 const isKeySystem = script.keySystem || false;
                 const scriptType = script.scriptType || 'free';
-                const source = script.source || 'Desconocido';
-                const apiSource = script.apiSource || 'unknown';
 
                 // Tags del script
                 const tags = [];
@@ -1419,17 +1398,10 @@
                 if (views > 0) tags.push(`<span class="script-tag">👁️ ${Number(views).toLocaleString()}</span>`);
                 if (likes > 0) tags.push(`<span class="script-tag">❤️ ${Number(likes).toLocaleString()}</span>`);
 
-                // Tag de fuente con colores específicos
-                const sourceColors = {
-                    'ScriptBlox': 'background: linear-gradient(45deg, #2563eb, #1d4ed8);',
-                    'RScripts': 'background: linear-gradient(45deg, #dc2626, #b91c1c);'
-                };
-                const sourceTag = `<span class="script-tag" style="${sourceColors[source] || 'background: linear-gradient(45deg, #6b7280, #4b5563);'}">🌐 ${source}</span>`;
-
-                const tagsHtml = tags.join('') + sourceTag;
+                const tagsHtml = tags.join('');
 
                 return `
-                <div class="script-card" data-id="${id}" data-source="${apiSource}">
+                <div class="script-card" data-id="${id}">
                     <div class="script-header">
                         <h3 class="script-title">${title}</h3>
                         <span class="script-game">${gameName}</span>
@@ -1437,8 +1409,8 @@
                     <div class="script-tags">${tagsHtml}</div>
                     <p class="script-description">${description}</p>
                     <div class="script-actions">
-                        <button class="copy-btn" onclick="copyScriptById('${id}', '${apiSource}')">Copiar</button>
-                        <button class="view-btn" onclick="viewScript('${id}', '${apiSource}')">Ver Script</button>
+                        <button class="copy-btn" onclick="copyScriptById('${id}')">Copiar</button>
+                        <button class="view-btn" onclick="viewScript('${id}')">Ver Script</button>
                     </div>
                 </div>`;
             }).join('');
@@ -1450,8 +1422,8 @@
             pageInfo.textContent = `${page} / ${Math.max(1, totalPagesLocal)}`;
         }
 
-        // ====== Modal y copia (CORREGIDO para RScripts) ======
-        async function viewScript(id, apiSource) {
+        // ====== Modal y copia ======
+        async function viewScript(id) {
             if (!id) {
                 showNotification('ID de script no válido', 'error');
                 return;
@@ -1462,32 +1434,10 @@
                 modalCode.textContent = 'Obteniendo contenido del script...';
                 scriptModal.classList.add('show');
 
-                let scriptContent = '';
-                let title = 'Script sin título';
-
-                if (apiSource === 'scriptblox') {
-                    // Para ScriptBlox, usar el endpoint específico del script
-                    const data = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
-                    const script = data?.script || data?.result || {};
-                    title = script.title || 'Script sin título';
-                    scriptContent = script.script || script.content || '';
-                } else if (apiSource === 'rscripts') {
-                    // Para RScripts, usar el endpoint correcto (igual que página de prueba)
-                    const data = await makeAPIRequest(`${RSCRIPTS_API}/script?id=${id}`);
-                    const script = data?.success?.data || data?.success || data?.data || {};
-                    title = script.title || 'Script sin título';
-                    scriptContent = script.script || script.content || '';
-                    
-                    // Si no hay contenido directo, intentar con rawScript
-                    if (!scriptContent && script.rawScript) {
-                        try {
-                            const rawData = await makeAPIRequest(script.rawScript);
-                            scriptContent = typeof rawData === 'string' ? rawData : JSON.stringify(rawData, null, 2);
-                        } catch (e) {
-                            console.log('No se pudo obtener rawScript:', e);
-                        }
-                    }
-                }
+                const data = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
+                const script = data?.script || data?.result || {};
+                const title = script.title || 'Script sin título';
+                const scriptContent = script.script || script.content || '';
 
                 modalTitle.textContent = title;
                 
@@ -1506,7 +1456,7 @@
             }
         }
 
-        async function copyScriptById(id, apiSource) {
+        async function copyScriptById(id) {
             if (!id) {
                 showNotification('ID de script no válido', 'error');
                 return;
@@ -1517,44 +1467,27 @@
                 
                 let scriptContent = '';
 
-                if (apiSource === 'scriptblox') {
-                    // Para ScriptBlox, intentar endpoint raw primero
-                    try {
-                        const response = await fetch(`${SCRIPTBLOX_API}/raw/${id}`);
-                        if (response.ok) {
-                            const contentType = response.headers.get('Content-Type') || '';
-                            if (contentType.includes('application/json')) {
-                                const data = await response.json();
-                                scriptContent = data?.script || data?.result || data || '';
-                            } else {
-                                scriptContent = await response.text();
-                            }
+                // Intentar endpoint raw primero
+                try {
+                    const response = await fetch(`${SCRIPTBLOX_API}/raw/${id}`);
+                    if (response.ok) {
+                        const contentType = response.headers.get('Content-Type') || '';
+                        if (contentType.includes('application/json')) {
+                            const data = await response.json();
+                            scriptContent = data?.script || data?.result || data || '';
+                        } else {
+                            scriptContent = await response.text();
                         }
-                    } catch (e) {
-                        console.log('Raw endpoint failed, trying regular endpoint');
                     }
+                } catch (e) {
+                    console.log('Raw endpoint failed, trying regular endpoint');
+                }
 
-                    // Si no hay contenido, intentar el endpoint normal
-                    if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined') {
-                        const fallbackData = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
-                        const fallbackScript = fallbackData?.script || fallbackData?.result || {};
-                        scriptContent = fallbackScript.script || fallbackScript.content || '';
-                    }
-                } else if (apiSource === 'rscripts') {
-                    // Para RScripts, usar la estructura correcta (igual que página de prueba)
-                    const data = await makeAPIRequest(`${RSCRIPTS_API}/script?id=${id}`);
-                    const script = data?.success?.data || data?.success || data?.data || {};
-                    scriptContent = script.script || script.content || '';
-                    
-                    // Si no hay contenido directo, intentar con rawScript
-                    if (!scriptContent && script.rawScript) {
-                        try {
-                            const rawData = await makeAPIRequest(script.rawScript);
-                            scriptContent = typeof rawData === 'string' ? rawData : JSON.stringify(rawData, null, 2);
-                        } catch (e) {
-                            console.log('No se pudo obtener rawScript:', e);
-                        }
-                    }
+                // Si no hay contenido, intentar el endpoint normal
+                if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined') {
+                    const fallbackData = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
+                    const fallbackScript = fallbackData?.script || fallbackData?.result || {};
+                    scriptContent = fallbackScript.script || fallbackScript.content || '';
                 }
 
                 if (!scriptContent || scriptContent === 'null' || scriptContent === 'undefined' || scriptContent.trim() === '') {
@@ -1641,13 +1574,11 @@
             currentSort = 'date';
             currentOrder = 'desc';
             currentVerified = '';
-            currentSource = 'all';
             sortFilter.value = 'date';
             orderFilter.value = 'desc';
             verifiedFilter.value = '';
-            sourceFilter.value = 'all';
             currentPage = 1;
-            maxPages = { scriptblox: 1, rscripts: 1 };
+            maxPages = 1;
             loadTrendingScripts();
         }
 
