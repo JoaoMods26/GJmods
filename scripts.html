@@ -1121,10 +1121,9 @@
             
             try {
                 const endpoint = query ? 'search' : 'fetch';
-                const params = new URLSearchParams({
-                    page: page,
-                    max: 50  // Aumentamos a 50 para obtener más resultados
-                });
+const params = new URLSearchParams({
+    page: page
+});
 
                 if (query) params.set('q', query);
 
@@ -1157,12 +1156,11 @@
                 const scripts = result?.scripts || [];
                 
                 // Calcular páginas máximas - corregido
-                if (result?.info) {
-                    maxPages = result.info.maxPages || Math.ceil((result.info.totalScripts || 100) / 50);
-                } else {
-                    // Si no hay info, estimamos basado en si obtenemos resultados completos
-                    maxPages = scripts.length === 50 ? Math.max(currentPage + 5, 10) : currentPage;
-                }
+if (result?.info) {
+    maxPages = result.info.totalPages || result.info.maxPages || 1;
+} else {
+    maxPages = currentPage; // si no devuelve info, asumimos que estamos en la última
+}
                 
                 console.log(`[API] Got ${scripts.length} scripts, maxPages: ${maxPages}`);
                 
