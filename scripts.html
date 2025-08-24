@@ -1239,31 +1239,25 @@
                 
                 console.log(`[API] Got ${scripts.length} scripts, currentPage: ${currentPage}, maxPages: ${maxPages}`);
                 
-return scripts.map(script => ({
-    id: script.slug || script._id || script.id,
-    title: script.title || 'Script sin título',
-    game: script.game?.name || script.gameName || 'Juego desconocido',
-    gameImage: script.game?.imageUrl || script.gameImage || '',
-    // ahora probamos todas las variantes de imagen personalizada
-    scriptImage: script.image 
-              || script.imageUrl 
-              || script.thumbnail 
-              || (Array.isArray(script.images) && script.images.length > 0 ? script.images[0] : '') 
-              || '',
-    description: script.description || 'Sin descripción disponible',
-    verified: script.verified || script.isVerified || false,
-    views: script.views || 0,
-    likes: script.likes || 0,
-    patched: script.patched || script.isPatched || false,
-    universal: script.universal || script.isUniversal || false,
-    keySystem: script.key || script.isKeySystem || script.keySystem || false,
-    scriptType: script.scriptType || script.mode || 'free',
-    source: 'ScriptBlox',
-    rawScript: script.script || script.content || '',
-    createdAt: script.createdAt || script.created || new Date().toISOString(),
-    updatedAt: script.updatedAt || script.updated || new Date().toISOString()
-}));
-
+                return scripts.map(script => ({
+                    id: script.slug || script._id || script.id,
+                    title: script.title || 'Script sin título',
+                    game: script.game?.name || script.gameName || 'Juego desconocido',
+                    gameImage: script.game?.imageUrl || script.gameImage || '',
+                    scriptImage: script.image || script.imageUrl || '',
+                    description: script.description || 'Sin descripción disponible',
+                    verified: script.verified || script.isVerified || false,
+                    views: script.views || 0,
+                    likes: script.likes || 0,
+                    patched: script.patched || script.isPatched || false,
+                    universal: script.universal || script.isUniversal || false,
+                    keySystem: script.key || script.isKeySystem || script.keySystem || false,
+                    scriptType: script.scriptType || script.mode || 'free',
+                    source: 'ScriptBlox',
+                    rawScript: script.script || script.content || '',
+                    createdAt: script.createdAt || script.created || new Date().toISOString(),
+                    updatedAt: script.updatedAt || script.updated || new Date().toISOString()
+                }));
 
             } catch (error) {
                 console.error('[ScriptBlox] Error:', error);
@@ -1293,57 +1287,37 @@ return scripts.map(script => ({
             }
         }
 
-async function fetchScripts() {
-    if (isLoading) return; // Prevenir múltiples requests
-    
-    showLoading(true);
-    hideAllResults();
-    isLoading = true;
+        async function fetchScripts() {
+            if (isLoading) return; // Prevenir múltiples requests
+            
+            showLoading(true);
+            hideAllResults();
+            isLoading = true;
 
-    try {
-        const scripts = await fetchScriptBloxScripts(currentQuery, currentPage);
-
-        // Paso extra: pedir detalles para conseguir imágenes personalizadas
-        const detailedScripts = await Promise.all(scripts.map(async (s) => {
             try {
-                const detail = await makeAPIRequest(`${SCRIPTBLOX_API}/${s.id}`);
-                const script = detail?.script || detail?.result || {};
-                return {
-                    ...s,
-                    scriptImage: script.image 
-                              || script.imageUrl 
-                              || script.thumbnail 
-                              || (Array.isArray(script.images) && script.images.length > 0 ? script.images[0] : '') 
-                              || s.scriptImage
-                };
-            } catch (e) {
-                console.warn("Error cargando detalles de", s.id, e);
-                return s;
+                const scripts = await fetchScriptBloxScripts(currentQuery, currentPage);
+                
+                allScripts = scripts;
+                isLoading = false;
+                showLoading(false);
+                
+                if (!scripts || scripts.length === 0) {
+                    showNoResults();
+                    return;
+                }
+
+                renderScripts(scripts);
+                updateHeader(scripts.length, currentPage, maxPages);
+                setupPagination(maxPages);
+                
+            } catch (err) {
+                console.error('Error fetching scripts:', err);
+                isLoading = false;
+                showLoading(false);
+                showNoResults('Error al consultar la API. Intenta de nuevo en unos momentos.');
+                showNotification('Error de conexión con la API', 'error');
             }
-        }));
-
-        allScripts = detailedScripts;
-        isLoading = false;
-        showLoading(false);
-
-        if (!detailedScripts || detailedScripts.length === 0) {
-            showNoResults();
-            return;
         }
-
-        renderScripts(detailedScripts);
-        updateHeader(detailedScripts.length, currentPage, maxPages);
-        setupPagination(maxPages);
-        
-    } catch (err) {
-        console.error('Error fetching scripts:', err);
-        isLoading = false;
-        showLoading(false);
-        showNoResults('Error al consultar la API. Intenta de nuevo en unos momentos.');
-        showNotification('Error de conexión con la API', 'error');
-    }
-}
-
 
         async function loadTrendingScripts() {
             if (isLoading) return; // Prevenir múltiples requests
@@ -1358,48 +1332,29 @@ async function fetchScripts() {
             isLoading = true;
 
             try {
-               const scripts = await fetchScriptBloxScripts('', currentPage);
+                const scripts = await fetchScriptBloxScripts('', currentPage);
+                
+                allScripts = scripts;
+                isLoading = false;
+                showLoading(false);
+                
+                if (!scripts || scripts.length === 0) {
+                    showNoResults('No hay scripts trending disponibles');
+                    return;
+                }
 
-// Paso extra para traer imágenes personalizadas
-const detailedScripts = await Promise.all(scripts.map(async (s) => {
-    try {
-        const detail = await makeAPIRequest(`${SCRIPTBLOX_API}/${s.id}`);
-        const script = detail?.script || detail?.result || {};
-        return {
-            ...s,
-            scriptImage: script.image 
-                      || script.imageUrl 
-                      || script.thumbnail 
-                      || (Array.isArray(script.images) && script.images.length > 0 ? script.images[0] : '') 
-                      || s.scriptImage
-        };
-    } catch (e) {
-        console.warn("Error cargando detalles de", s.id, e);
-        return s;
-    }
-}));
-
-allScripts = detailedScripts;
-isLoading = false;
-showLoading(false);
-
-if (!detailedScripts || detailedScripts.length === 0) {
-    showNoResults('No hay scripts trending disponibles');
-    return;
-}
-
-renderScripts(detailedScripts);
-updateHeader(detailedScripts.length, currentPage, maxPages);
-setupPagination(maxPages);
-
-} catch (err) {
-    console.error('Error loading trending:', err);
-    isLoading = false;
-    showLoading(false);
-    showNoResults('Error al cargar scripts trending');
-    showNotification('Error cargando trending scripts', 'error');
-}
-
+                renderScripts(scripts);
+                updateHeader(scripts.length, currentPage, maxPages);
+                setupPagination(maxPages);
+                
+            } catch (err) {
+                console.error('Error loading trending:', err);
+                isLoading = false;
+                showLoading(false);
+                showNoResults('Error al cargar scripts trending');
+                showNotification('Error cargando trending scripts', 'error');
+            }
+        }
 
         // ====== Paginación MEJORADA ======
         function setupPagination(totalPages) {
@@ -1525,12 +1480,10 @@ setupPagination(maxPages);
                 const scriptType = script.scriptType || 'free';
 
                 // IMAGEN DEL SCRIPT
-// IMAGEN DEL SCRIPT (PRIORIDAD: script.image personalizado > game.image)
-const previewImage = script.scriptImage || script.gameImage || '';
-const imageHtml = previewImage 
-    ? `<img src="${previewImage}" alt="${gameName}" class="script-image" onerror="this.outerHTML='<div class=\\'script-image placeholder\\'>🎮</div>'">`
-    : `<div class="script-image placeholder">🎮</div>`;
-
+                const gameImage = script.gameImage || script.scriptImage || '';
+                const imageHtml = gameImage 
+                    ? `<img src="${gameImage}" alt="${gameName}" class="script-image" onerror="this.outerHTML='<div class=\\'script-image placeholder\\'>🎮</div>'">`
+                    : `<div class="script-image placeholder">🎮</div>`;
 
                 // Tags del script
                 const tags = [];
