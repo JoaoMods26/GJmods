@@ -721,11 +721,6 @@
             letter-spacing: 1px;
         }
 
-        .ad-top {
-            grid-column: 1 / -1;
-            margin-bottom: 2rem;
-        }
-
         .ad-sidebar {
             position: sticky;
             top: 100px;
@@ -745,9 +740,7 @@
             }
 
             .sidebar {
-                position: relative;
-                top: auto;
-                order: 2;
+                display: none; /* Ocultar anuncios laterales en móvil */
             }
 
             .main-content {
@@ -758,8 +751,17 @@
                 grid-column: 1;
             }
 
-            .ad-top, .ad-bottom {
+            .ad-bottom {
                 grid-column: 1;
+                /* Hacer anuncios más pequeños en móvil */
+                min-height: 60px;
+                padding: 0.5rem;
+            }
+
+            .ad-bottom iframe {
+                max-width: 100%;
+                height: auto !important;
+                max-height: 100px !important;
             }
 
             .search-form {
@@ -837,23 +839,6 @@
 
 <!-- Contenido principal -->
 <main class="container">
-    <!-- Anuncio superior -->
-    <div class="ad-container ad-top">
-        <div>
-            <div class="ad-label">Publicidad</div>
-            <script type="text/javascript"> 
-                atOptions = { 
-                    'key' : 'd1a9332ab68f936abaa310ff142b94ef', 
-                    'format' : 'iframe', 
-                    'height' : 90, 
-                    'width' : 728, 
-                    'params' : {} 
-                }; 
-            </script>
-            <script type="text/javascript" src="//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js"></script>
-        </div>
-    </div>
-
     <!-- Contenido principal -->
     <div class="main-content">
         <!-- API Status -->
@@ -960,7 +945,23 @@
         </div>
     </aside>
 
-    <!-- Anuncio inferior -->
+    <!-- Anuncios inferiores - aparecen al final en móvil y desktop -->
+    <div class="ad-container ad-bottom">
+        <div>
+            <div class="ad-label">Publicidad</div>
+            <script type="text/javascript"> 
+                atOptions = { 
+                    'key' : 'd1a9332ab68f936abaa310ff142b94ef', 
+                    'format' : 'iframe', 
+                    'height' : 90, 
+                    'width' : 728, 
+                    'params' : {} 
+                }; 
+            </script>
+            <script type="text/javascript" src="//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js"></script>
+        </div>
+    </div>
+
     <div class="ad-container ad-bottom">
         <div>
             <div class="ad-label">Publicidad</div>
@@ -1122,12 +1123,12 @@
                 const endpoint = query ? 'search' : 'fetch';
                 const params = new URLSearchParams({
                     page: page,
-                    max: 30
+                    max: 50  // Aumentamos a 50 para obtener más resultados
                 });
 
                 if (query) params.set('q', query);
 
-                // Mapeo de ordenamiento
+                // Mapeo de ordenamiento correcto
                 const sortMap = {
                     'date': 'updatedAt',
                     'views': 'views', 
@@ -1140,11 +1141,14 @@
                 
                 params.set('order', currentOrder);
 
+                // Filtro verificado
                 if (currentVerified === 'true') {
-                    params.set('verified', '1');
+                    params.set('verified', 'true');
                 }
 
                 const url = `${SCRIPTBLOX_API}/${endpoint}?${params.toString()}`;
+                console.log('[API] Requesting:', url);
+                
                 const data = await makeAPIRequest(url);
                 
                 updateAPIStatus('success');
@@ -1152,10 +1156,15 @@
                 const result = data?.result || data;
                 const scripts = result?.scripts || [];
                 
-                // Calcular páginas máximas
-                if (result?.info?.maxPages) {
-                    maxPages = result.info.maxPages;
+                // Calcular páginas máximas - corregido
+                if (result?.info) {
+                    maxPages = result.info.maxPages || Math.ceil((result.info.totalScripts || 100) / 50);
+                } else {
+                    // Si no hay info, estimamos basado en si obtenemos resultados completos
+                    maxPages = scripts.length === 50 ? Math.max(currentPage + 5, 10) : currentPage;
                 }
+                
+                console.log(`[API] Got ${scripts.length} scripts, maxPages: ${maxPages}`);
                 
                 return scripts.map(script => ({
                     id: script.slug || script._id || script.id,
@@ -1204,34 +1213,31 @@
         }
 
         async function fetchScripts() {
+            if (isLoading) return; // Prevenir múltiples requests
+            
             showLoading(true);
             hideAllResults();
+            isLoading = true;
 
             try {
                 const scripts = await fetchScriptBloxScripts(currentQuery, currentPage);
                 
-                // Filtrar por verificación si es necesario
-                let filteredScripts = scripts;
-                if (currentVerified === 'true') {
-                    filteredScripts = scripts.filter(script => script.verified);
-                } else if (currentVerified === 'false') {
-                    filteredScripts = scripts.filter(script => !script.verified);
-                }
-
-                allScripts = filteredScripts;
+                allScripts = scripts;
+                isLoading = false;
                 showLoading(false);
                 
-                if (!filteredScripts || filteredScripts.length === 0) {
+                if (!scripts || scripts.length === 0) {
                     showNoResults();
                     return;
                 }
 
-                renderScripts(filteredScripts);
-                updateHeader(filteredScripts.length, currentPage, maxPages);
+                renderScripts(scripts);
+                updateHeader(scripts.length, currentPage, maxPages);
                 setupPagination(maxPages);
                 
             } catch (err) {
                 console.error('Error fetching scripts:', err);
+                isLoading = false;
                 showLoading(false);
                 showNoResults('Error al consultar la API. Intenta de nuevo en unos momentos.');
                 showNotification('Error de conexión con la API', 'error');
@@ -1239,6 +1245,8 @@
         }
 
         async function loadTrendingScripts() {
+            if (isLoading) return; // Prevenir múltiples requests
+            
             isShowingTrending = true;
             currentQuery = '';
             searchInput.value = '';
@@ -1246,32 +1254,27 @@
 
             showLoading(true);
             hideAllResults();
+            isLoading = true;
 
             try {
                 const scripts = await fetchScriptBloxScripts('', currentPage);
                 
-                // Filtrar por verificación si es necesario
-                let filteredScripts = scripts;
-                if (currentVerified === 'true') {
-                    filteredScripts = scripts.filter(script => script.verified);
-                } else if (currentVerified === 'false') {
-                    filteredScripts = scripts.filter(script => !script.verified);
-                }
-
-                allScripts = filteredScripts;
+                allScripts = scripts;
+                isLoading = false;
                 showLoading(false);
                 
-                if (!filteredScripts || filteredScripts.length === 0) {
+                if (!scripts || scripts.length === 0) {
                     showNoResults('No hay scripts trending disponibles');
                     return;
                 }
 
-                renderScripts(filteredScripts);
-                updateHeader(filteredScripts.length, currentPage, maxPages);
+                renderScripts(scripts);
+                updateHeader(scripts.length, currentPage, maxPages);
                 setupPagination(maxPages);
                 
             } catch (err) {
                 console.error('Error loading trending:', err);
+                isLoading = false;
                 showLoading(false);
                 showNoResults('Error al cargar scripts trending');
                 showNotification('Error cargando trending scripts', 'error');
@@ -1296,9 +1299,9 @@
             prevBtn.onclick = () => changePage(currentPage - 1);
             pagination.appendChild(prevBtn);
 
-            // Páginas numeradas (mostrar hasta 5)
-            const startPage = Math.max(1, currentPage - 2);
-            const endPage = Math.min(totalPages, startPage + 4);
+            // Páginas numeradas (mostrar hasta 7)
+            const startPage = Math.max(1, currentPage - 3);
+            const endPage = Math.min(totalPages, startPage + 6);
 
             if (startPage > 1) {
                 const firstBtn = document.createElement('button');
@@ -1391,7 +1394,7 @@
                 // Tags del script
                 const tags = [];
                 if (isVerified) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #10b981, #059669);">✅ Verificado</span>');
-                if (isUniversal) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);">🌐 Universal</span>');
+                if (isUniversal) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #8b5cf6, #7c3aed);">🌍 Universal</span>');
                 if (isKeySystem) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">🔑 Key System</span>');
                 if (isPatched) tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #ef4444, #dc2626);">⚠️ Parcheado</span>');
                 if (scriptType === 'paid') tags.push('<span class="script-tag" style="background: linear-gradient(45deg, #f59e0b, #d97706);">💰 Premium</span>');
