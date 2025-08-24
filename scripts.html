@@ -192,7 +192,7 @@
             background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            
+            animation: gradient-anim 10s ease-in-out infinite;
         }
 
         @keyframes gradient-anim {
@@ -346,6 +346,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 1rem;
             padding: 1.5rem;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
@@ -362,7 +363,9 @@
         }
 
         .script-card:hover {
+            transform: translateY(-4px);
             border-color: var(--color-accent);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15);
         }
 
         /* IMAGEN DEL SCRIPT */
@@ -463,10 +466,12 @@
             border-radius: 0.5rem;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
             font-size: 0.9rem;
         }
 
         .copy-btn:hover {
+            transform: translateY(-1px);
             box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
         }
 
@@ -478,12 +483,14 @@
             border-radius: 0.5rem;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
             font-size: 0.9rem;
             text-decoration: none;
             text-align: center;
         }
 
         .view-btn:hover {
+            transform: translateY(-1px);
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
@@ -857,6 +864,7 @@
 </head>
 <body>
 <!-- Canvas para partículas -->
+<canvas id="particles-canvas"></canvas>
 
 <!-- Navbar -->
 <nav class="navbar" id="navbar">
@@ -1093,7 +1101,9 @@
 
         // ====== Inicio ======
         document.addEventListener('DOMContentLoaded', () => {
-
+            initializeParticles();
+            setupEventListeners();
+            loadTrendingScripts();
         });
 
         function setupEventListeners() {
