@@ -1144,7 +1144,7 @@
             }
         }
 
-        // ====== RScripts API (NUEVA) ======
+        // ====== RScripts API (CORREGIDA) ======
         async function fetchRScriptsScripts(query = '', page = 1) {
             updateAPIStatus('loading');
             
@@ -1155,27 +1155,32 @@
                 if (query) {
                     endpoint = '/scripts/search';
                     params.set('q', query);
+                    params.set('limit', '20');
                 } else {
-                    endpoint = '/scripts';
+                    // CORRECCIÓN: Usar el endpoint correcto para trending/recent scripts
+                    endpoint = '/scripts/scriptlist';
+                    params.set('max', '20'); // RScripts usa 'max' en lugar de 'limit' para scriptlist
                 }
                 
                 params.set('page', page);
-                params.set('limit', '20');
                 
-                // Mapeo de ordenamiento para RScripts
-                const sortMap = {
-                    'date': 'createdAt',
-                    'views': 'views', 
-                    'likes': 'likes'
-                };
-                
-                if (sortMap[currentSort]) {
-                    params.set('sortBy', sortMap[currentSort]);
-                    params.set('sortOrder', currentOrder);
-                }
+                // Mapeo de ordenamiento para RScripts - SIMPLIFICADO
+                // RScripts puede no soportar todos estos parámetros, especialmente en scriptlist
+                if (query) {
+                    const sortMap = {
+                        'date': 'date',
+                        'views': 'views', 
+                        'likes': 'likes'
+                    };
+                    
+                    if (sortMap[currentSort]) {
+                        params.set('sortBy', sortMap[currentSort]);
+                        params.set('order', currentOrder);
+                    }
 
-                if (currentVerified === 'true') {
-                    params.set('verified', 'true');
+                    if (currentVerified === 'true') {
+                        params.set('verified', 'true');
+                    }
                 }
 
                 const url = `${RSCRIPTS_API}${endpoint}?${params.toString()}`;
@@ -1185,32 +1190,48 @@
                 
                 updateAPIStatus('success');
                 
-                // Estructuras de respuesta de RScripts
-                const scripts = data?.scripts || data?.data || data || [];
-                const totalPages = data?.totalPages || data?.pagination?.totalPages || 1;
+                // CORRECCIÓN: Manejar diferentes estructuras de respuesta de RScripts
+                let scripts = [];
+                let totalPages = 1;
+                
+                if (Array.isArray(data)) {
+                    // Si data es directamente un array
+                    scripts = data;
+                    totalPages = scripts.length >= 20 ? Math.max(currentPage + 1, maxPages) : currentPage;
+                } else if (data?.scripts) {
+                    scripts = data.scripts;
+                    totalPages = data.totalPages || data.pages || 1;
+                } else if (data?.data) {
+                    scripts = data.data;
+                    totalPages = data.totalPages || data.pagination?.totalPages || 1;
+                } else {
+                    // Si no hay estructura clara, intentar extraer scripts
+                    scripts = data?.results || [];
+                    totalPages = 1;
+                }
                 
                 maxPages = Math.max(1, totalPages);
                 
                 console.log(`[RScripts] Got ${scripts.length} scripts, currentPage: ${currentPage}, maxPages: ${maxPages}`);
                 
                 return scripts.map(script => ({
-                    id: script.id || script._id || script.slug,
-                    title: script.title || script.name || 'Script sin título',
-                    game: script.game || script.gameName || 'Juego desconocido',
-                    gameImage: script.gameImage || script.thumbnail || '',
-                    scriptImage: script.image || script.thumbnail || '',
-                    description: script.description || script.desc || 'Sin descripción disponible',
-                    verified: script.verified || script.isVerified || false,
-                    views: script.views || script.viewCount || 0,
-                    likes: script.likes || script.likeCount || 0,
+                    id: script.id || script._id || script.slug || Math.random().toString(36),
+                    title: script.title || script.name || script.scriptTitle || 'Script sin título',
+                    game: script.game || script.gameName || script.gameTitle || 'Juego desconocido',
+                    gameImage: script.gameImage || script.thumbnail || script.image || '',
+                    scriptImage: script.image || script.thumbnail || script.scriptImage || '',
+                    description: script.description || script.desc || script.scriptDescription || 'Sin descripción disponible',
+                    verified: script.verified || script.isVerified || script.isPatched === false || false,
+                    views: script.views || script.viewCount || script.viewcount || 0,
+                    likes: script.likes || script.likeCount || script.likecount || 0,
                     patched: script.patched || script.isPatched || false,
-                    universal: script.universal || script.isUniversal || false,
-                    keySystem: script.keySystem || script.hasKey || false,
-                    scriptType: script.type || script.scriptType || 'free',
+                    universal: script.universal || script.isUniversal || script.isGlobal || false,
+                    keySystem: script.keySystem || script.hasKey || script.key || false,
+                    scriptType: script.type || script.scriptType || script.mode || 'free',
                     source: 'RScripts',
-                    rawScript: script.content || script.script || script.code || '',
-                    createdAt: script.createdAt || script.created || new Date().toISOString(),
-                    updatedAt: script.updatedAt || script.updated || new Date().toISOString()
+                    rawScript: script.content || script.script || script.code || script.scriptContent || '',
+                    createdAt: script.createdAt || script.created || script.dateCreated || new Date().toISOString(),
+                    updatedAt: script.updatedAt || script.updated || script.dateUpdated || new Date().toISOString()
                 }));
 
             } catch (error) {
@@ -1516,6 +1537,7 @@
                 if (currentAPI === 'scriptblox') {
                     data = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
                 } else if (currentAPI === 'rscripts') {
+                    // CORRECCIÓN: Usar endpoint correcto para obtener script individual de RScripts
                     data = await makeAPIRequest(`${RSCRIPTS_API}/scripts/${id}`);
                 }
 
@@ -1576,6 +1598,7 @@
                         scriptContent = fallbackScript.script || fallbackScript.content || '';
                     }
                 } else if (currentAPI === 'rscripts') {
+                    // CORRECCIÓN: Manejar RScripts correctamente
                     data = await makeAPIRequest(`${RSCRIPTS_API}/scripts/${id}`);
                     const script = data?.script || data || {};
                     scriptContent = script.content || script.script || script.code || '';
