@@ -1144,95 +1144,86 @@
             }
         }
 
-        // ====== RScripts API (CORREGIDA) ======
+        // ====== RScripts API (CORREGIDA CON ENDPOINTS REALES) ======
         async function fetchRScriptsScripts(query = '', page = 1) {
             updateAPIStatus('loading');
             
             try {
-                let endpoint = '';
-                const params = new URLSearchParams();
+                let url = '';
                 
                 if (query) {
-                    endpoint = '/scripts/search';
-                    params.set('q', query);
-                    params.set('limit', '20');
+                    // Para búsqueda - necesitamos confirmar el endpoint exacto
+                    url = `${RSCRIPTS_API}/scripts/search?q=${encodeURIComponent(query)}&page=${page}&limit=20`;
                 } else {
-                    // CORRECCIÓN: Usar el endpoint correcto para trending/recent scripts
-                    endpoint = '/scripts/scriptlist';
-                    params.set('max', '20'); // RScripts usa 'max' en lugar de 'limit' para scriptlist
+                    // Para trending/recientes - usar el endpoint correcto
+                    url = `${RSCRIPTS_API}/scripts/trending`;
+                    // El endpoint trending no usa paginación según la documentación (solo devuelve top 12)
                 }
                 
-                params.set('page', page);
-                
-                // Mapeo de ordenamiento para RScripts - SIMPLIFICADO
-                // RScripts puede no soportar todos estos parámetros, especialmente en scriptlist
-                if (query) {
-                    const sortMap = {
-                        'date': 'date',
-                        'views': 'views', 
-                        'likes': 'likes'
-                    };
-                    
-                    if (sortMap[currentSort]) {
-                        params.set('sortBy', sortMap[currentSort]);
-                        params.set('order', currentOrder);
-                    }
-
-                    if (currentVerified === 'true') {
-                        params.set('verified', 'true');
-                    }
-                }
-
-                const url = `${RSCRIPTS_API}${endpoint}?${params.toString()}`;
                 console.log('[RScripts] Requesting:', url);
                 
                 const data = await makeAPIRequest(url);
                 
                 updateAPIStatus('success');
                 
-                // CORRECCIÓN: Manejar diferentes estructuras de respuesta de RScripts
+                // Manejar estructura de respuesta de RScripts según la documentación
                 let scripts = [];
                 let totalPages = 1;
                 
-                if (Array.isArray(data)) {
-                    // Si data es directamente un array
-                    scripts = data;
-                    totalPages = scripts.length >= 20 ? Math.max(currentPage + 1, maxPages) : currentPage;
-                } else if (data?.scripts) {
-                    scripts = data.scripts;
-                    totalPages = data.totalPages || data.pages || 1;
-                } else if (data?.data) {
-                    scripts = data.data;
-                    totalPages = data.totalPages || data.pagination?.totalPages || 1;
+                if (query) {
+                    // Para búsqueda, esperamos una estructura diferente
+                    if (data?.scripts) {
+                        scripts = data.scripts;
+                        totalPages = data.totalPages || data.pages || 1;
+                    } else if (Array.isArray(data)) {
+                        scripts = data;
+                        totalPages = scripts.length >= 20 ? Math.max(currentPage + 1, maxPages) : currentPage;
+                    } else {
+                        scripts = data?.results || data?.data || [];
+                        totalPages = 1;
+                    }
                 } else {
-                    // Si no hay estructura clara, intentar extraer scripts
-                    scripts = data?.results || [];
-                    totalPages = 1;
+                    // Para trending, según la documentación: { "success": [array_of_scripts] }
+                    if (data?.success && Array.isArray(data.success)) {
+                        scripts = data.success;
+                        totalPages = 1; // Trending siempre devuelve una sola "página"
+                    } else {
+                        scripts = [];
+                        totalPages = 1;
+                    }
                 }
                 
                 maxPages = Math.max(1, totalPages);
                 
                 console.log(`[RScripts] Got ${scripts.length} scripts, currentPage: ${currentPage}, maxPages: ${maxPages}`);
                 
-                return scripts.map(script => ({
-                    id: script.id || script._id || script.slug || Math.random().toString(36),
-                    title: script.title || script.name || script.scriptTitle || 'Script sin título',
-                    game: script.game || script.gameName || script.gameTitle || 'Juego desconocido',
-                    gameImage: script.gameImage || script.thumbnail || script.image || '',
-                    scriptImage: script.image || script.thumbnail || script.scriptImage || '',
-                    description: script.description || script.desc || script.scriptDescription || 'Sin descripción disponible',
-                    verified: script.verified || script.isVerified || script.isPatched === false || false,
-                    views: script.views || script.viewCount || script.viewcount || 0,
-                    likes: script.likes || script.likeCount || script.likecount || 0,
-                    patched: script.patched || script.isPatched || false,
-                    universal: script.universal || script.isUniversal || script.isGlobal || false,
-                    keySystem: script.keySystem || script.hasKey || script.key || false,
-                    scriptType: script.type || script.scriptType || script.mode || 'free',
-                    source: 'RScripts',
-                    rawScript: script.content || script.script || script.code || script.scriptContent || '',
-                    createdAt: script.createdAt || script.created || script.dateCreated || new Date().toISOString(),
-                    updatedAt: script.updatedAt || script.updated || script.dateUpdated || new Date().toISOString()
-                }));
+                return scripts.map(scriptData => {
+                    // Para trending, los datos están en scriptData.script y scriptData.user
+                    // Para búsqueda, los datos pueden estar directamente en scriptData
+                    const script = scriptData.script || scriptData;
+                    const user = scriptData.user || {};
+                    
+                    return {
+                        id: script._id || script.id || script.slug || Math.random().toString(36),
+                        title: script.title || script.name || script.scriptTitle || 'Script sin título',
+                        game: script.game || script.gameName || script.gameTitle || 'Juego desconocido',
+                        gameImage: script.gameImage || script.thumbnail || script.image || '',
+                        scriptImage: script.image || script.thumbnail || script.scriptImage || '',
+                        description: script.description || script.desc || script.scriptDescription || 'Sin descripción disponible',
+                        verified: user.verified || script.verified || script.isVerified || false,
+                        views: scriptData.views || script.views || script.viewCount || 0,
+                        likes: script.likes || script.likeCount || script.likecount || 0,
+                        patched: script.patched || script.isPatched || false,
+                        universal: script.universal || script.isUniversal || script.isGlobal || false,
+                        keySystem: script.keySystem || script.hasKey || script.key || false,
+                        scriptType: script.type || script.scriptType || script.mode || 'free',
+                        source: 'RScripts',
+                        rawScript: script.content || script.script || script.code || script.scriptContent || '',
+                        createdAt: script.createdAt || script.created || script.dateCreated || new Date().toISOString(),
+                        updatedAt: script.updatedAt || script.updated || script.dateUpdated || new Date().toISOString(),
+                        username: user.username || 'Usuario desconocido'
+                    };
+                });
 
             } catch (error) {
                 console.error('[RScripts] Error:', error);
