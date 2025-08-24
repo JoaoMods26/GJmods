@@ -1090,34 +1090,40 @@
             try {
                 const params = {
                     page: page,
-                    limit: Math.floor(SCRIPTS_PER_PAGE / 2) // Dividir entre las dos APIs
+                    max: Math.floor(SCRIPTS_PER_PAGE / 2) // Dividir entre las dos APIs
                 };
 
                 if (query) params.q = query;
 
                 // Parámetros de ordenamiento para RScripts
                 if (currentSort === 'updated') {
-                    params.sort = 'updated_at';
+                    params.orderBy = 'date';
                 } else if (currentSort === 'created') {
-                    params.sort = 'created_at';
+                    params.orderBy = 'id';
                 } else if (currentSort === 'views') {
-                    params.sort = 'views';
+                    params.orderBy = 'views';
                 } else if (currentSort === 'title') {
-                    params.sort = 'title';
+                    params.orderBy = 'title';
+                } else {
+                    params.orderBy = 'date';
                 }
                 
-                params.order = currentOrder;
+                params.sort = currentOrder;
 
                 const endpoint = query ? 'scripts/search' : 'scripts';
                 const data = await apiRequest(`${RSCRIPTS_API}/${endpoint}`, params);
                 
                 updateAPIStatus('rscripts', 'success');
                 
-                // Normalizar scripts de RScripts - CORREGIDO
+                // Guardar total de páginas desde RScripts
+                if (data?.info?.maxPages) {
+                    totalPages = Number(data.info.maxPages);
+                }
+
+                // Normalizar scripts de RScripts
                 const scripts = data?.data || data?.scripts || data || [];
                 
                 return scripts.map(script => {
-                    // Extraer el nombre del juego correctamente
                     let gameName = 'Juego desconocido';
                     if (script.game) {
                         if (typeof script.game === 'string') {
@@ -1150,7 +1156,7 @@
                         rawScript: script.script || script.content || script.code || '',
                         createdAt: script.created_at || script.createdAt || new Date().toISOString(),
                         updatedAt: script.updated_at || script.updatedAt || new Date().toISOString(),
-                        priority: 2 // RScripts tiene menor prioridad
+                        priority: 2
                     };
                 });
 
@@ -1263,7 +1269,7 @@
                 }
 
                 renderScripts(filteredScripts);
-                updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
+                updateHeader(filteredScripts.length, currentPage, totalPages);
                 
             } catch (err) {
                 console.error('Error fetching combined scripts:', err);
@@ -1301,7 +1307,7 @@
                 }
 
                 renderScripts(filteredScripts);
-                updateHeader(filteredScripts.length, currentPage, Math.ceil(filteredScripts.length / SCRIPTS_PER_PAGE));
+                updateHeader(filteredScripts.length, currentPage, totalPages);
                 
             } catch (err) {
                 console.error('Error loading trending:', err);
