@@ -1239,25 +1239,31 @@
                 
                 console.log(`[API] Got ${scripts.length} scripts, currentPage: ${currentPage}, maxPages: ${maxPages}`);
                 
-                return scripts.map(script => ({
-                    id: script.slug || script._id || script.id,
-                    title: script.title || 'Script sin título',
-                    game: script.game?.name || script.gameName || 'Juego desconocido',
-                    gameImage: script.game?.imageUrl || script.gameImage || '',
-                    scriptImage: script.image || script.imageUrl || '',
-                    description: script.description || 'Sin descripción disponible',
-                    verified: script.verified || script.isVerified || false,
-                    views: script.views || 0,
-                    likes: script.likes || 0,
-                    patched: script.patched || script.isPatched || false,
-                    universal: script.universal || script.isUniversal || false,
-                    keySystem: script.key || script.isKeySystem || script.keySystem || false,
-                    scriptType: script.scriptType || script.mode || 'free',
-                    source: 'ScriptBlox',
-                    rawScript: script.script || script.content || '',
-                    createdAt: script.createdAt || script.created || new Date().toISOString(),
-                    updatedAt: script.updatedAt || script.updated || new Date().toISOString()
-                }));
+return scripts.map(script => ({
+    id: script.slug || script._id || script.id,
+    title: script.title || 'Script sin título',
+    game: script.game?.name || script.gameName || 'Juego desconocido',
+    gameImage: script.game?.imageUrl || script.gameImage || '',
+    // ahora probamos todas las variantes de imagen personalizada
+    scriptImage: script.image 
+              || script.imageUrl 
+              || script.thumbnail 
+              || (Array.isArray(script.images) && script.images.length > 0 ? script.images[0] : '') 
+              || '',
+    description: script.description || 'Sin descripción disponible',
+    verified: script.verified || script.isVerified || false,
+    views: script.views || 0,
+    likes: script.likes || 0,
+    patched: script.patched || script.isPatched || false,
+    universal: script.universal || script.isUniversal || false,
+    keySystem: script.key || script.isKeySystem || script.keySystem || false,
+    scriptType: script.scriptType || script.mode || 'free',
+    source: 'ScriptBlox',
+    rawScript: script.script || script.content || '',
+    createdAt: script.createdAt || script.created || new Date().toISOString(),
+    updatedAt: script.updatedAt || script.updated || new Date().toISOString()
+}));
+
 
             } catch (error) {
                 console.error('[ScriptBlox] Error:', error);
