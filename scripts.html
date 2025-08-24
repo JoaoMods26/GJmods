@@ -192,7 +192,7 @@
             background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradient-anim 10s ease-in-out infinite;
+            
         }
 
         @keyframes gradient-anim {
@@ -857,7 +857,6 @@
 </head>
 <body>
 <!-- Canvas para partículas -->
-<canvas id="particles-canvas"></canvas>
 
 <!-- Navbar -->
 <nav class="navbar" id="navbar">
@@ -1094,9 +1093,7 @@
 
         // ====== Inicio ======
         document.addEventListener('DOMContentLoaded', () => {
-            initializeParticles();
-            setupEventListeners();
-            loadTrendingScripts();
+
         });
 
         function setupEventListeners() {
