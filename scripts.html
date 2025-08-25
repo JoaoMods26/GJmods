@@ -921,7 +921,6 @@
 </div>
 
 <script>
-
     // ====== Estado global ======
     let currentPage = 1;
     let currentQuery = '';
@@ -1027,7 +1026,6 @@
             const scripts = result?.scripts || [];
             if (result?.totalPages) { maxPages = Math.max(1, result.totalPages); } else if (result?.info?.totalPages) { maxPages = Math.max(1, result.info.totalPages); } else { maxPages = (scripts.length >= 20) ? currentPage + 1 : currentPage; }
             return scripts.map(script => ({
-                // --- CAMBIO #1 ---
                 scriptId: script.slug || script._id, // Para ScriptBlox usamos el SLUG
                 title: script.title || 'Script sin título',
                 game: script.game?.name || 'Juego desconocido',
@@ -1074,8 +1072,8 @@
                 const script = scriptData.script || scriptData;
                 const user = scriptData.user || {};
                 return {
-                    // --- CAMBIO #2 ---
-                    scriptId: script._id, // Para RScripts, usamos explícitamente el _id
+                    // --- CORRECCIÓN CLAVE AQUÍ ---
+                    scriptId: script._id, // Estaba usando 'script.id' por error, debe ser 'script._id'
                     title: script.title || 'Script sin título',
                     game: script.game || 'Juego desconocido',
                     description: script.description || 'Sin descripción',
@@ -1100,19 +1098,16 @@
     async function fetchScriptsFromCurrentAPI(query = '', page = 1) {
         return currentAPI === 'scriptblox' ? await fetchScriptBloxScripts(query, page) : await fetchRScriptsScripts(query, page);
     }
-
-    // ====== Acciones de búsqueda y renderizado (el resto del código sigue igual) ======
+    
+    // El resto de funciones no necesitan cambios
     async function handleSearch(e) { e.preventDefault(); currentQuery = searchInput.value.trim(); if (!currentQuery) { showNotification('Ingresa un término de búsqueda', 'error'); return; } currentPage = 1; isShowingTrending = false; await fetchScripts(); }
     function refreshCurrentSearch() { isShowingTrending ? loadTrendingScripts() : fetchScripts(); }
     async function fetchScripts() { if (isLoading) return; showLoading(true); hideAllResults(); isLoading = true; try { const scripts = await fetchScriptsFromCurrentAPI(currentQuery, currentPage); allScripts = scripts; isLoading = false; showLoading(false); if (!scripts || scripts.length === 0) { showNoResults(); return; } renderScripts(scripts); updateHeader(scripts.length, currentPage, maxPages); if (!isShowingTrending) { setupPagination(maxPages); } else { pagination.style.display = 'none'; } } catch (err) { console.error('Error fetching scripts:', err); isLoading = false; showLoading(false); showNoResults('Error al consultar la API.'); showNotification('Error de conexión con la API', 'error'); } }
     async function loadTrendingScripts() { if (isLoading) return; isShowingTrending = true; currentQuery = ''; searchInput.value = ''; currentPage = 1; showLoading(true); hideAllResults(); isLoading = true; try { const scripts = await fetchScriptsFromCurrentAPI('', 1); allScripts = scripts; isLoading = false; showLoading(false); if (!scripts || scripts.length === 0) { showNoResults('No hay scripts trending.'); return; } renderScripts(scripts); updateHeader(scripts.length, 1, 1); pagination.style.display = 'none'; } catch (err) { console.error('Error loading trending:', err); isLoading = false; showLoading(false); showNoResults('Error al cargar trending.'); showNotification('Error cargando trending', 'error'); } }
-    
     function setupPagination(totalPages) { if (isShowingTrending || totalPages <= 1) { pagination.style.display = 'none'; return; } pagination.style.display = 'flex'; pagination.innerHTML = ''; pagination.appendChild(createPaginationButton('‹', currentPage - 1, currentPage <= 1)); if (totalPages > 1) { pagination.appendChild(createPaginationButton('1', 1, false, currentPage === 1)); } if (currentPage > 3) { pagination.innerHTML += '<span class="pagination-dots">...</span>'; } for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) { pagination.appendChild(createPaginationButton(i.toString(), i, false, i === currentPage)); } if (currentPage < totalPages - 2) { pagination.innerHTML += '<span class="pagination-dots">...</span>'; } if (totalPages > 1) { pagination.appendChild(createPaginationButton(totalPages.toString(), totalPages, false, currentPage === totalPages)); } pagination.appendChild(createPaginationButton('›', currentPage + 1, currentPage >= totalPages)); }
     function createPaginationButton(text, page, disabled = false, active = false) { const btn = document.createElement('button'); btn.className = `page-btn ${active ? 'active' : ''}`; btn.textContent = text; btn.disabled = disabled; if (!disabled) { btn.onclick = () => changePage(page); } return btn; }
     async function changePage(newPage) { if (isShowingTrending || newPage === currentPage || isLoading || newPage < 1) return; currentPage = newPage; window.scrollTo({ top: 0, behavior: 'smooth' }); await fetchScripts(); }
-    
     function hideAllResults() { resultsHeader.style.display = 'none'; noResults.style.display = 'none'; scriptsGrid.innerHTML = ''; pagination.style.display = 'none'; }
-    
     function renderScripts(scripts) {
         scriptsGrid.innerHTML = scripts.map((script) => {
             const { scriptId, title, game, description, verified, views, likes, patched, universal, keySystem, scriptType, source } = script;
@@ -1124,39 +1119,20 @@
             tags.push(`<span class="script-tag">👁️ ${Number(views).toLocaleString()}</span>`);
             tags.push(`<span class="script-tag">❤️ ${Number(likes).toLocaleString()}</span>`);
             tags.push(`<span class="script-tag" style="background: ${source === 'ScriptBlox' ? '#3b82f6' : '#dc2626'};">${source}</span>`);
-
-            // --- CAMBIO #3 ---
-            return `
-            <div class="script-card" data-id="${scriptId}">
-                <div class="script-header">
-                    <h3 class="script-title">${sanitize(title)}</h3>
-                    <span class="script-game">${sanitize(game)}</span>
-                </div>
-                <div class="script-tags">${tags.join('')}</div>
-                <p class="script-description">${sanitize(description)}</p>
-                <div class="script-actions">
-                    <button class="copy-btn" onclick="copyScriptById('${scriptId}')">Copiar</button>
-                    <button class="view-btn" onclick="viewScript('${scriptId}')">Ver Script</button>
-                </div>
-            </div>`;
+            return `<div class="script-card" data-id="${scriptId}"><div class="script-header"><h3 class="script-title">${sanitize(title)}</h3><span class="script-game">${sanitize(game)}</span></div><div class="script-tags">${tags.join('')}</div><p class="script-description">${sanitize(description)}</p><div class="script-actions"><button class="copy-btn" onclick="copyScriptById('${scriptId}')">Copiar</button><button class="view-btn" onclick="viewScript('${scriptId}')">Ver Script</button></div></div>`;
         }).join('');
     }
-
     function updateHeader(total, page, totalPagesLocal) { resultsHeader.style.display = 'flex'; resultsCount.textContent = `Resultados: ${Number(total).toLocaleString()}`; pageInfo.textContent = isShowingTrending ? 'Trending' : `${page} / ${Math.max(1, totalPagesLocal)}`; }
-    
     async function viewScript(id) { if (!id) return; try { modalTitle.textContent = 'Cargando...'; modalCode.textContent = 'Obteniendo script...'; scriptModal.classList.add('show'); let endpoint = currentAPI === 'scriptblox' ? id : `scripts/${id}`; const data = await makeAPIRequest(`${PROXY_BASE}/${endpoint}`); const script = data?.script || data?.result || data || {}; const title = script.title || 'Script'; const scriptContent = script.script || script.content || ''; modalTitle.textContent = title; modalCode.textContent = scriptContent || 'Contenido no disponible.'; } catch (err) { console.error('Error viewing script:', err); modalTitle.textContent = 'Error'; modalCode.textContent = 'Error al cargar el script.'; showNotification('Error al cargar el script', 'error'); } }
     async function copyScriptById(id) { if (!id) return; try { showNotification('Obteniendo script...', 'success'); let endpoint = currentAPI === 'scriptblox' ? `raw/${id}` : `scripts/${id}`; const data = await makeAPIRequest(`${PROXY_BASE}/${endpoint}`); let scriptContent = data?.script || data?.content || data; if (typeof scriptContent !== 'string') { scriptContent = (await makeAPIRequest(`${PROXY_BASE}/${currentAPI === 'scriptblox' ? id : `scripts/${id}`}`))?.script?.script || ''; } if (!scriptContent) { showNotification('Contenido no disponible', 'error'); return; } copyToClipboard(scriptContent); showNotification('Script copiado', 'success'); } catch (err) { console.error('Error copying script:', err); showNotification('Error al copiar script', 'error'); } }
-    
     function closeModal() { scriptModal.classList.remove('show'); }
     function copyModalScript() { const text = modalCode.textContent || ''; if (!text || text.includes('Error')) { showNotification('Nada que copiar', 'error'); return; } copyToClipboard(text); showNotification('Script copiado', 'success'); }
     function copyToClipboard(text) { if (navigator.clipboard) { navigator.clipboard.writeText(text); } else { const area = document.createElement('textarea'); area.value = text; document.body.appendChild(area); area.select(); document.execCommand('copy'); document.body.removeChild(area); } }
-    
     function sanitize(str) { return String(str).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
     function showLoading(show) { loadingState.style.display = show ? 'block' : 'none'; }
     function showNoResults(message) { const p = noResults.querySelector('p'); p.textContent = message || 'No se encontraron scripts.'; noResults.style.display = 'block'; resultsHeader.style.display = 'none'; pagination.style.display = 'none'; }
     function clearSearch() { searchInput.value = ''; currentQuery = ''; currentSort = 'date'; sortFilter.value = 'date'; currentPage = 1; loadTrendingScripts(); }
     function showNotification(text, type = 'success') { const n = document.createElement('div'); n.className = `notification ${type}`; n.textContent = text; document.body.appendChild(n); setTimeout(() => n.classList.add('show'), 10); setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 200); }, 3000); }
-    
     window.selectAPI = selectAPI; window.viewScript = viewScript; window.copyScriptById = copyScriptById; window.copyModalScript = copyModalScript; window.closeModal = closeModal; window.clearSearch = clearSearch;
 </script>
 </body>
