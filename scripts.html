@@ -1389,7 +1389,7 @@
         }
 
         // ====== Modal y copia ======
-        async function viewScript(id) {
+              async function viewScript(id) {
             if (!id) return showNotification('ID de script no válido', 'error');
 
             modalTitle.textContent = 'Cargando...';
@@ -1397,23 +1397,48 @@
             scriptModal.classList.add('show');
 
             try {
-                let data;
+                let scriptContent = '';
+                let scriptTitle = 'Script sin título';
+
                 if (currentAPI === 'scriptblox') {
-                    data = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
+                    // La lógica para ScriptBlox se mantiene igual
+                    const data = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
+                    const script = data?.script || data?.result || data || {};
+                    scriptContent = script.script || '';
+                    scriptTitle = script.title || scriptTitle;
                 } else if (currentAPI === 'rscripts') {
-                    data = await makeAPIRequest(`${RSCRIPTS_API}/script/${id}`);
+                    // --- INICIO DE LA CORRECCIÓN PARA RSCRIPTS ---
+
+                    // 1. Obtenemos los metadatos del script
+                    const metadataResponse = await makeAPIRequest(`${RSCRIPTS_API}/script/${id}`);
+                    const scriptData = metadataResponse?.script;
+                    const rawUrl = scriptData?.rawScript;
+                    scriptTitle = scriptData?.title || scriptTitle;
+                    
+                    if (!rawUrl) {
+                        throw new Error('La URL del script (rawScript) no fue encontrada.');
+                    }
+
+                    // 2. Hacemos la petición a la URL para obtener el contenido
+                    const scriptResponse = await fetch(rawUrl);
+                    if (!scriptResponse.ok) {
+                        throw new Error('No se pudo cargar el contenido del script.');
+                    }
+                    scriptContent = await scriptResponse.text();
+                    
+                    // --- FIN DE LA CORRECCIÓN ---
                 }
 
-                const script = data?.script || data?.result || data || {};
-                const scriptContent = script.script || script.content || script.code || '';
-                modalTitle.textContent = script.title || 'Script sin título';
+                modalTitle.textContent = scriptTitle;
                 modalCode.textContent = scriptContent.trim() ? scriptContent : 'Este script no tiene contenido disponible.';
                 
             } catch (err) {
+                console.error('[VIEW_SCRIPT] Error:', err);
                 modalTitle.textContent = 'Error';
-                modalCode.textContent = 'Error al cargar el script. Intenta de nuevo.';
+                modalCode.textContent = `Error al cargar el script: ${err.message}. Intenta de nuevo.`;
                 showNotification('Error al cargar el script', 'error');
             }
+        
         }
 
                async function copyScriptById(id) {
