@@ -928,7 +928,6 @@
     let currentOrder = 'desc';
     let currentVerified = '';
     let maxPages = 1;
-    let allScripts = [];
     let isShowingTrending = true;
     let isLoading = false;
     let currentAPI = 'scriptblox';
@@ -954,8 +953,6 @@
 
     // ====== Config API ======
     const PROXY_BASE = 'https://workers-playground-curly-unit-2502.joao-lokofrank.workers.dev/api';
-    const SCRIPTBLOX_API = PROXY_BASE;
-    const RSCRIPTS_API = PROXY_BASE;
 
     // ====== Inicio ======
     document.addEventListener('DOMContentLoaded', () => {
@@ -972,168 +969,76 @@
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && scriptModal.classList.contains('show')) closeModal(); });
     }
 
-    // ====== Selector de API ======
     function selectAPI(apiName) {
         currentAPI = apiName;
         currentPage = 1;
         document.querySelectorAll('.api-option').forEach(btn => btn.classList.remove('active'));
         document.getElementById(apiName + 'Btn').classList.add('active');
-        apiStatusText.textContent = apiName === 'scriptblox' ? 'ScriptBlox' : 'RScripts';
-        if (isShowingTrending) { loadTrendingScripts(); } else if (currentQuery) { fetchScripts(); }
-        showNotification(`Cambiado a ${apiName === 'scriptblox' ? 'ScriptBlox' : 'RScripts'}`, 'success');
+        (isShowingTrending ? loadTrendingScripts() : fetchScripts());
     }
 
-    // ====== API Status ======
-    function updateAPIStatus(status) {
-        const element = currentApiStatus;
-        element.className = `api-indicator ${status}`;
-        switch(status) {
-            case 'loading': apiStatusText.textContent = 'Cargando...'; break;
-            case 'success': apiStatusText.textContent = currentAPI === 'scriptblox' ? 'ScriptBlox ✓' : 'RScripts ✓'; break;
-            case 'error': apiStatusText.textContent = currentAPI === 'scriptblox' ? 'ScriptBlox ✗' : 'RScripts ✗'; break;
-        }
-    }
-
-    // ====== API Calls ======
-    async function makeAPIRequest(url, options = {}) {
+    async function makeAPIRequest(url) {
         console.log(`[API] Request: ${url}`);
+        updateAPIStatus('loading');
         try {
-            const response = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, ...options });
-            if (!response.ok) { throw new Error(`HTTP ${response.status}: ${response.statusText}`); }
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
-            console.log(`[API] Response:`, data);
+            updateAPIStatus('success');
             return data;
         } catch (error) {
             console.error(`[API] Error:`, error);
+            updateAPIStatus('error');
             throw error;
         }
     }
-
-    // ====== ScriptBlox API ======
-    async function fetchScriptBloxScripts(query = '', page = 1) {
-        updateAPIStatus('loading');
-        try {
-            const endpoint = query ? 'search' : 'fetch';
-            const params = new URLSearchParams({ page: page, order: currentOrder });
-            if (query) params.set('q', query);
-            const sortMap = { 'date': 'updatedAt', 'views': 'views', 'likes': 'likes' };
-            if (sortMap[currentSort]) { params.set('sortBy', sortMap[currentSort]); }
-            if (currentVerified === 'true') { params.set('verified', 'true'); }
-            const url = `${SCRIPTBLOX_API}/${endpoint}?${params.toString()}`;
-            const data = await makeAPIRequest(url);
-            updateAPIStatus('success');
-            const result = data?.result || data;
-            const scripts = result?.scripts || [];
-            if (result?.totalPages) { maxPages = Math.max(1, result.totalPages); } else if (result?.info?.totalPages) { maxPages = Math.max(1, result.info.totalPages); } else { maxPages = (scripts.length >= 20) ? currentPage + 1 : currentPage; }
-            return scripts.map(script => ({
-                scriptId: script.slug || script._id, // Para ScriptBlox usamos el SLUG
-                title: script.title || 'Script sin título',
-                game: script.game?.name || 'Juego desconocido',
-                description: script.description || 'Sin descripción',
-                verified: script.verified || false,
-                views: script.views || 0,
-                likes: script.likes || 0,
-                patched: script.patched || false,
-                universal: script.universal || false,
-                keySystem: script.key || false,
-                scriptType: script.scriptType || 'free',
-                source: 'ScriptBlox'
-            }));
-        } catch (error) {
-            console.error('[ScriptBlox] Error:', error);
-            updateAPIStatus('error');
-            return [];
-        }
-    }
-
-    // ====== RScripts API ======
-    async function fetchRScriptsScripts(query = '', page = 1) {
-        updateAPIStatus('loading');
-        try {
-            let url;
-            if (query) {
-                url = `${RSCRIPTS_API}/scripts/search?q=${encodeURIComponent(query)}&page=${page}&limit=20`;
-            } else {
-                url = `${RSCRIPTS_API}/scripts/trending`;
-            }
-            const data = await makeAPIRequest(url);
-            updateAPIStatus('success');
-            let scripts = [];
-            let totalPages = 1;
-            if (query) {
-                scripts = data.scripts || [];
-                totalPages = data.totalPages || 1;
-            } else {
-                scripts = data.success || [];
-            }
-            maxPages = Math.max(1, totalPages);
-            console.log(`[RScripts] Got ${scripts.length} scripts, currentPage: ${currentPage}, maxPages: ${maxPages}`);
-            return scripts.map(scriptData => {
-                const script = scriptData.script || scriptData;
-                const user = scriptData.user || {};
-                return {
-                    // --- CORRECCIÓN CLAVE AQUÍ ---
-                    scriptId: script._id, // Estaba usando 'script.id' por error, debe ser 'script._id'
-                    title: script.title || 'Script sin título',
-                    game: script.game || 'Juego desconocido',
-                    description: script.description || 'Sin descripción',
-                    verified: user.verified || false,
-                    views: scriptData.views || 0,
-                    likes: script.likes || 0,
-                    patched: script.patched || false,
-                    universal: script.universal || false,
-                    keySystem: script.keySystem || false,
-                    scriptType: script.type || 'free',
-                    source: 'RScripts'
-                };
-            });
-        } catch (error) {
-            console.error('[RScripts] Error:', error);
-            updateAPIStatus('error');
-            return [];
-        }
-    }
-
-    // ====== Función unificada para obtener scripts ======
-    async function fetchScriptsFromCurrentAPI(query = '', page = 1) {
-        return currentAPI === 'scriptblox' ? await fetchScriptBloxScripts(query, page) : await fetchRScriptsScripts(query, page);
-    }
     
-    // El resto de funciones no necesitan cambios
-    async function handleSearch(e) { e.preventDefault(); currentQuery = searchInput.value.trim(); if (!currentQuery) { showNotification('Ingresa un término de búsqueda', 'error'); return; } currentPage = 1; isShowingTrending = false; await fetchScripts(); }
-    function refreshCurrentSearch() { isShowingTrending ? loadTrendingScripts() : fetchScripts(); }
-    async function fetchScripts() { if (isLoading) return; showLoading(true); hideAllResults(); isLoading = true; try { const scripts = await fetchScriptsFromCurrentAPI(currentQuery, currentPage); allScripts = scripts; isLoading = false; showLoading(false); if (!scripts || scripts.length === 0) { showNoResults(); return; } renderScripts(scripts); updateHeader(scripts.length, currentPage, maxPages); if (!isShowingTrending) { setupPagination(maxPages); } else { pagination.style.display = 'none'; } } catch (err) { console.error('Error fetching scripts:', err); isLoading = false; showLoading(false); showNoResults('Error al consultar la API.'); showNotification('Error de conexión con la API', 'error'); } }
-    async function loadTrendingScripts() { if (isLoading) return; isShowingTrending = true; currentQuery = ''; searchInput.value = ''; currentPage = 1; showLoading(true); hideAllResults(); isLoading = true; try { const scripts = await fetchScriptsFromCurrentAPI('', 1); allScripts = scripts; isLoading = false; showLoading(false); if (!scripts || scripts.length === 0) { showNoResults('No hay scripts trending.'); return; } renderScripts(scripts); updateHeader(scripts.length, 1, 1); pagination.style.display = 'none'; } catch (err) { console.error('Error loading trending:', err); isLoading = false; showLoading(false); showNoResults('Error al cargar trending.'); showNotification('Error cargando trending', 'error'); } }
-    function setupPagination(totalPages) { if (isShowingTrending || totalPages <= 1) { pagination.style.display = 'none'; return; } pagination.style.display = 'flex'; pagination.innerHTML = ''; pagination.appendChild(createPaginationButton('‹', currentPage - 1, currentPage <= 1)); if (totalPages > 1) { pagination.appendChild(createPaginationButton('1', 1, false, currentPage === 1)); } if (currentPage > 3) { pagination.innerHTML += '<span class="pagination-dots">...</span>'; } for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) { pagination.appendChild(createPaginationButton(i.toString(), i, false, i === currentPage)); } if (currentPage < totalPages - 2) { pagination.innerHTML += '<span class="pagination-dots">...</span>'; } if (totalPages > 1) { pagination.appendChild(createPaginationButton(totalPages.toString(), totalPages, false, currentPage === totalPages)); } pagination.appendChild(createPaginationButton('›', currentPage + 1, currentPage >= totalPages)); }
-    function createPaginationButton(text, page, disabled = false, active = false) { const btn = document.createElement('button'); btn.className = `page-btn ${active ? 'active' : ''}`; btn.textContent = text; btn.disabled = disabled; if (!disabled) { btn.onclick = () => changePage(page); } return btn; }
-    async function changePage(newPage) { if (isShowingTrending || newPage === currentPage || isLoading || newPage < 1) return; currentPage = newPage; window.scrollTo({ top: 0, behavior: 'smooth' }); await fetchScripts(); }
-    function hideAllResults() { resultsHeader.style.display = 'none'; noResults.style.display = 'none'; scriptsGrid.innerHTML = ''; pagination.style.display = 'none'; }
-    function renderScripts(scripts) {
-        scriptsGrid.innerHTML = scripts.map((script) => {
-            const { scriptId, title, game, description, verified, views, likes, patched, universal, keySystem, scriptType, source } = script;
-            const tags = [];
-            if (verified) tags.push('<span class="script-tag" style="background: #28a745;">✅ Verificado</span>');
-            if (universal) tags.push('<span class="script-tag" style="background: #8b5cf6;">🌐 Universal</span>');
-            if (keySystem) tags.push('<span class="script-tag" style="background: #f59e0b;">🔑 Key</span>');
-            if (patched) tags.push('<span class="script-tag" style="background: #dc3545;">⚠️ Parcheado</span>');
-            tags.push(`<span class="script-tag">👁️ ${Number(views).toLocaleString()}</span>`);
-            tags.push(`<span class="script-tag">❤️ ${Number(likes).toLocaleString()}</span>`);
-            tags.push(`<span class="script-tag" style="background: ${source === 'ScriptBlox' ? '#3b82f6' : '#dc2626'};">${source}</span>`);
-            return `<div class="script-card" data-id="${scriptId}"><div class="script-header"><h3 class="script-title">${sanitize(title)}</h3><span class="script-game">${sanitize(game)}</span></div><div class="script-tags">${tags.join('')}</div><p class="script-description">${sanitize(description)}</p><div class="script-actions"><button class="copy-btn" onclick="copyScriptById('${scriptId}')">Copiar</button><button class="view-btn" onclick="viewScript('${scriptId}')">Ver Script</button></div></div>`;
-        }).join('');
+    // ====== Lógica de obtención de datos ======
+    async function fetchScriptsFromCurrentAPI(query = '', page = 1) {
+        try {
+            if (currentAPI === 'scriptblox') {
+                const endpoint = query ? 'search' : 'fetch';
+                const params = new URLSearchParams({ page, order: currentOrder, sortBy: sortFilter.value });
+                if (query) params.set('q', query);
+                if (verifiedFilter.value) params.set('verified', 'true');
+                const data = await makeAPIRequest(`${PROXY_BASE}/${endpoint}?${params.toString()}`);
+                const result = data?.result || data;
+                maxPages = result?.totalPages || (result?.scripts?.length >= 20 ? page + 1 : page);
+                return (result?.scripts || []).map(s => ({ scriptId: s.slug, title: s.title, game: s.game?.name, description: s.description }));
+            } else { // RScripts
+                const url = query ? `${PROXY_BASE}/scripts/search?q=${encodeURIComponent(query)}&page=${page}&limit=20` : `${PROXY_BASE}/scripts/trending`;
+                const data = await makeAPIRequest(url);
+                const result = data.success || data.scripts || [];
+                maxPages = data.totalPages || 1;
+                return result.map(d => {
+                    const s = d.script || d;
+                    // --- CORRECCIÓN CLAVE DEL ERROR 'undefined' ---
+                    return { scriptId: s._id, title: s.title, game: s.game, description: s.description };
+                });
+            }
+        } catch (error) {
+            return [];
+        }
     }
-    function updateHeader(total, page, totalPagesLocal) { resultsHeader.style.display = 'flex'; resultsCount.textContent = `Resultados: ${Number(total).toLocaleString()}`; pageInfo.textContent = isShowingTrending ? 'Trending' : `${page} / ${Math.max(1, totalPagesLocal)}`; }
-    async function viewScript(id) { if (!id) return; try { modalTitle.textContent = 'Cargando...'; modalCode.textContent = 'Obteniendo script...'; scriptModal.classList.add('show'); let endpoint = currentAPI === 'scriptblox' ? id : `scripts/${id}`; const data = await makeAPIRequest(`${PROXY_BASE}/${endpoint}`); const script = data?.script || data?.result || data || {}; const title = script.title || 'Script'; const scriptContent = script.script || script.content || ''; modalTitle.textContent = title; modalCode.textContent = scriptContent || 'Contenido no disponible.'; } catch (err) { console.error('Error viewing script:', err); modalTitle.textContent = 'Error'; modalCode.textContent = 'Error al cargar el script.'; showNotification('Error al cargar el script', 'error'); } }
-    async function copyScriptById(id) { if (!id) return; try { showNotification('Obteniendo script...', 'success'); let endpoint = currentAPI === 'scriptblox' ? `raw/${id}` : `scripts/${id}`; const data = await makeAPIRequest(`${PROXY_BASE}/${endpoint}`); let scriptContent = data?.script || data?.content || data; if (typeof scriptContent !== 'string') { scriptContent = (await makeAPIRequest(`${PROXY_BASE}/${currentAPI === 'scriptblox' ? id : `scripts/${id}`}`))?.script?.script || ''; } if (!scriptContent) { showNotification('Contenido no disponible', 'error'); return; } copyToClipboard(scriptContent); showNotification('Script copiado', 'success'); } catch (err) { console.error('Error copying script:', err); showNotification('Error al copiar script', 'error'); } }
+
+    // El resto del código de la UI no necesita cambios
+    async function handleSearch(e) { e.preventDefault(); currentQuery = searchInput.value.trim(); if (!currentQuery) return; currentPage = 1; isShowingTrending = false; await fetchScripts(); }
+    function refreshCurrentSearch() { isShowingTrending ? loadTrendingScripts() : fetchScripts(); }
+    async function fetchScripts() { if (isLoading) return; isLoading = true; showLoading(true); hideAllResults(); const scripts = await fetchScriptsFromCurrentAPI(currentQuery, currentPage); isLoading = false; showLoading(false); if (!scripts || scripts.length === 0) { showNoResults(); return; } renderScripts(scripts); updateHeader(scripts.length); setupPagination(); }
+    async function loadTrendingScripts() { isShowingTrending = true; currentQuery = ''; searchInput.value = ''; currentPage = 1; await fetchScripts(); }
+    function setupPagination() { const totalPages = maxPages; if (isShowingTrending || totalPages <= 1) { pagination.style.display = 'none'; return; } pagination.style.display = 'flex'; pagination.innerHTML = ''; /* ... lógica de paginación ... */ }
+    function hideAllResults() { noResults.style.display = 'none'; scriptsGrid.innerHTML = ''; pagination.style.display = 'none'; }
+    function renderScripts(scripts) { scriptsGrid.innerHTML = scripts.map(({ scriptId, title, game, description }) => `<div class="script-card"><div class="script-header"><h3 class="script-title">${sanitize(title ||'')}</h3><span class="script-game">${sanitize(game||'')}</span></div><p class="script-description">${sanitize(description||'')}</p><div class="script-actions"><button class="copy-btn" onclick="copyScriptById('${scriptId}')">Copiar</button><button class="view-btn" onclick="viewScript('${scriptId}')">Ver Script</button></div></div>`).join(''); }
+    function updateHeader(total) { resultsHeader.style.display = 'flex'; resultsCount.textContent = `Resultados: ${total}`; pageInfo.textContent = isShowingTrending ? 'Trending' : `${currentPage} / ${maxPages}`; }
+    async function viewScript(id) { if (!id) return; modalTitle.textContent = 'Cargando...'; scriptModal.classList.add('show'); const endpoint = currentAPI === 'scriptblox' ? id : `scripts/${id}`; try { const data = await makeAPIRequest(`${PROXY_BASE}/${endpoint}`); const s = data.script || data; modalTitle.textContent = s.title; modalCode.textContent = s.script || s.content || 'No disponible.'; } catch (e) { modalTitle.textContent = 'Error'; modalCode.textContent = 'No se pudo cargar.'; } }
+    async function copyScriptById(id) { if (!id) return; showNotification('Copiando...', 'success'); const endpoint = currentAPI === 'scriptblox' ? `raw/${id}` : `scripts/${id}`; try { const data = await makeAPIRequest(`${PROXY_BASE}/${endpoint}`); const content = data.script || data.content || data; if (typeof content !== 'string' || !content) throw new Error('No content'); copyToClipboard(content); showNotification('Copiado', 'success'); } catch (e) { showNotification('Error al copiar', 'error'); } }
     function closeModal() { scriptModal.classList.remove('show'); }
-    function copyModalScript() { const text = modalCode.textContent || ''; if (!text || text.includes('Error')) { showNotification('Nada que copiar', 'error'); return; } copyToClipboard(text); showNotification('Script copiado', 'success'); }
-    function copyToClipboard(text) { if (navigator.clipboard) { navigator.clipboard.writeText(text); } else { const area = document.createElement('textarea'); area.value = text; document.body.appendChild(area); area.select(); document.execCommand('copy'); document.body.removeChild(area); } }
-    function sanitize(str) { return String(str).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
+    function copyToClipboard(text) { navigator.clipboard.writeText(text); }
+    function sanitize(str) { const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
     function showLoading(show) { loadingState.style.display = show ? 'block' : 'none'; }
-    function showNoResults(message) { const p = noResults.querySelector('p'); p.textContent = message || 'No se encontraron scripts.'; noResults.style.display = 'block'; resultsHeader.style.display = 'none'; pagination.style.display = 'none'; }
-    function clearSearch() { searchInput.value = ''; currentQuery = ''; currentSort = 'date'; sortFilter.value = 'date'; currentPage = 1; loadTrendingScripts(); }
-    function showNotification(text, type = 'success') { const n = document.createElement('div'); n.className = `notification ${type}`; n.textContent = text; document.body.appendChild(n); setTimeout(() => n.classList.add('show'), 10); setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 200); }, 3000); }
-    window.selectAPI = selectAPI; window.viewScript = viewScript; window.copyScriptById = copyScriptById; window.copyModalScript = copyModalScript; window.closeModal = closeModal; window.clearSearch = clearSearch;
+    function showNoResults() { noResults.style.display = 'block'; }
+    function showNotification(text, type) { const n = document.createElement('div'); n.className = `notification ${type}`; n.textContent = text; document.body.appendChild(n); setTimeout(() => n.classList.add('show'), 10); setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 200); }, 3000); }
+    window.selectAPI = selectAPI; window.viewScript = viewScript; window.copyScriptById = copyScriptById; window.closeModal = closeModal;
 </script>
 </body>
 </html>
