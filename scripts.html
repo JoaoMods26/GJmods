@@ -6,8 +6,8 @@
 <title>joao_mods</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
-        /* Estilos CSS (sin cambios, omitidos por brevedad para no alargar la respuesta) */
-        :root{--color-black:#0a0a0a;--color-white:#ffffff;--color-primary:#1e40af;--color-secondary:#dc2626;--color-accent:#3b82f6;--glass-bg:rgba(255, 255, 255, 0.05);--glass-border:rgba(255, 255, 255, 0.1);--color-success:#28a745}.navbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(10, 10, 10, 0.95);border-bottom:1px solid var(--glass-border);z-index:1000}.navbar-container{max-width:1200px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between;padding:0 1rem}.navbar-logo{font-size:1.4rem;font-weight:700;color:var(--color-accent);cursor:pointer}.navbar-nav{display:flex;gap:1rem;list-style:none;margin:0;padding:0}.nav-link{color:rgba(255, 255, 255, 0.8);text-decoration:none;padding:0.5rem 1rem;border-radius:4px;font-weight:500}.nav-link:hover,.nav-link.active{color:var(--color-white);background:var(--glass-bg)}*{box-sizing:border-box}body{font-family:'Inter', sans-serif;background-color:var(--color-black);color:var(--color-white);margin:0;padding:0;padding-top:60px;line-height:1.5}.container{max-width:1200px;margin:0 auto;padding:1rem;display:grid;grid-template-columns:1fr 180px;gap:1rem}.main-content{min-width:0}.sidebar{position:static}.header{text-align:center;padding:1rem 0;margin-bottom:1rem;grid-column:1 / -1}.logo{font-size:2.5rem;font-weight:700;color:var(--color-accent);margin:0}.search-section{margin-bottom:2rem}.search-container{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}.search-form{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap}.search-input{flex:1;min-width:250px;padding:0.75rem;background:rgba(255, 255, 255, 0.1);border:1px solid var(--glass-border);border-radius:4px;color:var(--color-white);font-size:1rem}.search-input:focus{outline:none;border-color:var(--color-accent)}.search-input::placeholder{color:rgba(255, 255, 255, 0.5)}.search-btn,.trending-btn{padding:0.75rem 1.5rem;border:none;border-radius:4px;font-weight:600;cursor:pointer;color:white}.search-btn{background:var(--color-primary)}.trending-btn{background:var(--color-secondary)}.search-btn:hover{background:var(--color-accent)}.search-btn:disabled{opacity:0.5;cursor:not-allowed}.api-selector{display:flex;gap:0.5rem;align-items:center;margin-bottom:1rem}.api-selector label{color:rgba(255, 255, 255, 0.8);font-weight:600}.api-toggle{display:flex;background:rgba(255, 255, 255, 0.1);border-radius:4px;border:1px solid var(--glass-border)}.api-option{padding:0.5rem 1rem;background:none;border:none;color:rgba(255, 255, 255, 0.7);cursor:pointer;font-size:0.9rem}.api-option.active{background:var(--color-accent);color:white}.filters-container{display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center}.filter-select{padding:0.5rem;background:rgba(255, 255, 255, 0.1);border:1px solid var(--glass-border);border-radius:4px;color:var(--color-white);font-size:0.9rem;cursor:pointer}.filter-select option{background:var(--color-black)}.results-section{margin-bottom:2rem}.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem}.results-count{font-size:1rem;color:var(--color-accent);font-weight:600}.scripts-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(350px, 1fr));gap:1rem}.script-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:8px;padding:1rem;border-top:3px solid var(--color-accent)}.script-card:hover{border-color:var(--color-accent)}.script-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;gap:0.5rem}.script-title{font-size:1.1rem;font-weight:600;color:var(--color-white);margin:0;line-height:1.2}.script-game{background:var(--color-accent);color:white;padding:0.2rem 0.5rem;border-radius:12px;font-size:0.75rem;font-weight:600;white-space:nowrap}.script-description{color:rgba(255, 255, 255, 0.8);font-size:0.9rem;margin-bottom:0.5rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.script-tags{display:flex;flex-wrap:wrap;gap:0.25rem;margin-bottom:0.5rem}.script-tag{background:rgba(255, 255, 255, 0.1);color:rgba(255, 255, 255, 0.8);padding:0.15rem 0.4rem;border-radius:10px;font-size:0.7rem}.script-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;font-size:0.8rem;color:rgba(255, 255, 255, 0.6)}.script-actions{display:flex;gap:0.5rem}.copy-btn,.view-btn{flex:1;padding:0.5rem;border:none;border-radius:4px;font-weight:600;cursor:pointer;font-size:0.9rem;color:white}.copy-btn{background:var(--color-success)}.view-btn{background:var(--color-primary);text-decoration:none;text-align:center}.loading{text-align:center;padding:2rem 0}.spinner{border:3px solid rgba(255, 255, 255, 0.1);border-top:3px solid var(--color-accent);border-radius:50%;width:30px;height:30px;animation:spin 1s linear infinite;margin:0 auto 1rem auto}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}.no-results{text-align:center;padding:2rem 0;color:rgba(255, 255, 255, 0.6)}.pagination{display:flex;justify-content:center;align-items:center;gap:0.5rem;margin-top:1rem;flex-wrap:wrap;padding:1rem;background:var(--glass-bg);border-radius:8px;border:1px solid var(--glass-border)}.page-btn{min-width:35px;height:35px;padding:0.5rem;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--color-white);border-radius:4px;cursor:pointer;font-weight:500;font-size:0.9rem;display:flex;align-items:center;justify-content:center}.page-btn:hover:not(:disabled){background:rgba(255, 255, 255, 0.1);border-color:var(--color-accent)}.page-btn.active{background:var(--color-accent);border-color:var(--color-accent);color:white;font-weight:600}.page-btn:disabled{opacity:0.4;cursor:not-allowed}.pagination-dots{color:rgba(255, 255, 255, 0.5);padding:0 0.5rem}.notification{position:fixed;top:80px;right:20px;padding:0.75rem 1rem;border-radius:4px;font-weight:600;z-index:1000;transform:translateX(300px);transition:transform 0.2s ease}.notification.show{transform:translateX(0)}.notification.success{background:var(--color-success)}.notification.error{background:var(--color-secondary)}.modal{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0, 0, 0, 0.8);display:flex;align-items:center;justify-content:center;z-index:2000;opacity:0;visibility:hidden;transition:all 0.2s ease}.modal.show{opacity:1;visibility:visible}.modal-content{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:8px;padding:1.5rem;max-width:90vw;max-height:90vh;overflow-y:auto;position:relative}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:1px solid var(--glass-border);padding-bottom:0.5rem}.close-btn{background:none;border:none;color:var(--color-white);font-size:1.5rem;cursor:pointer;padding:0.25rem;border-radius:4px}.close-btn:hover{background:rgba(255, 255, 255, 0.1)}.script-code{background:#1a1a2e;border:1px solid var(--glass-border);border-radius:4px;padding:1rem;font-family:'Consolas', 'Monaco', 'Courier New', monospace;font-size:0.85rem;line-height:1.4;color:#e2e8f0;max-height:400px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}.api-status{display:flex;justify-content:center;margin-bottom:0.5rem}.api-indicator{padding:0.25rem 0.75rem;border-radius:12px;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:0.5rem}.api-indicator.loading{background:#ffc107;color:#000}.api-indicator.success{background:var(--color-success);color:white}.api-indicator.error{background:var(--color-secondary);color:white}.status-dot{width:8px;height:8px;border-radius:50%;background:currentColor}.ad-container{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:4px;padding:0.5rem;margin-bottom:1rem;text-align:center;min-height:80px;display:flex;align-items:center;justify-content:center}.ad-label{color:rgba(255, 255, 255, 0.5);font-size:0.7rem;margin-bottom:0.5rem;text-transform:uppercase}.ad-sidebar{position:sticky;top:80px}.ad-bottom{grid-column:1 / -1;margin-top:1rem}@media (max-width: 768px){.container{padding:0.5rem;grid-template-columns:1fr;gap:0.5rem;display:flex;flex-direction:column}.header{order:1}.main-content{order:2}.sidebar{order:3}.ad-bottom{order:4;min-height:50px;padding:0.25rem}.search-form{flex-direction:column}.search-input{min-width:100%}.scripts-grid{grid-template-columns:1fr}.filters-container{flex-direction:column;align-items:stretch}.results-header{flex-direction:column;align-items:stretch}.script-actions{flex-direction:column}.navbar-nav{display:none}.modal-content{margin:0.5rem;max-width:calc(100vw - 1rem);max-height:calc(100vh - 1rem)}.pagination{gap:0.25rem}.page-btn{min-width:30px;height:30px;padding:0.25rem;font-size:0.8rem}.logo{font-size:2rem}.api-selector{flex-direction:column;align-items:stretch}}.script-card,.page-btn,.search-btn,.trending-btn,.copy-btn,.view-btn{will-change:auto}*{transition:none}.search-btn:hover,.copy-btn:hover,.view-btn:hover,.page-btn:hover:not(:disabled){transition:background-color 0.1s ease}
+        /* Estilos CSS */
+        :root{--color-black:#0a0a0a;--color-white:#ffffff;--color-primary:#1e40af;--color-secondary:#dc2626;--color-accent:#3b82f6;--glass-bg:rgba(255, 255, 255, 0.05);--glass-border:rgba(255, 255, 255, 0.1);--color-success:#28a745}.navbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(10, 10, 10, 0.95);border-bottom:1px solid var(--glass-border);z-index:1000}.navbar-container{max-width:1200px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between;padding:0 1rem}.navbar-logo{font-size:1.4rem;font-weight:700;color:var(--color-accent);cursor:pointer}.navbar-nav{display:flex;gap:1rem;list-style:none;margin:0;padding:0}.nav-link{color:rgba(255, 255, 255, 0.8);text-decoration:none;padding:0.5rem 1rem;border-radius:4px;font-weight:500}.nav-link:hover,.nav-link.active{color:var(--color-white);background:var(--glass-bg)}*{box-sizing:border-box}body{font-family:'Inter', sans-serif;background-color:var(--color-black);color:var(--color-white);margin:0;padding:0;padding-top:60px;line-height:1.5}.container{max-width:1200px;margin:0 auto;padding:1rem}.main-content{min-width:0}.header{text-align:center;padding:1rem 0;margin-bottom:1rem}.logo{font-size:2.5rem;font-weight:700;color:var(--color-accent);margin:0}.search-section{margin-bottom:2rem}.search-container{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}.search-form{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap}.search-input{flex:1;min-width:250px;padding:0.75rem;background:rgba(255, 255, 255, 0.1);border:1px solid var(--glass-border);border-radius:4px;color:var(--color-white);font-size:1rem}.search-input:focus{outline:none;border-color:var(--color-accent)}.search-input::placeholder{color:rgba(255, 255, 255, 0.5)}.search-btn,.trending-btn{padding:0.75rem 1.5rem;border:none;border-radius:4px;font-weight:600;cursor:pointer;color:white}.search-btn{background:var(--color-primary)}.trending-btn{background:var(--color-secondary)}.search-btn:hover{background:var(--color-accent)}.search-btn:disabled{opacity:0.5;cursor:not-allowed}.api-selector{display:flex;gap:0.5rem;align-items:center;margin-bottom:1rem}.api-selector label{color:rgba(255, 255, 255, 0.8);font-weight:600}.api-toggle{display:flex;background:rgba(255, 255, 255, 0.1);border-radius:4px;border:1px solid var(--glass-border)}.api-option{padding:0.5rem 1rem;background:none;border:none;color:rgba(255, 255, 255, 0.7);cursor:pointer;font-size:0.9rem}.api-option.active{background:var(--color-accent);color:white}.filters-container{display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center}.filter-select{padding:0.5rem;background:rgba(255, 255, 255, 0.1);border:1px solid var(--glass-border);border-radius:4px;color:var(--color-white);font-size:0.9rem;cursor:pointer}.filter-select option{background:var(--color-black)}.results-section{margin-bottom:2rem}.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem}.results-count{font-size:1rem;color:var(--color-accent);font-weight:600}.scripts-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(350px, 1fr));gap:1rem}.script-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:8px;padding:1rem;border-top:3px solid var(--color-accent)}.script-card:hover{border-color:var(--color-accent)}.script-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;gap:0.5rem}.script-title{font-size:1.1rem;font-weight:600;color:var(--color-white);margin:0;line-height:1.2}.script-game{background:var(--color-accent);color:white;padding:0.2rem 0.5rem;border-radius:12px;font-size:0.75rem;font-weight:600;white-space:nowrap}.script-description{color:rgba(255, 255, 255, 0.8);font-size:0.9rem;margin-bottom:0.5rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.script-tags{display:flex;flex-wrap:wrap;gap:0.25rem;margin-bottom:0.5rem}.script-tag{background:rgba(255, 255, 255, 0.1);color:rgba(255, 255, 255, 0.8);padding:0.15rem 0.4rem;border-radius:10px;font-size:0.7rem}.script-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;font-size:0.8rem;color:rgba(255, 255, 255, 0.6)}.script-actions{display:flex;gap:0.5rem}.copy-btn,.view-btn{flex:1;padding:0.5rem;border:none;border-radius:4px;font-weight:600;cursor:pointer;font-size:0.9rem;color:white}.copy-btn{background:var(--color-success)}.view-btn{background:var(--color-primary);text-decoration:none;text-align:center}.loading{text-align:center;padding:2rem 0}.spinner{border:3px solid rgba(255, 255, 255, 0.1);border-top:3px solid var(--color-accent);border-radius:50%;width:30px;height:30px;animation:spin 1s linear infinite;margin:0 auto 1rem auto}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}.no-results{text-align:center;padding:2rem 0;color:rgba(255, 255, 255, 0.6)}.pagination{display:flex;justify-content:center;align-items:center;gap:0.5rem;margin-top:1rem;flex-wrap:wrap;padding:1rem;background:var(--glass-bg);border-radius:8px;border:1px solid var(--glass-border)}.page-btn{min-width:35px;height:35px;padding:0.5rem;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--color-white);border-radius:4px;cursor:pointer;font-weight:500;font-size:0.9rem;display:flex;align-items:center;justify-content:center}.page-btn:hover:not(:disabled){background:rgba(255, 255, 255, 0.1);border-color:var(--color-accent)}.page-btn.active{background:var(--color-accent);border-color:var(--color-accent);color:white;font-weight:600}.page-btn:disabled{opacity:0.4;cursor:not-allowed}.pagination-dots{color:rgba(255, 255, 255, 0.5);padding:0 0.5rem}.notification{position:fixed;top:80px;right:20px;padding:0.75rem 1rem;border-radius:4px;font-weight:600;z-index:1000;transform:translateX(300px);transition:transform 0.2s ease}.notification.show{transform:translateX(0)}.notification.success{background:var(--color-success)}.notification.error{background:var(--color-secondary)}.modal{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0, 0, 0, 0.8);display:flex;align-items:center;justify-content:center;z-index:2000;opacity:0;visibility:hidden;transition:all 0.2s ease}.modal.show{opacity:1;visibility:visible}.modal-content{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:8px;padding:1.5rem;max-width:90vw;max-height:90vh;overflow-y:auto;position:relative}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:1px solid var(--glass-border);padding-bottom:0.5rem}.close-btn{background:none;border:none;color:var(--color-white);font-size:1.5rem;cursor:pointer;padding:0.25rem;border-radius:4px}.close-btn:hover{background:rgba(255, 255, 255, 0.1)}.script-code{background:#1a1a2e;border:1px solid var(--glass-border);border-radius:4px;padding:1rem;font-family:'Consolas', 'Monaco', 'Courier New', monospace;font-size:0.85rem;line-height:1.4;color:#e2e8f0;max-height:400px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}.api-status{display:flex;justify-content:center;margin-bottom:0.5rem}.api-indicator{padding:0.25rem 0.75rem;border-radius:12px;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:0.5rem}.api-indicator.loading{background:#ffc107;color:#000}.api-indicator.success{background:var(--color-success);color:white}.api-indicator.error{background:var(--color-secondary);color:white}.status-dot{width:8px;height:8px;border-radius:50%;background:currentColor}@media (max-width: 768px){.container{padding:0.5rem}.search-form{flex-direction:column}.search-input{min-width:100%}.scripts-grid{grid-template-columns:1fr}.filters-container{flex-direction:column;align-items:stretch}.results-header{flex-direction:column;align-items:stretch}.script-actions{flex-direction:column}.navbar-nav{display:none}.modal-content{margin:0.5rem;max-width:calc(100vw - 1rem);max-height:calc(100vh - 1rem)}.pagination{gap:0.25rem}.page-btn{min-width:30px;height:30px;padding:0.25rem;font-size:0.8rem}.logo{font-size:2rem}.api-selector{flex-direction:column;align-items:stretch}}.script-card,.page-btn,.search-btn,.trending-btn,.copy-btn,.view-btn{will-change:auto}*{transition:none}.search-btn:hover,.copy-btn:hover,.view-btn:hover,.page-btn:hover:not(:disabled){transition:background-color 0.1s ease}
 </style>
 </head>
 <body>
@@ -32,8 +32,6 @@
 <h1 class="logo">Buscador de Scripts</h1>
 <p style="color: rgba(255, 255, 255, 0.7); font-size: 1rem;">Encuentra scripts para tus juegos favoritos de Roblox</p>
 </header>
-
-
 
 <!-- Contenido principal -->
 <main class="container">
@@ -93,23 +91,6 @@
             </div>
         </section>
 
-        <!-- Anuncio horizontal 728x90 -->
-        <div class="ad-container ad-bottom">
-            <div>
-                <div class="ad-label">Publicidad</div>
-                <script type="text/javascript"> 
-                    atOptions = { 
-                        'key' : 'd1a9332ab68f936abaa310ff142b94ef', 
-                        'format' : 'iframe', 
-                        'height' : 90, 
-                        'width' : 728, 
-                        'params' : {} 
-                    }; 
-                </script>
-                <script type="text/javascript" src="//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js"></script>
-            </div>
-        </div>
-
         <!-- Sección de resultados -->
         <section class="results-section" id="results">
             <div class="results-header" id="resultsHeader" style="display: none;">
@@ -134,104 +115,6 @@
                 <!-- La paginación se generará dinámicamente -->
             </div>
         </section>
-
-        <!-- Anuncio horizontal 468x60 -->
-        <div class="ad-container ad-bottom">
-            <div>
-                <div class="ad-label">Publicidad</div>
-                <script type="text/javascript"> 
-                    atOptions = { 
-                        'key' : '8c3ca771c13fd8624f87fdec4e5b7d29', 
-                        'format' : 'iframe', 
-                        'height' : 60, 
-                        'width' : 468, 
-                        'params' : {} 
-                    }; 
-                </script>
-                <script type="text/javascript" src="//believableordinarygentlemen.com/8c3ca771c13fd8624f87fdec4e5b7d29/invoke.js"></script>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sidebar con anuncios -->
-    <aside class="sidebar">
-        <!-- Anuncio lateral 160x300 -->
-        <div class="ad-container ad-sidebar">
-            <div>
-                <div class="ad-label">Anuncio</div>
-                <script type="text/javascript"> 
-                    atOptions = { 
-                        'key' : 'ab51e186a04576460b84ebe553be82ea', 
-                        'format' : 'iframe', 
-                        'height' : 300, 
-                        'width' : 160, 
-                        'params' : {} 
-                    }; 
-                </script>
-                <script type="text/javascript" src="//believableordinarygentlemen.com/ab51e186a04576460b84ebe553be82ea/invoke.js"></script>
-            </div>
-        </div>
-
-        <!-- Anuncio lateral 160x600 -->
-        <div class="ad-container ad-sidebar">
-            <div>
-                <div class="ad-label">Patrocinado</div>
-                <script type="text/javascript"> 
-                    atOptions = { 
-                        'key' : '09ebe62ec20777f91a14e0029e2f92a4', 
-                        'format' : 'iframe', 
-                        'height' : 600, 
-                        'width' : 160, 
-                        'params' : {} 
-                    }; 
-                </script>
-                <script type="text/javascript" src="//believableordinarygentlemen.com/09ebe62ec20777f91a14e0029e2f92a4/invoke.js"></script>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Anuncios inferiores -->
-    
-    <!-- Anuncio móvil 320x50 -->
-    <div class="ad-container ad-bottom mobile-ad">
-        <div>
-            <div class="ad-label">Publicidad</div>
-            <script type="text/javascript"> 
-                atOptions = { 
-                    'key' : '3673085df22687e59379948e6eb888d9', 
-                    'format' : 'iframe', 
-                    'height' : 50, 
-                    'width' : 320, 
-                    'params' : {} 
-                }; 
-            </script>
-            <script type="text/javascript" src="//believableordinarygentlemen.com/3673085df22687e59379948e6eb888d9/invoke.js"></script>
-        </div>
-    </div>
-
-    <div class="ad-container ad-bottom">
-        <div>
-            <div class="ad-label">Publicidad</div>
-            <script type="text/javascript"> 
-                atOptions = { 
-                    'key' : 'aa4b552f34e750eee2a4f60ed72cc416', 
-                    'format' : 'iframe', 
-                    'height' : 250, 
-                    'width' : 300, 
-                    'params' : {} 
-                }; 
-            </script>
-            <script type="text/javascript" src="//believableordinarygentlemen.com/aa4b552f34e750eee2a4f60ed72cc416/invoke.js"></script>
-        </div>
-    </div>
-
-    <!-- Anuncio nativo -->
-    <div class="ad-container ad-bottom">
-        <div>
-            <div class="ad-label">Contenido patrocinado</div>
-            <script async="async" data-cfasync="false" src="//believableordinarygentlemen.com/4525df450d44613469633168ded413cf/invoke.js"></script> 
-            <div id="container-4525df450d44613469633168ded413cf"></div>
-        </div>
     </div>
 </main>
 
@@ -253,22 +136,8 @@
 </div>
 </div>
 
-<style>
-@media (max-width: 768px) {
-    .ad-container.ad-bottom:first-of-type {
-        display: flex !important;
-    }
-}
-
-@media (min-width: 769px) {
-    .ad-container.ad-bottom:first-of-type {
-        display: none !important;
-    }
-}
-</style>
-
 <script>
-        // ESTADO GLOBAL Y REFERENCIAS DOM (Sin cambios)
+        // ESTADO GLOBAL Y REFERENCIAS DOM
         let currentPage = 1, currentQuery = '', currentSort = 'date', currentOrder = 'desc', currentVerified = '', maxPages = 1, isShowingTrending = true, isLoading = false, currentAPI = 'scriptblox';
         const searchForm = document.getElementById('searchForm'), searchInput = document.getElementById('searchInput'), sortFilter = document.getElementById('sortFilter'), orderFilter = document.getElementById('orderFilter'), verifiedFilter = document.getElementById('verifiedFilter'), scriptsGrid = document.getElementById('scriptsGrid'), loadingState = document.getElementById('loadingState'), noResults = document.getElementById('noResults'), resultsHeader = document.getElementById('resultsHeader'), resultsCount = document.getElementById('resultsCount'), pageInfo = document.getElementById('pageInfo'), pagination = document.getElementById('pagination'), scriptModal = document.getElementById('scriptModal'), modalCode = document.getElementById('modalCode'), modalTitle = document.getElementById('modalTitle'), currentApiStatus = document.getElementById('currentApiStatus'), apiStatusText = document.getElementById('apiStatusText');
         const PROXY_BASE = 'https://workers-playground-curly-unit-2502.joao-lokofrank.workers.dev/api', SCRIPTBLOX_API = PROXY_BASE, RSCRIPTS_API = `${PROXY_BASE}/rscripts`;
@@ -335,7 +204,6 @@
             } catch (error) { updateAPIStatus('error'); return []; }
         }
 
-        // --- FUNCIÓN CORREGIDA ---
         async function fetchRScriptsScripts(query = '', page = 1) {
             updateAPIStatus('loading');
             try {
@@ -344,27 +212,21 @@
                 updateAPIStatus('success');
                 
                 let scripts = [];
-                if (query) { // Para Búsqueda
+                if (query) {
                     scripts = data?.scripts || [];
                     maxPages = data?.info?.maxPages || 1;
-                } else { // Para Recientes (Trending)
-                    // --- INICIO DE LA CORRECCIÓN ---
-                    // La estructura aquí es diferente. Debemos procesarla para que coincida con la de búsqueda.
+                } else {
                     scripts = (data?.success || []).map(item => {
                         const scriptData = item.script || {};
-                        // Unimos el objeto padre (item) con el hijo (item.script)
-                        // para asegurarnos de tener todos los datos, incluyendo rawScript.
                         return { ...item, ...scriptData, _id: scriptData._id || item._id };
                     });
                     maxPages = 1;
-                    // --- FIN DE LA CORRECCIÓN ---
                 }
                 
                 return scripts.map(s => ({ id: s._id, title: s.title, game: s.game?.name, description: s.description, verified: s.user?.verified, views: s.views, likes: s.likes, patched: s.patched, universal: s.universal, keySystem: s.keySystem, scriptType: 'free', source: 'RScripts', rawScript: s.rawScript }));
             } catch (error) { updateAPIStatus('error'); return []; }
         }
         
-        // --- RESTO DEL SCRIPT (SIN CAMBIOS FUNCIONALES IMPORTANTES) ---
         async function fetchScriptsFromCurrentAPI(query = '', page = 1) {
             return currentAPI === 'scriptblox' ? await fetchScriptBloxScripts(query, page) : await fetchRScriptsScripts(query, page);
         }
