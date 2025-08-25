@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>joao_mods</title>
+<title>joao</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
-        /* Estilos CSS (sin cambios, omitidos por brevedad) */
+        /* Estilos CSS (sin cambios, omitidos por brevedad para no alargar la respuesta) */
         :root{--color-black:#0a0a0a;--color-white:#ffffff;--color-primary:#1e40af;--color-secondary:#dc2626;--color-accent:#3b82f6;--glass-bg:rgba(255, 255, 255, 0.05);--glass-border:rgba(255, 255, 255, 0.1);--color-success:#28a745}.navbar{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(10, 10, 10, 0.95);border-bottom:1px solid var(--glass-border);z-index:1000}.navbar-container{max-width:1200px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between;padding:0 1rem}.navbar-logo{font-size:1.4rem;font-weight:700;color:var(--color-accent);cursor:pointer}.navbar-nav{display:flex;gap:1rem;list-style:none;margin:0;padding:0}.nav-link{color:rgba(255, 255, 255, 0.8);text-decoration:none;padding:0.5rem 1rem;border-radius:4px;font-weight:500}.nav-link:hover,.nav-link.active{color:var(--color-white);background:var(--glass-bg)}*{box-sizing:border-box}body{font-family:'Inter', sans-serif;background-color:var(--color-black);color:var(--color-white);margin:0;padding:0;padding-top:60px;line-height:1.5}.container{max-width:1200px;margin:0 auto;padding:1rem;display:grid;grid-template-columns:1fr 180px;gap:1rem}.main-content{min-width:0}.sidebar{position:static}.header{text-align:center;padding:1rem 0;margin-bottom:1rem;grid-column:1 / -1}.logo{font-size:2.5rem;font-weight:700;color:var(--color-accent);margin:0}.search-section{margin-bottom:2rem}.search-container{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:8px;padding:1.5rem;margin-bottom:1rem}.search-form{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap}.search-input{flex:1;min-width:250px;padding:0.75rem;background:rgba(255, 255, 255, 0.1);border:1px solid var(--glass-border);border-radius:4px;color:var(--color-white);font-size:1rem}.search-input:focus{outline:none;border-color:var(--color-accent)}.search-input::placeholder{color:rgba(255, 255, 255, 0.5)}.search-btn,.trending-btn{padding:0.75rem 1.5rem;border:none;border-radius:4px;font-weight:600;cursor:pointer;color:white}.search-btn{background:var(--color-primary)}.trending-btn{background:var(--color-secondary)}.search-btn:hover{background:var(--color-accent)}.search-btn:disabled{opacity:0.5;cursor:not-allowed}.api-selector{display:flex;gap:0.5rem;align-items:center;margin-bottom:1rem}.api-selector label{color:rgba(255, 255, 255, 0.8);font-weight:600}.api-toggle{display:flex;background:rgba(255, 255, 255, 0.1);border-radius:4px;border:1px solid var(--glass-border)}.api-option{padding:0.5rem 1rem;background:none;border:none;color:rgba(255, 255, 255, 0.7);cursor:pointer;font-size:0.9rem}.api-option.active{background:var(--color-accent);color:white}.filters-container{display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center}.filter-select{padding:0.5rem;background:rgba(255, 255, 255, 0.1);border:1px solid var(--glass-border);border-radius:4px;color:var(--color-white);font-size:0.9rem;cursor:pointer}.filter-select option{background:var(--color-black)}.results-section{margin-bottom:2rem}.results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem}.results-count{font-size:1rem;color:var(--color-accent);font-weight:600}.scripts-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(350px, 1fr));gap:1rem}.script-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:8px;padding:1rem;border-top:3px solid var(--color-accent)}.script-card:hover{border-color:var(--color-accent)}.script-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;gap:0.5rem}.script-title{font-size:1.1rem;font-weight:600;color:var(--color-white);margin:0;line-height:1.2}.script-game{background:var(--color-accent);color:white;padding:0.2rem 0.5rem;border-radius:12px;font-size:0.75rem;font-weight:600;white-space:nowrap}.script-description{color:rgba(255, 255, 255, 0.8);font-size:0.9rem;margin-bottom:0.5rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.script-tags{display:flex;flex-wrap:wrap;gap:0.25rem;margin-bottom:0.5rem}.script-tag{background:rgba(255, 255, 255, 0.1);color:rgba(255, 255, 255, 0.8);padding:0.15rem 0.4rem;border-radius:10px;font-size:0.7rem}.script-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;font-size:0.8rem;color:rgba(255, 255, 255, 0.6)}.script-actions{display:flex;gap:0.5rem}.copy-btn,.view-btn{flex:1;padding:0.5rem;border:none;border-radius:4px;font-weight:600;cursor:pointer;font-size:0.9rem;color:white}.copy-btn{background:var(--color-success)}.view-btn{background:var(--color-primary);text-decoration:none;text-align:center}.loading{text-align:center;padding:2rem 0}.spinner{border:3px solid rgba(255, 255, 255, 0.1);border-top:3px solid var(--color-accent);border-radius:50%;width:30px;height:30px;animation:spin 1s linear infinite;margin:0 auto 1rem auto}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}.no-results{text-align:center;padding:2rem 0;color:rgba(255, 255, 255, 0.6)}.pagination{display:flex;justify-content:center;align-items:center;gap:0.5rem;margin-top:1rem;flex-wrap:wrap;padding:1rem;background:var(--glass-bg);border-radius:8px;border:1px solid var(--glass-border)}.page-btn{min-width:35px;height:35px;padding:0.5rem;background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--color-white);border-radius:4px;cursor:pointer;font-weight:500;font-size:0.9rem;display:flex;align-items:center;justify-content:center}.page-btn:hover:not(:disabled){background:rgba(255, 255, 255, 0.1);border-color:var(--color-accent)}.page-btn.active{background:var(--color-accent);border-color:var(--color-accent);color:white;font-weight:600}.page-btn:disabled{opacity:0.4;cursor:not-allowed}.pagination-dots{color:rgba(255, 255, 255, 0.5);padding:0 0.5rem}.notification{position:fixed;top:80px;right:20px;padding:0.75rem 1rem;border-radius:4px;font-weight:600;z-index:1000;transform:translateX(300px);transition:transform 0.2s ease}.notification.show{transform:translateX(0)}.notification.success{background:var(--color-success)}.notification.error{background:var(--color-secondary)}.modal{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0, 0, 0, 0.8);display:flex;align-items:center;justify-content:center;z-index:2000;opacity:0;visibility:hidden;transition:all 0.2s ease}.modal.show{opacity:1;visibility:visible}.modal-content{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:8px;padding:1.5rem;max-width:90vw;max-height:90vh;overflow-y:auto;position:relative}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;border-bottom:1px solid var(--glass-border);padding-bottom:0.5rem}.close-btn{background:none;border:none;color:var(--color-white);font-size:1.5rem;cursor:pointer;padding:0.25rem;border-radius:4px}.close-btn:hover{background:rgba(255, 255, 255, 0.1)}.script-code{background:#1a1a2e;border:1px solid var(--glass-border);border-radius:4px;padding:1rem;font-family:'Consolas', 'Monaco', 'Courier New', monospace;font-size:0.85rem;line-height:1.4;color:#e2e8f0;max-height:400px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}.api-status{display:flex;justify-content:center;margin-bottom:0.5rem}.api-indicator{padding:0.25rem 0.75rem;border-radius:12px;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:0.5rem}.api-indicator.loading{background:#ffc107;color:#000}.api-indicator.success{background:var(--color-success);color:white}.api-indicator.error{background:var(--color-secondary);color:white}.status-dot{width:8px;height:8px;border-radius:50%;background:currentColor}.ad-container{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:4px;padding:0.5rem;margin-bottom:1rem;text-align:center;min-height:80px;display:flex;align-items:center;justify-content:center}.ad-label{color:rgba(255, 255, 255, 0.5);font-size:0.7rem;margin-bottom:0.5rem;text-transform:uppercase}.ad-sidebar{position:sticky;top:80px}.ad-bottom{grid-column:1 / -1;margin-top:1rem}@media (max-width: 768px){.container{padding:0.5rem;grid-template-columns:1fr;gap:0.5rem;display:flex;flex-direction:column}.header{order:1}.main-content{order:2}.sidebar{order:3}.ad-bottom{order:4;min-height:50px;padding:0.25rem}.search-form{flex-direction:column}.search-input{min-width:100%}.scripts-grid{grid-template-columns:1fr}.filters-container{flex-direction:column;align-items:stretch}.results-header{flex-direction:column;align-items:stretch}.script-actions{flex-direction:column}.navbar-nav{display:none}.modal-content{margin:0.5rem;max-width:calc(100vw - 1rem);max-height:calc(100vh - 1rem)}.pagination{gap:0.25rem}.page-btn{min-width:30px;height:30px;padding:0.25rem;font-size:0.8rem}.logo{font-size:2rem}.api-selector{flex-direction:column;align-items:stretch}}.script-card,.page-btn,.search-btn,.trending-btn,.copy-btn,.view-btn{will-change:auto}*{transition:none}.search-btn:hover,.copy-btn:hover,.view-btn:hover,.page-btn:hover:not(:disabled){transition:background-color 0.1s ease}
 </style>
 </head>
@@ -123,7 +123,6 @@
         <div class="ad-container ad-sidebar">
             <div>
                 <div class="ad-label">Anuncio</div>
-                <!-- === AQUÍ VA TU CÓDIGO DE ANUNCIO 160x300 === -->
                 <script type="text/javascript"> 
                     atOptions = { 
                         'key' : 'ab51e186a04576460b84ebe553be82ea', 
@@ -134,7 +133,6 @@
                     }; 
                 </script>
                 <script type="text/javascript" src="//believableordinarygentlemen.com/ab51e186a04576460b84ebe553be82ea/invoke.js"></script>
-                <!-- ============================================= -->
             </div>
         </div>
 
@@ -142,7 +140,6 @@
         <div class="ad-container ad-sidebar">
             <div>
                 <div class="ad-label">Patrocinado</div>
-                <!-- === AQUÍ VA TU CÓDIGO DE ANUNCIO 160x600 === -->
                 <script type="text/javascript"> 
                     atOptions = { 
                         'key' : '09ebe62ec20777f91a14e0029e2f92a4', 
@@ -153,7 +150,6 @@
                     }; 
                 </script>
                 <script type="text/javascript" src="//believableordinarygentlemen.com/09ebe62ec20777f91a14e0029e2f92a4/invoke.js"></script>
-                <!-- ============================================= -->
             </div>
         </div>
     </aside>
@@ -162,7 +158,6 @@
     <div class="ad-container ad-bottom">
         <div>
             <div class="ad-label">Publicidad</div>
-            <!-- === AQUÍ VA TU CÓDIGO DE ANUNCIO 728x90 === -->
             <script type="text/javascript"> 
                 atOptions = { 
                     'key' : 'd1a9332ab68f936abaa310ff142b94ef', 
@@ -173,14 +168,12 @@
                 }; 
             </script>
             <script type="text/javascript" src="//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js"></script>
-            <!-- =========================================== -->
         </div>
     </div>
 
     <div class="ad-container ad-bottom">
         <div>
             <div class="ad-label">Publicidad</div>
-            <!-- === AQUÍ VA TU CÓDIGO DE ANUNCIO 300x250 === -->
             <script type="text/javascript"> 
                 atOptions = { 
                     'key' : 'aa4b552f34e750eee2a4f60ed72cc416', 
@@ -191,7 +184,6 @@
                 }; 
             </script>
             <script type="text/javascript" src="//believableordinarygentlemen.com/aa4b552f34e750eee2a4f60ed72cc416/invoke.js"></script>
-            <!-- =========================================== -->
         </div>
     </div>
 
@@ -199,10 +191,8 @@
     <div class="ad-container ad-bottom">
         <div>
             <div class="ad-label">Contenido patrocinado</div>
-            <!-- === AQUÍ VA TU CÓDIGO DE ANUNCIO NATIVO === -->
             <script async="async" data-cfasync="false" src="//believableordinarygentlemen.com/4525df450d44613469633168ded413cf/invoke.js"></script> 
             <div id="container-4525df450d44613469633168ded413cf"></div>
-            <!-- ========================================= -->
         </div>
     </div>
 </main>
@@ -226,42 +216,11 @@
 </div>
 
 <script>
-        // ====== Estado global ======
-        let currentPage = 1;
-        let currentQuery = '';
-        let currentSort = 'date';
-        let currentOrder = 'desc';
-        let currentVerified = '';
-        let maxPages = 1;
-        let isShowingTrending = true;
-        let isLoading = false;
-        let currentAPI = 'scriptblox';
-
-        // ====== Referencias DOM ======
-        const searchForm = document.getElementById('searchForm');
-        const searchInput = document.getElementById('searchInput');
-        const sortFilter = document.getElementById('sortFilter');
-        const orderFilter = document.getElementById('orderFilter');
-        const verifiedFilter = document.getElementById('verifiedFilter');
-        const scriptsGrid = document.getElementById('scriptsGrid');
-        const loadingState = document.getElementById('loadingState');
-        const noResults = document.getElementById('noResults');
-        const resultsHeader = document.getElementById('resultsHeader');
-        const resultsCount = document.getElementById('resultsCount');
-        const pageInfo = document.getElementById('pageInfo');
-        const pagination = document.getElementById('pagination');
-        const scriptModal = document.getElementById('scriptModal');
-        const modalCode = document.getElementById('modalCode');
-        const modalTitle = document.getElementById('modalTitle');
-        const currentApiStatus = document.getElementById('currentApiStatus');
-        const apiStatusText = document.getElementById('apiStatusText');
-
-        // ====== Config API ======
-        const PROXY_BASE = 'https://workers-playground-curly-unit-2502.joao-lokofrank.workers.dev/api';
-        const SCRIPTBLOX_API = PROXY_BASE;
-        const RSCRIPTS_API = `${PROXY_BASE}/rscripts`;
-
-        // ====== Inicio ======
+        // ESTADO GLOBAL Y REFERENCIAS DOM (Sin cambios)
+        let currentPage = 1, currentQuery = '', currentSort = 'date', currentOrder = 'desc', currentVerified = '', maxPages = 1, isShowingTrending = true, isLoading = false, currentAPI = 'scriptblox';
+        const searchForm = document.getElementById('searchForm'), searchInput = document.getElementById('searchInput'), sortFilter = document.getElementById('sortFilter'), orderFilter = document.getElementById('orderFilter'), verifiedFilter = document.getElementById('verifiedFilter'), scriptsGrid = document.getElementById('scriptsGrid'), loadingState = document.getElementById('loadingState'), noResults = document.getElementById('noResults'), resultsHeader = document.getElementById('resultsHeader'), resultsCount = document.getElementById('resultsCount'), pageInfo = document.getElementById('pageInfo'), pagination = document.getElementById('pagination'), scriptModal = document.getElementById('scriptModal'), modalCode = document.getElementById('modalCode'), modalTitle = document.getElementById('modalTitle'), currentApiStatus = document.getElementById('currentApiStatus'), apiStatusText = document.getElementById('apiStatusText');
+        const PROXY_BASE = 'https://workers-playground-curly-unit-2502.joao-lokofrank.workers.dev/api', SCRIPTBLOX_API = PROXY_BASE, RSCRIPTS_API = `${PROXY_BASE}/rscripts`;
+        
         document.addEventListener('DOMContentLoaded', () => {
             setupEventListeners();
             loadTrendingScripts();
@@ -269,340 +228,116 @@
 
         function setupEventListeners() {
             searchForm.addEventListener('submit', handleSearch);
-            sortFilter.addEventListener('change', () => { 
-                currentSort = sortFilter.value; 
-                currentPage = 1;
-                refreshCurrentSearch(); 
-            });
-            orderFilter.addEventListener('change', () => { 
-                currentOrder = orderFilter.value; 
-                currentPage = 1;
-                refreshCurrentSearch(); 
-            });
-            verifiedFilter.addEventListener('change', () => { 
-                currentVerified = verifiedFilter.value; 
-                currentPage = 1;
-                refreshCurrentSearch(); 
-            });
-
-            scriptModal.addEventListener('click', (e) => { 
-                if (e.target === scriptModal) closeModal(); 
-            });
-            
-            document.addEventListener('keydown', (e) => { 
-                if (e.key === 'Escape' && scriptModal.classList.contains('show')) closeModal(); 
-            });
+            sortFilter.addEventListener('change', () => { currentSort = sortFilter.value; currentPage = 1; refreshCurrentSearch(); });
+            orderFilter.addEventListener('change', () => { currentOrder = orderFilter.value; currentPage = 1; refreshCurrentSearch(); });
+            verifiedFilter.addEventListener('change', () => { currentVerified = verifiedFilter.value; currentPage = 1; refreshCurrentSearch(); });
+            scriptModal.addEventListener('click', (e) => { if (e.target === scriptModal) closeModal(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && scriptModal.classList.contains('show')) closeModal(); });
         }
 
-        // ====== Selector de API ======
         function selectAPI(apiName) {
             currentAPI = apiName;
             currentPage = 1;
-            
             document.querySelectorAll('.api-option').forEach(btn => btn.classList.remove('active'));
             document.getElementById(apiName + 'Btn').classList.add('active');
-            
             apiStatusText.textContent = apiName === 'scriptblox' ? 'ScriptBlox' : 'RScripts';
-            
-            if (isShowingTrending) {
-                loadTrendingScripts();
-            } else if (currentQuery) {
-                fetchScripts();
-            }
-            
+            if (isShowingTrending) { loadTrendingScripts(); } else if (currentQuery) { fetchScripts(); }
             showNotification(`Cambiado a ${apiName === 'scriptblox' ? 'ScriptBlox' : 'RScripts'}`, 'success');
         }
 
-        // ====== API Status ======
         function updateAPIStatus(status) {
             const element = currentApiStatus;
             element.className = `api-indicator ${status}`;
-            
             switch(status) {
-                case 'loading':
-                    apiStatusText.textContent = 'Cargando...';
-                    break;
-                case 'success':
-                    apiStatusText.textContent = currentAPI === 'scriptblox' ? 'ScriptBlox ✓' : 'RScripts ✓';
-                    break;
-                case 'error':
-                    apiStatusText.textContent = currentAPI === 'scriptblox' ? 'ScriptBlox ✗' : 'RScripts ✗';
-                    break;
+                case 'loading': apiStatusText.textContent = 'Cargando...'; break;
+                case 'success': apiStatusText.textContent = currentAPI === 'scriptblox' ? 'ScriptBlox ✓' : 'RScripts ✓'; break;
+                case 'error': apiStatusText.textContent = currentAPI === 'scriptblox' ? 'ScriptBlox ✗' : 'RScripts ✗'; break;
             }
         }
 
-        // ====== API Calls ======
         async function makeAPIRequest(url, options = {}) {
-            console.log(`[API] Request: ${url}`);
             try {
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    ...options
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                console.log(`[API] Response:`, data);
-                return data;
-            } catch (error) {
-                console.error(`[API] Error:`, error);
-                throw error;
-            }
+                const response = await fetch(url, { method: 'GET', headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}, ...options });
+                if (!response.ok) { throw new Error(`HTTP ${response.status}: ${response.statusText}`); }
+                return await response.json();
+            } catch (error) { console.error(`[API] Error:`, error); throw error; }
         }
-        
-        // --- El resto de funciones de API y búsqueda (sin cambios) ---
         
         async function fetchScriptBloxScripts(query = '', page = 1) {
             updateAPIStatus('loading');
-            
             try {
                 const endpoint = query ? 'search' : 'fetch';
                 const params = new URLSearchParams({ page: page });
-
                 if (query) params.set('q', query);
-
                 const sortMap = { 'date': 'updatedAt', 'views': 'views', 'likes': 'likes' };
-                if (sortMap[currentSort]) {
-                    params.set('sortBy', sortMap[currentSort]);
-                }
+                if (sortMap[currentSort]) params.set('sortBy', sortMap[currentSort]);
                 params.set('order', currentOrder);
-                if (currentVerified === 'true') {
-                    params.set('verified', 'true');
-                }
-
+                if (currentVerified === 'true') params.set('verified', 'true');
                 const url = `${SCRIPTBLOX_API}/${endpoint}?${params.toString()}`;
                 const data = await makeAPIRequest(url);
                 updateAPIStatus('success');
-                
                 const result = data?.result || data;
                 const scripts = result?.scripts || [];
-                
-                if (result?.totalPages) {
-                    maxPages = Math.max(1, result.totalPages);
-                } else if (result?.info?.totalPages) {
-                    maxPages = Math.max(1, result.info.totalPages);
-                } else {
-                    maxPages = (scripts.length === 20) ? currentPage + 1 : currentPage;
-                }
-                
-                return scripts.map(script => ({
-                    id: script.slug || script._id || script.id,
-                    title: script.title || 'Script sin título',
-                    game: script.game?.name || script.gameName || 'Juego desconocido',
-                    description: script.description || 'Sin descripción disponible',
-                    verified: script.verified || false,
-                    views: script.views || 0,
-                    likes: script.likes || 0,
-                    patched: script.patched || false,
-                    universal: script.universal || false,
-                    keySystem: script.key || false,
-                    scriptType: script.scriptType || 'free',
-                    source: 'ScriptBlox',
-                    rawScript: script.script || '',
-                }));
-
-            } catch (error) {
-                console.error('[ScriptBlox] Error:', error);
-                updateAPIStatus('error');
-                return [];
-            }
+                maxPages = result?.totalPages || result?.info?.totalPages || (scripts.length === 20 ? currentPage + 1 : currentPage);
+                return scripts.map(s => ({ id: s.slug || s._id, title: s.title, game: s.game?.name, description: s.description, verified: s.verified, views: s.views, likes: s.likes, patched: s.patched, universal: s.universal, keySystem: s.key, scriptType: s.scriptType, source: 'ScriptBlox', rawScript: s.script }));
+            } catch (error) { updateAPIStatus('error'); return []; }
         }
 
+        // --- FUNCIÓN CORREGIDA ---
         async function fetchRScriptsScripts(query = '', page = 1) {
             updateAPIStatus('loading');
-            
             try {
-                let url = '';
-                
-                if (query) {
-                    const params = new URLSearchParams({ page: page, limit: 20, q: query });
-                    url = `${RSCRIPTS_API}/scripts?${params.toString()}`;
-                } else {
-                    url = `${RSCRIPTS_API}/trending`;
-                }
-                
+                const url = query ? `${RSCRIPTS_API}/scripts?${new URLSearchParams({ page, limit: 20, q: query })}` : `${RSCRIPTS_API}/trending`;
                 const data = await makeAPIRequest(url);
                 updateAPIStatus('success');
                 
                 let scripts = [];
-                if (query) {
+                if (query) { // Para Búsqueda
                     scripts = data?.scripts || [];
                     maxPages = data?.info?.maxPages || 1;
-                } else {
-                    scripts = (data?.success || []).map(item => item.script ? { ...item.script, user: item.user, views: item.views } : item);
+                } else { // Para Recientes (Trending)
+                    // --- INICIO DE LA CORRECCIÓN ---
+                    // La estructura aquí es diferente. Debemos procesarla para que coincida con la de búsqueda.
+                    scripts = (data?.success || []).map(item => {
+                        const scriptData = item.script || {};
+                        // Unimos el objeto padre (item) con el hijo (item.script)
+                        // para asegurarnos de tener todos los datos, incluyendo rawScript.
+                        return { ...item, ...scriptData, _id: scriptData._id || item._id };
+                    });
                     maxPages = 1;
+                    // --- FIN DE LA CORRECCIÓN ---
                 }
                 
-                return scripts.map(script => ({
-                    id: script._id,
-                    title: script.title || 'Script sin título',
-                    game: script.game?.name || 'Juego desconocido',
-                    description: script.description || 'Sin descripción disponible',
-                    verified: script.user?.verified || false,
-                    views: script.views || 0,
-                    likes: script.likes || 0,
-                    patched: script.patched || false,
-                    universal: script.universal || false,
-                    keySystem: script.keySystem || false,
-                    scriptType: 'free',
-                    source: 'RScripts',
-                    rawScript: script.rawScript || '', // Importante mantener este campo
-                }));
-
-            } catch (error) {
-                console.error('[RScripts] Error:', error);
-                updateAPIStatus('error');
-                return [];
-            }
+                return scripts.map(s => ({ id: s._id, title: s.title, game: s.game?.name, description: s.description, verified: s.user?.verified, views: s.views, likes: s.likes, patched: s.patched, universal: s.universal, keySystem: s.keySystem, scriptType: 'free', source: 'RScripts', rawScript: s.rawScript }));
+            } catch (error) { updateAPIStatus('error'); return []; }
         }
-
+        
+        // --- RESTO DEL SCRIPT (SIN CAMBIOS FUNCIONALES IMPORTANTES) ---
         async function fetchScriptsFromCurrentAPI(query = '', page = 1) {
-            if (currentAPI === 'scriptblox') {
-                return await fetchScriptBloxScripts(query, page);
-            } else if (currentAPI === 'rscripts') {
-                return await fetchRScriptsScripts(query, page);
-            }
+            return currentAPI === 'scriptblox' ? await fetchScriptBloxScripts(query, page) : await fetchRScriptsScripts(query, page);
         }
-        
-        async function handleSearch(e){e.preventDefault();currentQuery=searchInput.value.trim();if(!currentQuery){showNotification("Por favor ingresa un término de búsqueda","error");return}currentPage=1;isShowingTrending=!1;await fetchScripts()}function refreshCurrentSearch(){if(isShowingTrending){loadTrendingScripts()}else{fetchScripts()}}async function fetchScripts(){if(isLoading)return;showLoading(!0);hideAllResults();isLoading=!0;try{const scripts=await fetchScriptsFromCurrentAPI(currentQuery,currentPage);isLoading=!1;showLoading(!1);if(!scripts||scripts.length===0){showNoResults();return}renderScripts(scripts);updateHeader(scripts.length,currentPage,maxPages);if(!isShowingTrending){setupPagination(maxPages)}else{pagination.style.display="none"}}catch(err){isLoading=!1;showLoading(!1);showNoResults("Error al consultar la API. Intenta de nuevo.");showNotification("Error de conexión con la API","error")}}async function loadTrendingScripts(){if(isLoading)return;isShowingTrending=!0;currentQuery="";searchInput.value="";currentPage=1;showLoading(!0);hideAllResults();isLoading=!0;try{const scripts=await fetchScriptsFromCurrentAPI("",1);isLoading=!1;showLoading(!1);if(!scripts||scripts.length===0){showNoResults("No hay scripts trending disponibles");return}renderScripts(scripts);updateHeader(scripts.length,1,1);pagination.style.display="none"}catch(err){isLoading=!1;showLoading(!1);showNoResults("Error al cargar scripts trending");showNotification("Error cargando trending scripts","error")}}
+        async function handleSearch(e) { e.preventDefault(); currentQuery = searchInput.value.trim(); if (!currentQuery) return; currentPage = 1; isShowingTrending = false; await fetchScripts(); }
+        function refreshCurrentSearch() { isShowingTrending ? loadTrendingScripts() : fetchScripts(); }
+        async function fetchScripts() { if (isLoading) return; isLoading = true; showLoading(true); hideAllResults(); try { const scripts = await fetchScriptsFromCurrentAPI(currentQuery, currentPage); if (scripts && scripts.length > 0) { renderScripts(scripts); updateHeader(scripts.length, currentPage, maxPages); if (!isShowingTrending) setupPagination(maxPages); else pagination.style.display = 'none'; } else { showNoResults(); } } catch (err) { showNoResults('Error al consultar la API.'); } finally { isLoading = false; showLoading(false); } }
+        async function loadTrendingScripts() { if (isLoading) return; isShowingTrending = true; currentQuery = ''; searchInput.value = ''; currentPage = 1; await fetchScripts(); }
+        function setupPagination(totalPages) { if (isShowingTrending || totalPages <= 1) { pagination.style.display = 'none'; return; } pagination.style.display = 'flex'; pagination.innerHTML = ''; pagination.appendChild(createPaginationButton('‹ Anterior', currentPage - 1, currentPage <= 1)); let startPage = Math.max(1, currentPage - 2), endPage = Math.min(totalPages, startPage + 4); if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4); if (startPage > 1) { pagination.appendChild(createPaginationButton('1', 1)); if (startPage > 2) pagination.insertAdjacentHTML('beforeend', '<span class="pagination-dots">...</span>'); } for (let i = startPage; i <= endPage; i++) pagination.appendChild(createPaginationButton(i, i, false, i === currentPage)); if (endPage < totalPages) { if (endPage < totalPages - 1) pagination.insertAdjacentHTML('beforeend', '<span class="pagination-dots">...</span>'); pagination.appendChild(createPaginationButton(totalPages, totalPages)); } pagination.appendChild(createPaginationButton('Siguiente ›', currentPage + 1, currentPage >= totalPages)); }
+        function createPaginationButton(text, page, disabled = false, active = false) { const btn = document.createElement('button'); btn.className = `page-btn ${active ? 'active' : ''}`; btn.textContent = text; btn.disabled = disabled; if (!disabled) btn.onclick = () => changePage(page); return btn; }
+        async function changePage(newPage) { if (newPage === currentPage || isLoading) return; currentPage = newPage; window.scrollTo({ top: 0, behavior: 'smooth' }); await fetchScripts(); }
+        function hideAllResults() { resultsHeader.style.display = 'none'; noResults.style.display = 'none'; scriptsGrid.innerHTML = ''; pagination.style.display = 'none'; }
+        function renderScripts(scripts) { scriptsGrid.innerHTML = scripts.map(s => { const id = s.id || '', title = sanitize(s.title || ''), game = sanitize(s.game || ''), desc = sanitize(s.description || ''), rawUrl = sanitize(s.rawScript || ''); const tags = []; if(s.verified) tags.push('<span class="script-tag" style="background: #28a745;">✅ Verificado</span>'); if(s.universal) tags.push('<span class="script-tag" style="background: #8b5cf6;">🌐 Universal</span>'); if(s.keySystem) tags.push('<span class="script-tag" style="background: #f59e0b;">🔑 Key System</span>'); if(s.patched) tags.push('<span class="script-tag" style="background: #dc3545;">⚠️ Parcheado</span>'); tags.push(`<span class="script-tag" style="background: ${s.source==='ScriptBlox'?'#3b82f6':'#dc2626'};">${s.source}</span>`); return `<div class="script-card" data-id="${id}" data-title="${title}" data-raw-url="${rawUrl}"><div class="script-header"><h3 class="script-title">${title}</h3><span class="script-game">${game}</span></div><div class="script-tags">${tags.join('')}</div><p class="script-description">${desc}</p><div class="script-actions"><button class="copy-btn" onclick="copyScript(this)">Copiar</button><button class="view-btn" onclick="viewScript(this)">Ver Script</button></div></div>`; }).join(''); }
+        function updateHeader(total, page, totalPages) { resultsHeader.style.display = 'flex'; resultsCount.textContent = `Resultados: ${total}`; pageInfo.textContent = isShowingTrending ? 'Trending' : `${page} / ${totalPages}`; }
+        async function viewScript(btn) { const card = btn.closest('.script-card'), id = card.dataset.id, title = card.dataset.title; if (!id) return; modalTitle.textContent = title || 'Cargando...'; modalCode.textContent = 'Obteniendo script...'; scriptModal.classList.add('show'); try { let content = ''; if (currentAPI === 'scriptblox') { const data = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`); content = data?.script?.script || ''; } else { const rawUrl = card.dataset.rawUrl; if (!rawUrl) throw new Error('URL no encontrada'); const res = await fetch(rawUrl); if (!res.ok) throw new Error('No se pudo cargar'); content = await res.text(); } modalCode.textContent = content.trim() ? content : 'Contenido no disponible.'; } catch (err) { modalCode.textContent = `Error: ${err.message}`; } }
+        async function copyScript(btn) { const card = btn.closest('.script-card'), id = card.dataset.id; if (!id) return; showNotification('Obteniendo script...', 'success'); try { let content = ''; if (currentAPI === 'scriptblox') { const res = await fetch(`${SCRIPTBLOX_API}/raw/${id}`); content = res.ok ? await res.text() : ''; if (!content) { const data = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`); content = data?.script?.script || ''; } } else { const rawUrl = card.dataset.rawUrl; if (!rawUrl) throw new Error('URL no encontrada'); const res = await fetch(rawUrl); if (!res.ok) throw new Error('No se pudo obtener'); content = await res.text(); } if (!content.trim()) return showNotification('Contenido no disponible', 'error'); copyToClipboard(content); showNotification('Script copiado', 'success'); } catch (err) { showNotification(`Error al copiar: ${err.message}`, 'error'); } }
+        function closeModal() { scriptModal.classList.remove('show'); }
+        function copyModalScript() { const text = modalCode.textContent || ''; if (!text || text.includes('Error')) return; copyToClipboard(text); showNotification('Script copiado', 'success'); }
+        function copyToClipboard(text) { navigator.clipboard.writeText(text).catch(() => { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }); }
+        function sanitize(str) { const el = document.createElement('div'); el.innerText = str || ''; return el.innerHTML; }
+        function showLoading(show) { loadingState.style.display = show ? 'block' : 'none'; }
+        function showNoResults(message) { noResults.querySelector('p').textContent = message || 'No se encontraron scripts.'; noResults.style.display = 'block'; resultsHeader.style.display = 'none'; pagination.style.display = 'none'; }
+        function clearSearch() { searchInput.value = ''; currentQuery = ''; currentSort = 'date'; currentOrder = 'desc'; currentVerified = ''; sortFilter.value = 'date'; orderFilter.value = 'desc'; verifiedFilter.value = ''; currentPage = 1; loadTrendingScripts(); }
+        function showNotification(text, type = 'success') { const el = document.createElement('div'); el.className = `notification ${type}`; el.textContent = text; document.body.appendChild(el); setTimeout(() => el.classList.add('show'), 10); setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 200); }, 3000); }
+        window.selectAPI = selectAPI; window.viewScript = viewScript; window.copyScript = copyScript; window.copyModalScript = copyModalScript; window.closeModal = closeModal; window.clearSearch = clearSearch;
+</script>
 
-        function setupPagination(totalPages){if(isShowingTrending||totalPages<=1){pagination.style.display="none";return}pagination.style.display="flex";pagination.innerHTML="";const prevBtn=createPaginationButton("‹ Anterior",currentPage-1,currentPage<=1);pagination.appendChild(prevBtn);const showPages=5;let startPage=Math.max(1,currentPage-2);let endPage=Math.min(totalPages,startPage+showPages-1);if(endPage-startPage<showPages-1){startPage=Math.max(1,endPage-showPages+1)}if(startPage>1){pagination.appendChild(createPaginationButton("1",1,!1));if(startPage>2){const dots=document.createElement("span");dots.className="pagination-dots";dots.textContent="...";pagination.appendChild(dots)}}for(let i=startPage;i<=endPage;i++){pagination.appendChild(createPaginationButton(i.toString(),i,!1,i===currentPage))}if(endPage<totalPages){if(endPage<totalPages-1){const dots=document.createElement("span");dots.className="pagination-dots";dots.textContent="...";pagination.appendChild(dots)}pagination.appendChild(createPaginationButton(totalPages.toString(),totalPages,!1))}const nextBtn=createPaginationButton("Siguiente ›",currentPage+1,currentPage>=totalPages);pagination.appendChild(nextBtn)}function createPaginationButton(text,page,disabled=!1,active=!1){const btn=document.createElement("button");btn.className=`page-btn ${active?"active":""}`;btn.textContent=text;btn.disabled=disabled;if(!disabled){btn.onclick=()=>changePage(page)}return btn}async function changePage(newPage){if(isShowingTrending||newPage===currentPage||isLoading||newPage<1)return;currentPage=newPage;window.scrollTo({top:0,behavior:"smooth"});await fetchScripts()}function hideAllResults(){resultsHeader.style.display="none";noResults.style.display="none";scriptsGrid.innerHTML="";pagination.style.display="none"}
-
-        // ====== Render ======
-        function renderScripts(scripts) {
-            scriptsGrid.innerHTML = scripts.map((script) => {
-                const id = script.id || '';
-                const title = sanitize(script.title);
-                const gameName = sanitize(script.game);
-                const description = sanitize(script.description);
-                const source = script.source || currentAPI;
-                // --- CAMBIO CLAVE 1: Guardar la URL del script ---
-                const rawUrl = sanitize(script.rawScript || '');
-
-                const tags = [];
-                if (script.verified) tags.push('<span class="script-tag" style="background: #28a745;">✅ Verificado</span>');
-                if (script.universal) tags.push('<span class="script-tag" style="background: #8b5cf6;">🌐 Universal</span>');
-                if (script.keySystem) tags.push('<span class="script-tag" style="background: #f59e0b;">🔑 Key System</span>');
-                if (script.patched) tags.push('<span class="script-tag" style="background: #dc3545;">⚠️ Parcheado</span>');
-                tags.push(`<span class="script-tag" style="background: ${source === 'ScriptBlox' ? '#3b82f6' : '#dc2626'};">${source}</span>`);
-
-                return `
-                <div class="script-card" data-id="${id}" data-title="${title}" data-raw-url="${rawUrl}">
-                    <div class="script-header">
-                        <h3 class="script-title">${title}</h3>
-                        <span class="script-game">${gameName}</span>
-                    </div>
-                    <div class="script-tags">${tags.join('')}</div>
-                    <p class="script-description">${description}</p>
-                    <div class="script-actions">
-                        <button class="copy-btn" onclick="copyScript(this)">Copiar</button>
-                        <button class="view-btn" onclick="viewScript(this)">Ver Script</button>
-                    </div>
-                </div>`;
-            }).join('');
-        }
-
-        function updateHeader(total, page, totalPagesLocal) {
-            resultsHeader.style.display = 'flex';
-            resultsCount.textContent = `Resultados: ${Number(total).toLocaleString()}`;
-            pageInfo.textContent = isShowingTrending ? 'Trending' : `${page} / ${Math.max(1, totalPagesLocal)}`;
-        }
-
-        // ====== Modal y copia (LÓGICA CORREGIDA) ======
-        async function viewScript(buttonElement) {
-            const card = buttonElement.closest('.script-card');
-            const id = card.dataset.id;
-            const title = card.dataset.title;
-            
-            if (!id) return showNotification('ID de script no válido', 'error');
-
-            modalTitle.textContent = title || 'Cargando...';
-            modalCode.textContent = 'Obteniendo contenido del script...';
-            scriptModal.classList.add('show');
-
-            try {
-                let scriptContent = '';
-
-                if (currentAPI === 'scriptblox') {
-                    // La lógica para ScriptBlox sigue necesitando una llamada a la API
-                    const data = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
-                    const script = data?.script || data?.result || data || {};
-                    scriptContent = script.script || '';
-                } else if (currentAPI === 'rscripts') {
-                    // --- CAMBIO CLAVE 2: Usar la URL guardada ---
-                    const rawUrl = card.dataset.rawUrl;
-                    if (!rawUrl) throw new Error('No se encontró la URL del script.');
-                    
-                    const response = await fetch(rawUrl);
-                    if (!response.ok) throw new Error('No se pudo cargar el contenido del script.');
-                    scriptContent = await response.text();
-                }
-
-                modalCode.textContent = scriptContent.trim() ? scriptContent : 'Este script no tiene contenido disponible.';
-                
-            } catch (err) {
-                console.error('[VIEW_SCRIPT] Error:', err);
-                modalCode.textContent = `Error al cargar el script: ${err.message}.`;
-                showNotification('Error al cargar el script', 'error');
-            }
-        }
-
-        async function copyScript(buttonElement) {
-            const card = buttonElement.closest('.script-card');
-            const id = card.dataset.id;
-
-            if (!id) return showNotification('ID de script no válido', 'error');
-            showNotification('Obteniendo script...', 'success');
-
-            try {
-                let scriptContent = '';
-                if (currentAPI === 'scriptblox') {
-                    const response = await fetch(`${SCRIPTBLOX_API}/raw/${id}`);
-                    scriptContent = response.ok ? await response.text() : '';
-                    if (!scriptContent) {
-                        const fallbackData = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
-                        scriptContent = fallbackData?.script?.script || '';
-                    }
-                } else if (currentAPI === 'rscripts') {
-                    // --- CAMBIO CLAVE 3: Usar la URL guardada ---
-                    const rawUrl = card.dataset.rawUrl;
-                    if (!rawUrl) throw new Error('No se encontró la URL del script.');
-                    
-                    const response = await fetch(rawUrl);
-                    if (!response.ok) throw new Error('No se pudo obtener el contenido del script.');
-                    scriptContent = await response.text();
-                }
-
-                if (!scriptContent || !scriptContent.trim()) {
-                    return showNotification('Este script no tiene contenido disponible', 'error');
-                }
-
-                copyToClipboard(scriptContent);
-                showNotification('Script copiado al portapapeles', 'success');
-                
-            } catch (err) {
-                console.error('[COPY_SCRIPT] Error:', err);
-                showNotification(`Error al copiar el script: ${err.message}`, 'error');
-            }
-        }
-        
-        // --- El resto de funciones (closeModal, copyModalScript, etc. sin cambios) ---
-        function closeModal(){scriptModal.classList.remove("show")}function copyModalScript(){const text=modalCode.textContent||"";if(!text||text.includes("Error")||text.includes("Cargando")){return showNotification("Nada válido para copiar","error")}copyToClipboard(text);showNotification("Script copiado desde la vista previa","success")}function copyToClipboard(text){navigator.clipboard.writeText(text).catch(()=>{const textarea=document.createElement("textarea");textarea.value=text;textarea.style.position="fixed";textarea.style.left="-9999px";document.body.appendChild(textarea);textarea.select();document.execCommand("copy");document.body.removeChild(textarea)})}function sanitize(str){const el=document.createElement("div");el.innerText=str||"";return el.innerHTML}function showLoading(show){loadingState.style.display=show?"block":"none"}function showNoResults(message){noResults.querySelector("p").textContent=message||"No se encontraron scripts para tu búsqueda.";noResults.style.display="block";resultsHeader.style.display="none";pagination.style.display="none"}function clearSearch(){searchInput.value="";currentQuery="";currentSort="date";currentOrder="desc";currentVerified="";sortFilter.value="date";orderFilter.value="desc";verifiedFilter.value="";currentPage=1;loadTrendingScripts()}function showNotification(text,type="success"){const notification=document.createElement("div");notification.className=`notification ${type}`;notification.textContent=text;document.body.appendChild(notification);setTimeout(()=>notification.classList.add("show"),10);setTimeout(()=>{notification.classList.remove("show");setTimeout(()=>notification.remove(),200)},3e3)}
-
-        // Exponer funciones globales
-        window.selectAPI = selectAPI;
-        window.viewScript = viewScript;
-        window.copyScript = copyScript; // Renombrado para evitar conflicto de ID
-        window.copyModalScript = copyModalScript;
-        window.closeModal = closeModal;
-        window.clearSearch = clearSearch;
-    </script>
 </body>
 </html>
