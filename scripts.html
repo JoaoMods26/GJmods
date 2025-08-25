@@ -1,114 +1,4 @@
-export default {
-    async fetch(request) {
-      const url = new URL(request.url);
-      const corsHeaders = {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization, User-Agent"
-      };
-
-      // Maneja las peticiones pre-vuelo (preflight) de CORS
-      if (request.method === "OPTIONS") {
-        return new Response(null, { status: 204, headers: corsHeaders });
-      }
-
-      // Procesa solo las rutas que comienzan con /api/
-      if (url.pathname.startsWith("/api/")) {
-        const path = url.pathname.replace(/^\/api\//, "");
-        let target;
-        let headers = {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-          "Accept": "application/json"
-        };
-
-        // --- Lógica de enrutamiento para ambas APIs ---
-
-        // Si la ruta empieza con "rscripts/", es una petición para la API de RScripts
-        if (path.startsWith("rscripts/")) {
-            const rscriptsPath = path.replace("rscripts/", "");
-            target = `https://rscripts.net/api/v2/${rscriptsPath}${url.search}`;
-            // RScripts no necesita headers especiales como Origin o Referer
-        } 
-        // Si no, se asume que la petición es para la API de ScriptBlox
-        else {
-            let scriptbloxPath = path;
-            if (path === "fetch" || path === "scripts") {
-              scriptbloxPath = "script/fetch";
-            } else if (path === "search") {
-              scriptbloxPath = "script/search";
-            } else if (path.startsWith("raw/")) {
-              const slug = path.replace("raw/", "");
-              scriptbloxPath = `script/raw/${slug}`;
-            } else {
-              scriptbloxPath = `script/${path}`;
-            }
-            target = `https://scriptblox.com/api/${scriptbloxPath}${url.search}`;
-            
-            // Headers específicos que ScriptBlox podría requerir
-            headers["Referer"] = "https://scriptblox.com/";
-            headers["Origin"] = "https://scriptblox.com";
-        }
-
-        try {
-          console.log(`[PROXY] Petición: ${request.method} ${url.pathname}${url.search}`);
-          console.log(`[PROXY] Destino: ${target}`);
-          
-          const response = await fetch(target, {
-            method: request.method,
-            headers: headers
-          });
-          
-          console.log(`[PROXY] Respuesta: ${response.status} ${response.statusText}`);
-          
-          // Clona las cabeceras de CORS para la respuesta
-          const newHeaders = new Headers(corsHeaders);
-          const contentType = response.headers.get("Content-Type") || "application/json";
-          newHeaders.set("Content-Type", contentType);
-          
-          const responseData = await response.text();
-          
-          // Devuelve la respuesta con los datos y las cabeceras CORS correctas
-          return new Response(responseData, { 
-            status: response.status, 
-            headers: newHeaders 
-          });
-          
-        } catch (err) {
-          console.error("[PROXY] Error:", err);
-          return new Response(
-            JSON.stringify({ 
-              error: "Error en el proxy", 
-              detail: err.message,
-              target: target,
-              timestamp: new Date().toISOString()
-            }), 
-            {
-              status: 500,
-              headers: { "Content-Type": "application/json", ...corsHeaders }
-            }
-          );
-        }
-      }
-      
-      // Página de información por defecto del proxy
-	  return new Response(
-		JSON.stringify({
-		  message: "GJMODS Universal Proxy API",
-		  version: "5.0-unified",
-		  endpoints: [
-			"GET /api/fetch -> (ScriptBlox)",
-			"GET /api/search?q=query -> (ScriptBlox)",
-            "GET /api/rscripts/trending -> (RScripts)",
-            "GET /api/rscripts/scripts?q=query -> (RScripts)"
-		  ],
-		  timestamp: new Date().toISOString()
-		}, null, 2), 
-		{
-		  headers: { "Content-Type": "application/json", ...corsHeaders }
-		}
-	  );
-    }
-}<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
@@ -1257,9 +1147,7 @@ export default {
                 
                 console.log(`[RScripts] Got ${scripts.length} scripts, currentPage: ${currentPage}, maxPages: ${maxPages}`);
                 
-                return scripts
-                .filter(script => script && script._id) // <-- CORRECCIÓN AÑADIDA AQUÍ
-                .map(script => ({
+                return scripts.map(script => ({
                     id: script._id,
                     title: script.title || 'Script sin título',
                     game: script.game?.name || 'Juego desconocido',
