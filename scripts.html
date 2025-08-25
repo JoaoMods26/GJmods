@@ -1389,20 +1389,46 @@
         }
 
         // ====== Modal y copia ======
-        async function viewScript(id) {
-            if (!id) return showNotification('ID de script no válido', 'error');
+        
+// ====== Modal y vista previa ======
+async function viewScript(id) {
+    if (!id) return showNotification('ID de script no válido', 'error');
 
-            modalTitle.textContent = 'Cargando...';
-            modalCode.textContent = 'Obteniendo contenido del script...';
-            scriptModal.classList.add('show');
+    modalTitle.textContent = 'Cargando...';
+    modalCode.textContent = 'Obteniendo contenido del script...';
+    scriptModal.classList.add('show');
 
-            try {
-                let data;
-                if (currentAPI === 'scriptblox') {
-                    data = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
-                } else if (currentAPI === 'rscripts') {
-                    data = await makeAPIRequest(`${RSCRIPTS_API}/script/${id}`);
+    try {
+        let data, scriptContent = '';
+
+        if (currentAPI === 'scriptblox') {
+            data = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
+            const script = data?.script || data?.result || data || {};
+            scriptContent = script.script || script.content || script.code || '';
+            modalTitle.textContent = script.title || 'Script sin título';
+        } else if (currentAPI === 'rscripts') {
+            data = await makeAPIRequest(`${RSCRIPTS_API}/script/${id}`);
+            const script = data?.script || {};
+            modalTitle.textContent = script.title || 'Script sin título';
+
+            // 🔥 Nuevo: usar rawScript
+            const rawUrl = script.rawScript;
+            if (rawUrl) {
+                const rawResp = await fetch(rawUrl);
+                if (rawResp.ok) {
+                    scriptContent = await rawResp.text();
                 }
+            }
+        }
+
+        modalCode.textContent = scriptContent.trim() ? scriptContent : 'Este script no tiene contenido disponible.';
+
+    } catch (err) {
+        modalTitle.textContent = 'Error';
+        modalCode.textContent = 'Error al cargar el script. Intenta de nuevo.';
+        showNotification('Error al cargar el script', 'error');
+    }
+}
 
                 const script = data?.script || data?.result || data || {};
                 const scriptContent = script.script || script.content || script.code || '';
@@ -1416,19 +1442,44 @@
             }
         }
 
-        async function copyScriptById(id) {
-            if (!id) return showNotification('ID de script no válido', 'error');
-            showNotification('Obteniendo script...', 'success');
+        
+// ====== Copiar script directo ======
+async function copyScriptById(id) {
+    if (!id) return showNotification('ID de script no válido', 'error');
+    showNotification('Obteniendo script...', 'success');
 
-            try {
-                let scriptContent = '';
-                if (currentAPI === 'scriptblox') {
-                    const response = await fetch(`${SCRIPTBLOX_API}/raw/${id}`);
-                    scriptContent = response.ok ? await response.text() : '';
-                    if (!scriptContent) {
-                        const fallbackData = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
-                        scriptContent = fallbackData?.script?.script || '';
-                    }
+    try {
+        let scriptContent = '';
+
+        if (currentAPI === 'scriptblox') {
+            const response = await fetch(`${SCRIPTBLOX_API}/raw/${id}`);
+            scriptContent = response.ok ? await response.text() : '';
+            if (!scriptContent) {
+                const fallbackData = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
+                scriptContent = fallbackData?.script?.script || '';
+            }
+        } else if (currentAPI === 'rscripts') {
+            const response = await makeAPIRequest(`${RSCRIPTS_API}/script/${id}`);
+            const rawUrl = response?.script?.rawScript;
+            if (rawUrl) {
+                const rawResp = await fetch(rawUrl);
+                if (rawResp.ok) {
+                    scriptContent = await rawResp.text();
+                }
+            }
+        }
+
+        if (!scriptContent || !scriptContent.trim()) {
+            return showNotification('Este script no tiene contenido disponible', 'error');
+        }
+
+        copyToClipboard(scriptContent);
+        showNotification('Script copiado al portapapeles', 'success');
+
+    } catch (err) {
+        showNotification('Error al copiar el script', 'error');
+    }
+}
                 } else if (currentAPI === 'rscripts') {
                     const response = await makeAPIRequest(`${RSCRIPTS_API}/script/${id}`);
                     scriptContent = response?.script?.script || '';
