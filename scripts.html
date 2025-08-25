@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>joao_mods</title>
+<title>joao</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
         /* Variables CSS para consistencia */
@@ -955,7 +955,6 @@
         // ====== Config API ======
         const PROXY_BASE = 'https://workers-playground-curly-unit-2502.joao-lokofrank.workers.dev/api';
         const SCRIPTBLOX_API = PROXY_BASE;
-        // Ahora, RSCRIPTS_API también apunta a nuestro proxy, pero a una ruta especial
         const RSCRIPTS_API = `${PROXY_BASE}/rscripts`;
 
         // ====== Inicio ======
@@ -1389,7 +1388,7 @@
         }
 
         // ====== Modal y copia ======
-              async function viewScript(id) {
+        async function viewScript(id) {
             if (!id) return showNotification('ID de script no válido', 'error');
 
             modalTitle.textContent = 'Cargando...';
@@ -1401,15 +1400,13 @@
                 let scriptTitle = 'Script sin título';
 
                 if (currentAPI === 'scriptblox') {
-                    // La lógica para ScriptBlox se mantiene igual
                     const data = await makeAPIRequest(`${SCRIPTBLOX_API}/${id}`);
                     const script = data?.script || data?.result || data || {};
                     scriptContent = script.script || '';
                     scriptTitle = script.title || scriptTitle;
                 } else if (currentAPI === 'rscripts') {
                     // --- INICIO DE LA CORRECCIÓN PARA RSCRIPTS ---
-
-                    // 1. Obtenemos los metadatos del script
+                    // 1. Obtenemos los metadatos del script a través de nuestro proxy
                     const metadataResponse = await makeAPIRequest(`${RSCRIPTS_API}/script/${id}`);
                     const scriptData = metadataResponse?.script;
                     const rawUrl = scriptData?.rawScript;
@@ -1425,7 +1422,6 @@
                         throw new Error('No se pudo cargar el contenido del script.');
                     }
                     scriptContent = await scriptResponse.text();
-                    
                     // --- FIN DE LA CORRECCIÓN ---
                 }
 
@@ -1438,17 +1434,15 @@
                 modalCode.textContent = `Error al cargar el script: ${err.message}. Intenta de nuevo.`;
                 showNotification('Error al cargar el script', 'error');
             }
-        
         }
 
-               async function copyScriptById(id) {
+        async function copyScriptById(id) {
             if (!id) return showNotification('ID de script no válido', 'error');
             showNotification('Obteniendo script...', 'success');
 
             try {
                 let scriptContent = '';
                 if (currentAPI === 'scriptblox') {
-                    // La lógica para ScriptBlox se mantiene igual
                     const response = await fetch(`${SCRIPTBLOX_API}/raw/${id}`);
                     scriptContent = response.ok ? await response.text() : '';
                     if (!scriptContent) {
@@ -1457,24 +1451,20 @@
                     }
                 } else if (currentAPI === 'rscripts') {
                     // --- INICIO DE LA CORRECCIÓN PARA RSCRIPTS ---
-                    
                     // 1. Obtenemos los metadatos del script desde nuestro proxy
                     const metadataResponse = await makeAPIRequest(`${RSCRIPTS_API}/script/${id}`);
                     const rawUrl = metadataResponse?.script?.rawScript;
 
-                    // 2. Verificamos si la URL del script existe
                     if (!rawUrl) {
                         throw new Error('La URL del script (rawScript) no fue encontrada.');
                     }
 
-                    // 3. Hacemos una nueva petición fetch directamente a la URL del script
-                    // Nota: Esta petición no pasa por nuestro proxy, va directo a rscripts.net
+                    // 2. Hacemos una nueva petición fetch directamente a la URL del script
                     const scriptResponse = await fetch(rawUrl);
                     if (!scriptResponse.ok) {
                         throw new Error('No se pudo obtener el contenido del script desde la URL.');
                     }
                     scriptContent = await scriptResponse.text();
-                    
                     // --- FIN DE LA CORRECCIÓN ---
                 }
 
