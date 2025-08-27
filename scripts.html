@@ -39,7 +39,7 @@
 .header-ads-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     position: absolute;
     top: 50%;
     left: 0;
@@ -50,9 +50,10 @@
 }
 
 .header-ad {
-    width: 200px;
-    height: 100px;
     pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .header-content {
@@ -78,14 +79,15 @@
 .bottom-ads-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+    gap: 2rem;
     justify-items: center;
 }
 
 .bottom-ad {
-    width: 100%;
-    max-width: 400px;
-    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
 }
 
 /* Responsive design */
@@ -94,27 +96,17 @@
     
     /* Anuncios móvil */
     .header-ads-container {
-        position: static;
-        transform: none;
-        flex-direction: column;
-        gap: 1rem;
-        margin: 1rem 0;
-    }
-    
-    .header-ad {
-        width: 100%;
-        max-width: 300px;
-        height: 80px;
+        display: none !important; /* Ocultar completamente en móvil */
     }
     
     .bottom-ads-grid {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 1.5rem;
     }
     
     .bottom-ad {
+        width: 100%;
         max-width: 100%;
-        height: 150px;
     }
     
     .bottom-ads-title {
@@ -125,12 +117,12 @@
 
 /* Ocultar anuncios en pantallas muy pequeñas */
 @media (max-width: 480px) {
-    .header-ad {
-        height: 60px;
+    .header-ads-container {
+        display: none !important;
     }
     
     .bottom-ad {
-        height: 120px;
+        min-height: 80px;
     }
 }
 
@@ -157,14 +149,32 @@
 <!-- Header con anuncios laterales -->
 <header class="header">
     <div class="header-ads-container">
-        <!-- Primer anuncio lateral -->
-        <div class="ad-container header-ad" onclick="handleAdClick('https://ejemplo.com/anuncio1')" style="cursor: pointer;" data-ad-id="header-ad-1">
-            <img src="https://picsum.photos/200/100?random=1" alt="Anuncio 1" loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDIwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiMzYjgyZjYiLz48dGV4dCB4PSIxMDAiIHk9IjU1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2Ij5BbnVuY2lvIDE8L3RleHQ+PC9zdmc+'">
+        <!-- Primer anuncio lateral - 160x300 -->
+        <div class="ad-container header-ad" data-ad-id="header-ad-1">
+            <script type="text/javascript"> 
+                atOptions = { 
+                    'key' : 'ab51e186a04576460b84ebe553be82ea', 
+                    'format' : 'iframe', 
+                    'height' : 300, 
+                    'width' : 160, 
+                    'params' : {} 
+                }; 
+            </script> 
+            <script type="text/javascript" src="//believableordinarygentlemen.com/ab51e186a04576460b84ebe553be82ea/invoke.js"></script>
         </div>
         
-        <!-- Segundo anuncio lateral -->
-        <div class="ad-container header-ad" onclick="handleAdClick('https://ejemplo.com/anuncio2')" style="cursor: pointer;" data-ad-id="header-ad-2">
-            <img src="https://picsum.photos/200/100?random=2" alt="Anuncio 2" loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDIwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNkYzI2MjYiLz48dGV4dCB4PSIxMDAiIHk9IjU1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2Ij5BbnVuY2lvIDI8L3RleHQ+PC9zdmc+'">
+        <!-- Segundo anuncio lateral - 160x600 -->
+        <div class="ad-container header-ad" data-ad-id="header-ad-2">
+            <script type="text/javascript"> 
+                atOptions = { 
+                    'key' : '09ebe62ec20777f91a14e0029e2f92a4', 
+                    'format' : 'iframe', 
+                    'height' : 600, 
+                    'width' : 160, 
+                    'params' : {} 
+                }; 
+            </script> 
+            <script type="text/javascript" src="//believableordinarygentlemen.com/09ebe62ec20777f91a14e0029e2f92a4/invoke.js"></script>
         </div>
     </div>
     
@@ -261,24 +271,52 @@
         <section class="bottom-ads-section">
             <h2 class="bottom-ads-title">🎮 Contenido Patrocinado</h2>
             <div class="bottom-ads-grid">
-                <!-- Anuncio 3 -->
-                <div class="ad-container bottom-ad" onclick="handleAdClick('https://ejemplo.com/anuncio3')" style="cursor: pointer;" data-ad-id="bottom-ad-3">
-                    <img src="https://picsum.photos/400/200?random=3" alt="Anuncio 3" loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMyOGE3NDUiLz48dGV4dCB4PSIyMDAiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCI+QW51bmNpbyAzPC90ZXh0Pjwvc3ZnPg=='">
+                <!-- Anuncio 300x250 -->
+                <div class="ad-container bottom-ad" data-ad-id="bottom-ad-1">
+                    <script type="text/javascript"> 
+                        atOptions = { 
+                            'key' : 'aa4b552f34e750eee2a4f60ed72cc416', 
+                            'format' : 'iframe', 
+                            'height' : 250, 
+                            'width' : 300, 
+                            'params' : {} 
+                        }; 
+                    </script> 
+                    <script type="text/javascript" src="//believableordinarygentlemen.com/aa4b552f34e750eee2a4f60ed72cc416/invoke.js"></script>
                 </div>
                 
-                <!-- Anuncio 4 -->
-                <div class="ad-container bottom-ad" onclick="handleAdClick('https://ejemplo.com/anuncio4')" style="cursor: pointer;" data-ad-id="bottom-ad-4">
-                    <img src="https://picsum.photos/400/200?random=4" alt="Anuncio 4" loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNmNTllMGIiLz48dGV4dCB4PSIyMDAiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCI+QW51bmNpbyA0PC90ZXh0Pjwvc3ZnPg=='">
+                <!-- Anuncio 728x90 -->
+                <div class="ad-container bottom-ad" data-ad-id="bottom-ad-2">
+                    <script type="text/javascript"> 
+                        atOptions = { 
+                            'key' : 'd1a9332ab68f936abaa310ff142b94ef', 
+                            'format' : 'iframe', 
+                            'height' : 90, 
+                            'width' : 728, 
+                            'params' : {} 
+                        }; 
+                    </script> 
+                    <script type="text/javascript" src="//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js"></script>
                 </div>
                 
-                <!-- Anuncio 5 -->
-                <div class="ad-container bottom-ad" onclick="handleAdClick('https://ejemplo.com/anuncio5')" style="cursor: pointer;" data-ad-id="bottom-ad-5">
-                    <img src="https://picsum.photos/400/200?random=5" alt="Anuncio 5" loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiM4YjVjZjYiLz48dGV4dCB4PSIyMDAiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCI+QW51bmNpbyA1PC90ZXh0Pjwvc3ZnPg=='">
+                <!-- Anuncio 468x60 -->
+                <div class="ad-container bottom-ad" data-ad-id="bottom-ad-3">
+                    <script type="text/javascript"> 
+                        atOptions = { 
+                            'key' : '8c3ca771c13fd8624f87fdec4e5b7d29', 
+                            'format' : 'iframe', 
+                            'height' : 60, 
+                            'width' : 468, 
+                            'params' : {} 
+                        }; 
+                    </script> 
+                    <script type="text/javascript" src="//believableordinarygentlemen.com/8c3ca771c13fd8624f87fdec4e5b7d29/invoke.js"></script>
                 </div>
                 
-                <!-- Anuncio 6 -->
-                <div class="ad-container bottom-ad" onclick="handleAdClick('https://ejemplo.com/anuncio6')" style="cursor: pointer;" data-ad-id="bottom-ad-6">
-                    <img src="https://picsum.photos/400/200?random=6" alt="Anuncio 6" loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDQwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNlZjQ0NDQiLz48dGV4dCB4PSIyMDAiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCI+QW51bmNpbyA2PC90ZXh0Pjwvc3ZnPg=='">
+                <!-- Anuncio Native Banner -->
+                <div class="ad-container bottom-ad" data-ad-id="bottom-ad-4">
+                    <script async="async" data-cfasync="false" src="//believableordinarygentlemen.com/4525df450d44613469633168ded413cf/invoke.js"></script> 
+                    <div id="container-4525df450d44613469633168ded413cf"></div>
                 </div>
             </div>
         </section>
@@ -418,7 +456,6 @@
         function clearSearch() { searchInput.value = ''; currentQuery = ''; currentSort = 'date'; currentOrder = 'desc'; currentVerified = ''; sortFilter.value = 'date'; orderFilter.value = 'desc'; verifiedFilter.value = ''; currentPage = 1; loadTrendingScripts(); }
         function showNotification(text, type = 'success') { const el = document.createElement('div'); el.className = `notification ${type}`; el.textContent = text; document.body.appendChild(el); setTimeout(() => el.classList.add('show'), 10); setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 200); }, 3000); }
         window.selectAPI = selectAPI; window.viewScript = viewScript; window.copyScript = copyScript; window.copyModalScript = copyModalScript; window.closeModal = closeModal; window.clearSearch = clearSearch;
-
 
 </script>
 
