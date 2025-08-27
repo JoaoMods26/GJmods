@@ -4,24 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>joao_mods</title>
-    
 
-
-
-
-
-
-
-
-   <link rel="icon" type="image/png" href="https://i.ibb.co/Vcbqr6wC/Srudios.png">
-
-
-
-
-
-
-
-
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Vcbqr6wC/Srudios.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,36 +58,51 @@
             position: relative;
         }
 
-        /* Contenedor del título con anuncios laterales */
+        /* CONTENEDOR DEL TÍTULO CON ANUNCIOS LATERALES CORREGIDO */
         .title-with-ads {
             position: relative;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             width: 100%;
-            max-width: 1400px;
+            max-width: 1600px;
             margin-bottom: 1rem;
+            min-height: 400px;
+            padding: 2rem 0;
         }
 
-        /* Anuncios laterales */
+        /* ANUNCIOS LATERALES CORREGIDOS */
         .side-ad {
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 80px;
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 10px;
             padding: 10px;
             z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .side-ad-left {
-            left: -130px;
+            left: 20px;
         }
 
         .side-ad-right {
-            right: -130px;
+            right: 20px;
+        }
+
+        /* CONTENEDOR DEL LOGO CENTRAL */
+        .logo-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 200px;
+            z-index: 5;
         }
 
         /* Logo principal */
@@ -118,8 +117,6 @@
             -webkit-text-fill-color: transparent;
             animation: logoGlow 8s ease-in-out infinite, textGradient 10s ease-in-out infinite;
             text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
-            z-index: 5;
-            position: relative;
         }
 
         @keyframes logoGlow {
@@ -261,36 +258,94 @@
             line-height: 1.5;
         }
 
-        /* Contenedor de anuncios normales */
-        .ad-container {
-            width: 90%;
-            max-width: 800px;
-            min-height: 100px;
-            margin: 30px auto;
-            padding: 20px;
-            background: transparent;
-            border-radius: 10px;
-            text-align: center;
+        /* SECCIÓN DE ANUNCIOS AL FINAL MEJORADA */
+        .bottom-ads-section {
+            width: 100%;
+            max-width: 1400px;
+            margin: 4rem auto 2rem;
+            padding: 2rem;
+            border-top: 2px solid var(--glass-border);
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
+        .bottom-ads-title {
+            text-align: center;
+            color: var(--color-accent);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bottom-ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            justify-items: center;
+        }
+
+        .bottom-ad {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+            width: 100%;
+            max-width: 750px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s ease;
+        }
+
+        .bottom-ad:hover {
+            transform: scale(1.02);
+            border-color: var(--color-accent);
+        }
+
+        /* RESPONSIVE MEJORADO */
+        @media (max-width: 1400px) {
             .side-ad-left {
-                left: -110px;
+                left: 15px;
             }
             
             .side-ad-right {
-                right: -110px;
+                right: 15px;
+            }
+            
+            .logo-container {
+                margin: 0 180px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .side-ad-left {
+                left: 10px;
+            }
+            
+            .side-ad-right {
+                right: 10px;
+            }
+            
+            .logo-container {
+                margin: 0 160px;
             }
         }
 
         @media (max-width: 1024px) {
             .side-ad {
-                display: none;
+                display: none !important;
+            }
+            
+            .logo-container {
+                margin: 0;
             }
             
             .title-with-ads {
-                justify-content: center;
+                min-height: auto;
+                padding: 1rem 0;
             }
         }
 
@@ -316,9 +371,24 @@
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
+            
+            .bottom-ads-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .bottom-ads-title {
+                font-size: 1.2rem;
+                margin-bottom: 2rem;
+            }
         }
 
-
+        @media (max-width: 480px) {
+            .bottom-ad {
+                padding: 10px;
+                min-height: 80px;
+            }
+        }
     </style>
 </head>
 
@@ -327,7 +397,7 @@
     <canvas id="particles-canvas"></canvas>
 
     <div class="hero-container">
-        <!-- Logo con anuncios laterales -->
+        <!-- LOGO CON ANUNCIOS LATERALES CORREGIDO -->
         <div class="title-with-ads">
             <!-- Anuncio lateral izquierdo (160x300) -->
             <div class="side-ad side-ad-left">
@@ -343,8 +413,10 @@
                 <script type="text/javascript" src="//believableordinarygentlemen.com/ab51e186a04576460b84ebe553be82ea/invoke.js"></script>
             </div>
 
-            <!-- Logo principal -->
-            <h1 class="main-logo">GJMODS</h1>
+            <!-- CONTENEDOR DEL LOGO CENTRAL -->
+            <div class="logo-container">
+                <h1 class="main-logo">GJMODS</h1>
+            </div>
 
             <!-- Anuncio lateral derecho (300x250) -->
             <div class="side-ad side-ad-right">
@@ -369,10 +441,10 @@
         <!-- Botones principales -->
         <div class="main-buttons">
             <a href="exploits.html" class="main-btn btn-primary" id="exploits-btn">
-                🚀 Ver Exploits
+                Ver Exploits
             </a>
             <a href="https://discord.gg/ZTVC94ZmVZ" target="_blank" class="main-btn btn-secondary">
-                💬 Discord
+                Discord
             </a>
             <a href="https://www.youtube.com/@joao_mods0" target="_blank" class="main-btn btn-secondary">
                 Youtube
@@ -457,53 +529,58 @@
             </div>
         </div>
 
-        <!-- ANUNCIOS RESTANTES AL FINAL -->
-        <!-- ANUNCIO 1: 320x50 (móvil) -->
-        <div class="ad-container">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : '3673085df22687e59379948e6eb888d9',
-                    'format' : 'iframe',
-                    'height' : 50,
-                    'width' : 320,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//believableordinarygentlemen.com/3673085df22687e59379948e6eb888d9/invoke.js"></script>
-        </div>
+        <!-- SECCIÓN DE ANUNCIOS AL FINAL MEJORADA -->
+        <div class="bottom-ads-section">
+            <h2 class="bottom-ads-title">Contenido Patrocinado</h2>
+            <div class="bottom-ads-grid">
+                <!-- ANUNCIO 1: 320x50 (móvil) -->
+                <div class="bottom-ad">
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key' : '3673085df22687e59379948e6eb888d9',
+                            'format' : 'iframe',
+                            'height' : 50,
+                            'width' : 320,
+                            'params' : {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//believableordinarygentlemen.com/3673085df22687e59379948e6eb888d9/invoke.js"></script>
+                </div>
 
-        <!-- ANUNCIO 2: 468x60 -->
-        <div class="ad-container">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : '8c3ca771c13fd8624f87fdec4e5b7d29',
-                    'format' : 'iframe',
-                    'height' : 60,
-                    'width' : 468,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//believableordinarygentlemen.com/8c3ca771c13fd8624f87fdec4e5b7d29/invoke.js"></script>
-        </div>
+                <!-- ANUNCIO 2: 468x60 -->
+                <div class="bottom-ad">
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key' : '8c3ca771c13fd8624f87fdec4e5b7d29',
+                            'format' : 'iframe',
+                            'height' : 60,
+                            'width' : 468,
+                            'params' : {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//believableordinarygentlemen.com/8c3ca771c13fd8624f87fdec4e5b7d29/invoke.js"></script>
+                </div>
 
-        <!-- ANUNCIO 3: 728x90 -->
-        <div class="ad-container">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : 'd1a9332ab68f936abaa310ff142b94ef',
-                    'format' : 'iframe',
-                    'height' : 90,
-                    'width' : 728,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js"></script>
-        </div>
+                <!-- ANUNCIO 3: 728x90 -->
+                <div class="bottom-ad">
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key' : 'd1a9332ab68f936abaa310ff142b94ef',
+                            'format' : 'iframe',
+                            'height' : 90,
+                            'width' : 728,
+                            'params' : {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js"></script>
+                </div>
 
-        <!-- ANUNCIO 4: Script directo -->
-        <div class="ad-container">
-            <script async data-cfasync="false" src="//pl27389425.profitableratecpm.com/4525df450d44613469633168ded413cf/invoke.js"></script>
-            <div id="container-4525df450d44613469633168ded413cf"></div>
+                <!-- ANUNCIO 4: Script directo -->
+                <div class="bottom-ad">
+                    <script async data-cfasync="false" src="//believableordinarygentlemen.com/4525df450d44613469633168ded413cf/invoke.js"></script>
+                    <div id="container-4525df450d44613469633168ded413cf"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -511,20 +588,21 @@
         // Event listener para el botón de exploits
         document.addEventListener('DOMContentLoaded', function() {
             const exploitsBtn = document.getElementById('exploits-btn');
-            exploitsBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = "exploits.html";
-            });
-        });
-
-    <script type="text/javascript">
-        // Event listener para el botón de exploits
-        document.addEventListener('DOMContentLoaded', function() {
             const scriptsBtn = document.getElementById('scripts-btn');
-            scriptsBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = "scripts.html";
-            });
+            
+            if (exploitsBtn) {
+                exploitsBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.href = "exploits.html";
+                });
+            }
+            
+            if (scriptsBtn) {
+                scriptsBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.location.href = "scripts.html";
+                });
+            }
         });
 
         // Sistema de partículas
