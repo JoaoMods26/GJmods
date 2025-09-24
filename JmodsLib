@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial JmodsLib - Guía Completa</title>
+
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Vcbqr6wC/Srudios.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-black: #0a0a0a;
+            --color-white: #ffffff;
+            --color-primary: #1e40af;
+            --color-secondary: #dc2626;
+            --color-accent: #3b82f6;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --code-bg: rgba(20, 20, 30, 0.8);
+            --code-border: rgba(59, 130, 246, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--color-black);
+            color: var(--color-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Canvas para partículas */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        /* Header */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--color-white);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--color-accent);
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .quick-start {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-start h3 {
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* Secciones */
+        .section {
+            margin-bottom: 4rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+
+        .section h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section h3 {
+            font-size: 1.5rem;
+            color: var(--color-accent);
+            margin: 2rem 0 1rem 0;
+        }
+
+        .section p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+        }
+
+        .section ul {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        .section li {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Bloques de código */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--code-border);
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-block::before {
+            content: attr(data-language);
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 0.8rem;
+            color: var(--color-accent);
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #e5e7eb;
+            white-space: pre-wrap;
+        }
+
+        /* Sintaxis highlighting básico */
+        .keyword { color: #c678dd; }
+        .string { color: #98c379; }
+        .comment { color: #5c6370; font-style: italic; }
+        .function { color: #61afef; }
+        .number { color: #d19a66; }
+        .variable { color: #e06c75; }
+
+        /* Alertas */
+        .alert {
+            background: linear-gradient(45deg, rgba(220, 38, 38, 0.1), rgba(239, 68, 68, 0.1));
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 0.8rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .alert.info {
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(96, 165, 250, 0.1));
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .alert.success {
+            background: linear-gradient(45deg, rgba(34, 197, 94, 0.1), rgba(74, 222, 128, 0.1));
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .alert.warning {
+            background: linear-gradient(45deg, rgba(251, 191, 36, 0.1), rgba(252, 211, 77, 0.1));
+            border-color: rgba(251, 191, 36, 0.3);
+            color: rgba(252, 211, 77, 0.9);
+        }
+
+        .alert h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Grid de ejemplos */
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .example-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+        }
+
+        .example-card h4 {
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Botón de copia */
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 4rem;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid var(--color-accent);
+            border-radius: 0.4rem;
+            padding: 0.3rem 0.8rem;
+            color: var(--color-accent);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Tabla de contenidos */
+        .toc {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .toc h3 {
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin: 0.5rem 0;
+        }
+
+        .toc-list a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .toc-list a:hover {
+            color: var(--color-accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .code-block {
+                padding: 1rem;
+                font-size: 0.85rem;
+            }
+
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+        }
+
+        .footer p {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .footer a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Tabla de temas */
+        .theme-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0.8rem;
+            overflow: hidden;
+        }
+
+        .theme-table th,
+        .theme-table td {
+            padding: 0.8rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .theme-table th {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        .theme-table td {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .theme-preview {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        /* Scroll suave */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Estilos para el índice de contenidos flotante */
+        .floating-toc {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.8rem;
+            padding: 1rem;
+            max-width: 200px;
+            z-index: 50;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .floating-toc:hover {
+            opacity: 1;
+        }
+
+        .floating-toc h4 {
+            color: var(--color-accent);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .floating-toc ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .floating-toc li {
+            margin: 0.3rem 0;
+        }
+
+        .floating-toc a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .floating-toc a:hover {
+            color: var(--color-accent);
+        }
+
+        @media (max-width: 1024px) {
+            .floating-toc {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Canvas para partículas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">JMODSLIB</a>
+            <nav class="nav-links">
+                <a href="#inicio" class="nav-link">Inicio</a>
+                <a href="#instalacion" class="nav-link">Instalación</a>
+                <a href="#elementos" class="nav-link">Elementos</a>
+                <a href="#ejemplos" class="nav-link">Ejemplos</a>
+                <a href="#funciones-avanzadas" class="nav-link">Avanzado</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Tabla de contenidos flotante -->
+    <div class="floating-toc">
+        <h4>Contenidos</h4>
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#instalacion">Instalación</a></li>
+            <li><a href="#temas">Temas</a></li>
+            <li><a href="#notificaciones">Notificaciones</a></li>
+            <li><a href="#tabs">Tabs</a></li>
+            <li><a href="#elementos">Elementos</a></li>
+            <li><a href="#funciones-avanzadas">Funciones Avanzadas</a></li>
+            <li><a href="#ejemplos">Ejemplos</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero" id="inicio">
+            <h1>JmodsLib Tutorial</h1>
+            <p>Aprende a crear interfaces modernas para tus scripts de Roblox con nuestra librería completa. Sistema de auto-guardado de temas, compatibilidad móvil y PC, y más de 24 temas disponibles.</p>
+            
+            <div class="quick-start">
+                <h3>🚀 Inicio Rápido</h3>
+                <div class="code-block" data-language="lua">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    <code><span class="keyword">local</span> <span class="variable">JmodsLib</span> = <span class="function">loadstring</span>(<span class="function">game:HttpGet</span>(<span class="string">'https://pastebin.com/raw/u4jihHkC'</span>))()</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabla de contenidos -->
+        <div class="toc">
+            <h3>📖 Índice de Contenidos</h3>
+            <ul class="toc-list">
+                <li><a href="#instalacion">📥 Instalación y Configuración</a></li>
+                <li><a href="#temas">🎨 Temas Disponibles (24 temas)</a></li>
+                <li><a href="#notificaciones">🔔 Sistema de Notificaciones</a></li>
+                <li><a href="#tabs">📑 Creación de Tabs</a></li>
+                <li><a href="#secciones">📋 Creación de Secciones</a></li>
+                <li><a href="#elementos">🔧 Elementos de UI</a></li>
+                <li><a href="#funciones-avanzadas">⚡ Funciones Avanzadas</a></li>
+                <li><a href="#ejemplos">📋 Ejemplos Completos</a></li>
+                <li><a href="#consejos">💡 Consejos y Mejores Prácticas</a></li>
+            </ul>
+        </div>
+
+        <!-- Instalación -->
+        <section class="section" id="instalacion">
+            <h2>📥 Instalación y Configuración</h2>
+            
+            <h3>Paso 1: Cargar la Librería</h3>
+            <p>Para comenzar a usar JmodsLib, carga la librería desde nuestro repositorio:</p>
+            
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Esto carga la interfaz/JmodsLib puede ser remplazado por el nombre que deseen</span>
+<span class="keyword">local</span> <span class="variable">JmodsLib</span> = <span class="function">loadstring</span>(<span class="function">game:HttpGet</span>(<span class="string">'https://pastebin.com/raw/u4jihHkC'</span>))()</code>
+            </div>
+
+            <div class="alert info">
+                <h4>💡 Consejo</h4>
+                <p>Puedes cambiar "JmodsLib" por cualquier nombre que prefieras, pero recuerda usar el mismo nombre en todo tu código.</p>
+            </div>
+
+            <h3>Paso 2: Crear una Ventana</h3>
+            <p>Crea la ventana principal de tu interfaz con todas las opciones personalizables:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- En JmodsLib ponemos exactamente el mismo nombre que hayamos puesto si es que lo cambiamos anteriormente</span>
+<span class="keyword">local</span> <span class="variable">Window</span> = <span class="variable">JmodsLib</span>:<span class="function">CreateWindow</span>({
+    <span class="variable">Name</span> = <span class="string">"Mi primera Interfaz"</span>,
+    <span class="variable">Icon</span> = <span class="number">90692784970350</span>, <span class="comment">--- Cambiar por el ícono que prefieras</span>
+    <span class="variable">LoadingTitle</span> = <span class="string">"Cargando... espera..."</span>, <span class="comment">--- Cambiar si quieres algo personalizado</span>
+    <span class="variable">LoadingSubtitle</span> = <span class="string">"ya casi está"</span>, <span class="comment">--- Cambiar si quieres algo personalizado</span>
+    <span class="variable">Theme</span> = <span class="string">"Rojo"</span>, <span class="comment">--- Este tema es el tema por defecto que la gente verá al ejecutar tu script</span>
+    <span class="variable">Intro</span> = <span class="keyword">true</span>, <span class="comment">--- Esto activa la intro pero es opcional</span>
+    <span class="variable">IntroIcon</span> = <span class="number">90692784970350</span>, <span class="comment">--- Esto es el ícono de la intro</span>
+    <span class="variable">AnimationIntro</span> = <span class="number">5</span>, <span class="comment">--- Acá puedes poner del 0 al 6, el 0 siendo random</span>
+    <span class="variable">DragImage</span> = <span class="number">127271155083726</span> <span class="comment">--- esta es el ícono de abajo a la derecha</span>
+})</code>
+            </div>
+
+            <div class="alert warning">
+                <h4>⚠️ Opciones de la Intro</h4>
+                <p>Si no activas <code>Intro = true</code>, no es necesario lo siguiente y lo puedes eliminar:</p>
+                <ul>
+                    <li>LoadingTitle</li>
+                    <li>LoadingSubtitle</li>
+                    <li>IntroIcon</li>
+                    <li>AnimationIntro</li>
+                </ul>
+            </div>
+
+            <h3>Animaciones de Intro Disponibles</h3>
+            <p>Puedes elegir entre 6 animaciones diferentes para la intro:</p>
+            <ul>
+                <li><strong>0</strong> - Animación aleatoria (una diferente cada vez)</li>
+                <li><strong>1</strong> - Entrada con escala y rotación</li>
+                <li><strong>2</strong> - Entrada deslizante con rebote</li>
+                <li><strong>3</strong> - Entrada en espiral</li>
+                <li><strong>4</strong> - Entrada tipo "drop"</li>
+                <li><strong>5</strong> - Fade-In con Zoom</li>
+                <li><strong>6</strong> - Rebote desde las esquinas</li>
+            </ul>
+        </section>
+
+        <!-- Temas -->
+        <section class="section" id="temas">
+            <h2>🎨 Temas Disponibles</h2>
+            <p>JmodsLib incluye 24 temas diferentes que se guardan automáticamente. Puedes usar nombres en español o inglés:</p>
+            
+            <table class="theme-table">
+                <thead>
+                    <tr>
+                        <th>Español</th>
+                        <th>Inglés</th>
+                        <th>Preview</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>negro</td><td>black</td><td><span class="theme-preview" style="background: #000;"></span></td><td>Tema por defecto</td></tr>
+                    <tr><td>azul</td><td>Azul</td><td><span class="theme-preview" style="background: #4169E1;"></span></td><td>Azul clásico</td></tr>
+                    <tr><td>oscuro</td><td>dark</td><td><span class="theme-preview" style="background: #191923;"></span></td><td>Gris oscuro moderno</td></tr>
+                    <tr><td>rojo</td><td>red</td><td><span class="theme-preview" style="background: #DC143C;"></span></td><td>Rojo intenso</td></tr>
+                    <tr><td>verde</td><td>green</td><td><span class="theme-preview" style="background: #228B22;"></span></td><td>Verde natural</td></tr>
+                    <tr><td>morado</td><td>purple</td><td><span class="theme-preview" style="background: #8A2BE2;"></span></td><td>Morado elegante</td></tr>
+                    <tr><td>naranja</td><td>orange</td><td><span class="theme-preview" style="background: #FF8C00;"></span></td><td>Naranja vibrante</td></tr>
+                    <tr><td>rosa</td><td>pink</td><td><span class="theme-preview" style="background: #FF69B4;"></span></td><td>Rosa moderno</td></tr>
+                    <tr><td>gris</td><td>gray</td><td><span class="theme-preview" style="background: #808080;"></span></td><td>Gris neutro</td></tr>
+                    <tr><td>cian</td><td>cyan</td><td><span class="theme-preview" style="background: #00CED1;"></span></td><td>Cian fresco</td></tr>
+                    <tr><td>amarillo</td><td>yellow</td><td><span class="theme-preview" style="background: #FFD700;"></span></td><td>Amarillo dorado</td></tr>
+                    <tr><td>turquesa</td><td>turquoise</td><td><span class="theme-preview" style="background: #40E0D0;"></span></td><td>Turquesa tropical</td></tr>
+                    <tr><td>marron</td><td>brown</td><td><span class="theme-preview" style="background: #8B4513;"></span></td><td>Marrón tierra</td></tr>
+                    <tr><td>dorado</td><td>gold</td><td><span class="theme-preview" style="background: #FFD700;"></span></td><td>Oro brillante</td></tr>
+                    <tr><td>plateado</td><td>silver</td><td><span class="theme-preview" style="background: #C0C0C0;"></span></td><td>Plata metálica</td></tr>
+                    <tr><td colspan="4" style="text-align: center; font-weight: bold; background: rgba(59, 130, 246, 0.1);">🌈 Temas Neón</td></tr>
+                    <tr><td>neon</td><td>neon</td><td><span class="theme-preview" style="background: linear-gradient(45deg, #00FF7F, #00BFFF);"></span></td><td>Neón estándar</td></tr>
+                    <tr><td>oscuro neon</td><td>dark_neon</td><td><span class="theme-preview" style="background: linear-gradient(45deg, #8C40FF, #FF40FF);"></span></td><td>Neón púrpura</td></tr>
+                    <tr><td>neon azul</td><td>neon_blue</td><td><span class="theme-preview" style="background: #0080FF;"></span></td><td>Neón azul eléctrico</td></tr>
+                    <tr><td>neon rojo</td><td>neon_red</td><td><span class="theme-preview" style="background: #FF0040;"></span></td><td>Neón rojo intenso</td></tr>
+                    <tr><td>neon verde</td><td>neon_green</td><td><span class="theme-preview" style="background: #00FF80;"></span></td><td>Neón verde brillante</td></tr>
+                    <tr><td>neon amarillo</td><td>neon_yellow</td><td><span class="theme-preview" style="background: #FFFF00;"></span></td><td>Neón amarillo</td></tr>
+                    <tr><td>neon rosa</td><td>neon_pink</td><td><span class="theme-preview" style="background: #FF0080;"></span></td><td>Neón rosa</td></tr>
+                    <tr><td>neon naranja</td><td>neon_orange</td><td><span class="theme-preview" style="background: #FF8000;"></span></td><td>Neón naranja</td></tr>
+                    <tr><td>neon violeta</td><td>neon_violet</td><td><span class="theme-preview" style="background: #8000FF;"></span></td><td>Neón violeta</td></tr>
+                    <tr><td>neon blanco</td><td>neon_white</td><td><span class="theme-preview" style="background: #FFFFFF;"></span></td><td>Neón blanco puro</td></tr>
+                </tbody>
+            </table>
+
+            <div class="alert success">
+                <h4>✅ Auto-Guardado de Temas</h4>
+                <p>Los temas se guardan automáticamente y se cargan la próxima vez que ejecutes el script. Los usuarios pueden cambiar el tema usando el selector integrado en la interfaz.</p>
+            </div>
+        </section>
+
+        <!-- Notificaciones -->
+        <section class="section" id="notificaciones">
+            <h2>🔔 Sistema de Notificaciones Avanzado</h2>
+            <p>Crea notificaciones atractivas con soporte para links clickeables y detección automática de URLs:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Creación de notificaciones</span>
+<span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+    <span class="variable">Title</span> = <span class="string">"Bienvenido"</span>, <span class="comment">--- Título</span>
+    <span class="variable">Content</span> = <span class="string">"joao_mods te espera en https://youtube.com"</span>, <span class="comment">--- Sí acá se puede poner links, esto es el contenido</span>
+    <span class="variable">Duration</span> = <span class="number">15</span>, <span class="comment">--- Esta es la duración</span>
+    <span class="variable">Image</span> = <span class="number">13458017478</span> <span class="comment">--- Esta imagen se mostrará a la esquina derecha de la notificación</span>
+})</code>
+            </div>
+
+            <div class="alert info">
+                <h4>🔗 Características de las Notificaciones</h4>
+                <ul>
+                    <li><strong>Links automáticos:</strong> Detecta automáticamente URLs y las hace clickeables</li>
+                    <li><strong>Dominio inteligente:</strong> Muestra nombres cortos (YouTube, Discord, GitHub, etc.)</li>
+                    <li><strong>Copia automática:</strong> Al hacer clic se copia el link al portapapeles</li>
+                    <li><strong>Sin solapamiento:</strong> Solo una notificación visible a la vez</li>
+                    <li><strong>Responsive:</strong> Se adapta a dispositivos móviles</li>
+                </ul>
+            </div>
+
+            <h3>Ejemplos de Notificaciones</h3>
+            <div class="examples-grid">
+                <div class="example-card">
+                    <h4>Notificación Simple</h4>
+                    <div class="code-block" data-language="lua">
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                        <code><span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+    <span class="variable">Title</span> = <span class="string">"Script Cargado"</span>,
+    <span class="variable">Content</span> = <span class="string">"¡Todo listo para usar!"</span>,
+    <span class="variable">Duration</span> = <span class="number">3</span>
+})</code>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h4>Notificación con Links</h4>
+                    <div class="code-block" data-language="lua">
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                        <code><span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+    <span class="variable">Title</span> = <span class="string">"Únete al Discord"</span>,
+    <span class="variable">Content</span> = <span class="string">"Discord: https://discord.gg/ZTVC94ZmVZ"</span>,
+    <span class="variable">Duration</span> = <span class="number">10</span>,
+    <span class="variable">Image</span> = <span class="number">13458017478</span>
+})</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Crear Tabs -->
+        <section class="section" id="tabs">
+            <h2>📑 Creación de Tabs</h2>
+            <p>Los tabs te permiten organizar tu interfaz en diferentes páginas. Cada tab puede contener múltiples elementos:</p>
+            
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Creación de tabs:</span>
+<span class="variable">MainTab</span> = <span class="variable">Window</span>:<span class="function">CreateTab</span>(<span class="string">"Principal"</span>)
+
+<span class="comment">--- Crear un segundo tab</span>
+<span class="variable">SettingsTab</span> = <span class="variable">Window</span>:<span class="function">CreateTab</span>(<span class="string">"Configuración"</span>)
+
+<span class="comment">--- Crear un tercer tab</span>
+<span class="variable">ScriptsTab</span> = <span class="variable">Window</span>:<span class="function">CreateTab</span>(<span class="string">"Scripts"</span>)</code>
+            </div>
+
+            <div class="alert info">
+                <h4>💡 Importante sobre los Tabs</h4>
+                <p>El nombre que le pongas a la variable (ej. MainTab, SettingsTab) será lo que uses para referenciar ese tab cuando agregues elementos. Puedes crear tantos tabs como necesites.</p>
+            </div>
+        </section>
+
+        <!-- Crear Secciones -->
+        <section class="section" id="secciones">
+            <h2>📋 Creación de Secciones</h2>
+            <p>Las secciones actúan como separadores visuales y organizadores dentro de los tabs:</p>
+            
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Sección con título</span>
+<span class="variable">Section1</span> = <span class="variable">MainTab</span>:<span class="function">CreateSection</span>(<span class="string">"Funciones Principales"</span>)
+
+<span class="comment">--- Sección vacía como separador</span>
+<span class="variable">Separator</span> = <span class="variable">MainTab</span>:<span class="function">CreateSection</span>(<span class="string">""</span>)
+
+<span class="comment">--- Otra sección</span>
+<span class="variable">Section2</span> = <span class="variable">MainTab</span>:<span class="function">CreateSection</span>(<span class="string">"Configuración Avanzada"</span>)</code>
+            </div>
+
+            <div class="alert success">
+                <h4>✅ Tips para Secciones</h4>
+                <ul>
+                    <li>Las secciones con texto actúan como títulos o separadores con nombre</li>
+                    <li>Las secciones vacías ("") crean un espacio visual entre elementos</li>
+                    <li>Usa secciones para organizar mejor tu interfaz</li>
+                    <li>Siempre haz referencia al tab correcto donde quieres que aparezca</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Elementos de UI -->
+        <section class="section" id="elementos">
+            <h2>🔧 Elementos de Interfaz</h2>
+            
+            <h3 id="botones">🔘 Botones</h3>
+            <p>Los botones ejecutan funciones cuando son presionados:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Botón básico</span>
+<span class="variable">Button1</span> = <span class="variable">MainTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Saludar"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="function">print</span>(<span class="string">"¡Hola mundo!"</span>)
+        <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+            <span class="variable">Title</span> = <span class="string">"Saludos"</span>,
+            <span class="variable">Content</span> = <span class="string">"¡Hola desde el botón!"</span>,
+            <span class="variable">Duration</span> = <span class="number">3</span>
+        })
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- Botón que ejecuta script externo</span>
+<span class="variable">Button2</span> = <span class="variable">MainTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Cargar Script"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="function">loadstring</span>(<span class="function">game:HttpGet</span>(<span class="string">"https://example.com/script.lua"</span>))()
+    <span class="keyword">end</span>
+})</code>
+            </div>
+
+            <h3 id="toggle">🎛️ Toggle (Interruptor)</h3>
+            <p>Los toggles permiten activar/desactivar funciones:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="variable">MainTab</span>:<span class="function">CreateToggle</span>({
+    <span class="variable">Name</span> = <span class="string">"Auto Farm"</span>,
+    <span class="variable">CurrentValue</span> = <span class="keyword">false</span>, <span class="comment">--- Valor inicial</span>
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">state</span>)
+        <span class="keyword">if</span> <span class="variable">state</span> <span class="keyword">then</span>
+            <span class="function">print</span>(<span class="string">"Auto Farm activado"</span>)
+            <span class="comment">-- Aquí iría la lógica del auto farm</span>
+        <span class="keyword">else</span>
+            <span class="function">print</span>(<span class="string">"Auto Farm desactivado"</span>)
+            <span class="comment">-- Aquí iría la lógica para detener el auto farm</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})</code>
+            </div>
+
+            <h3 id="slider">📊 Slider (Barra Deslizante)</h3>
+            <p>Los sliders controlan valores numéricos dentro de un rango:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="variable">MainTab</span>:<span class="function">CreateSlider</span>({
+    <span class="variable">Name</span> = <span class="string">"Velocidad de Caminata"</span>,
+    <span class="variable">Range</span> = {<span class="number">16</span>, <span class="number">100</span>}, <span class="comment">--- Mínimo y máximo</span>
+    <span class="variable">Increment</span> = <span class="number">1</span>, <span class="comment">--- De cuánto en cuánto cambia</span>
+    <span class="variable">Suffix</span> = <span class="string">"studs/s"</span>, <span class="comment">--- Texto después del valor</span>
+    <span class="variable">CurrentValue</span> = <span class="number">16</span>, <span class="comment">--- Valor inicial</span>
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">value</span>)
+        <span class="function">print</span>(<span class="string">"Velocidad cambiada a:"</span>, <span class="variable">value</span>)
+        <span class="keyword">if</span> <span class="function">game.Players.LocalPlayer.Character</span> <span class="keyword">and</span> <span class="function">game.Players.LocalPlayer.Character</span>:<span class="function">FindFirstChild</span>(<span class="string">"Humanoid"</span>) <span class="keyword">then</span>
+            <span class="function">game.Players.LocalPlayer.Character.Humanoid.WalkSpeed</span> = <span class="variable">value</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})</code>
+            </div>
+
+            <h3 id="input">⌨️ Input (Campo de Texto)</h3>
+            <p>Los inputs permiten al usuario escribir texto:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="variable">MainTab</span>:<span class="function">CreateInput</span>({
+    <span class="variable">Name</span> = <span class="string">"Nombre del Jugador"</span>,
+    <span class="variable">PlaceholderText</span> = <span class="string">"Escribe un nombre..."</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">text</span>)
+        <span class="function">print</span>(<span class="string">"Texto ingresado:"</span>, <span class="variable">text</span>)
+        <span class="comment">-- Ejemplo: buscar jugador por nombre</span>
+        <span class="keyword">local</span> <span class="variable">player</span> = <span class="function">game.Players</span>:<span class="function">FindFirstChild</span>(<span class="variable">text</span>)
+        <span class="keyword">if</span> <span class="variable">player</span> <span class="keyword">then</span>
+            <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+                <span class="variable">Title</span> = <span class="string">"Jugador encontrado"</span>,
+                <span class="variable">Content</span> = <span class="string">"Encontrado: "</span> .. <span class="variable">player</span>.<span class="variable">Name</span>,
+                <span class="variable">Duration</span> = <span class="number">3</span>
+            })
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})</code>
+            </div>
+
+            <h3 id="dropdown">📋 Dropdown (Menú Desplegable)</h3>
+            <p>Los dropdowns permiten seleccionar entre múltiples opciones predefinidas:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="variable">MainTab</span>:<span class="function">CreateDropdown</span>({
+    <span class="variable">Name</span> = <span class="string">"Seleccionar Arma"</span>,
+    <span class="variable">Options</span> = {<span class="string">"Espada"</span>, <span class="string">"Arco"</span>, <span class="string">"Hacha"</span>, <span class="string">"Lanza"</span>},
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">option</span>)
+        <span class="function">print</span>(<span class="string">"Arma seleccionada:"</span>, <span class="variable">option</span>)
+        <span class="comment">-- Aquí podrías equipar el arma seleccionada</span>
+    <span class="keyword">end</span>
+})</code>
+            </div>
+
+            <h3 id="colorpicker">🎨 ColorPicker (Selector de Color)</h3>
+            <p>Los colorpickers permiten seleccionar colores con una interfaz visual:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="variable">MainTab</span>:<span class="function">CreateColorPicker</span>({
+    <span class="variable">Name</span> = <span class="string">"Color del Aura"</span>,
+    <span class="variable">Color</span> = <span class="function">Color3.fromRGB</span>(<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>), <span class="comment">--- Color inicial</span>
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">color</span>)
+        <span class="function">print</span>(<span class="function">string.format</span>(<span class="string">"Color seleccionado: RGB(%d, %d, %d)"</span>, 
+            <span class="variable">color</span>.<span class="variable">R</span>*<span class="number">255</span>, <span class="variable">color</span>.<span class="variable">G</span>*<span class="number">255</span>, <span class="variable">color</span>.<span class="variable">B</span>*<span class="number">255</span>))
+        <span class="comment">-- Aquí podrías aplicar el color a algún efecto visual</span>
+    <span class="keyword">end</span>
+})</code>
+            </div>
+
+            <h3 id="keybind">⌨️ Keybind (Asignar Tecla)</h3>
+            <p>Los keybinds permiten asignar teclas para activar funciones rápidamente:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="variable">MainTab</span>:<span class="function">CreateKeybind</span>({
+    <span class="variable">Name</span> = <span class="string">"Toggle Fly"</span>,
+    <span class="variable">CurrentKeybind</span> = <span class="string">"F"</span>, <span class="comment">--- Tecla inicial</span>
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">key</span>)
+        <span class="function">print</span>(<span class="string">"Tecla presionada:"</span>, <span class="variable">key</span>)
+        <span class="comment">-- Aquí iría la lógica para activar/desactivar fly</span>
+        <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+            <span class="variable">Title</span> = <span class="string">"Fly Toggle"</span>,
+            <span class="variable">Content</span> = <span class="string">"Fly activado/desactivado"</span>,
+            <span class="variable">Duration</span> = <span class="number">2</span>
+        })
+    <span class="keyword">end</span>
+})</code>
+            </div>
+
+            <h3 id="paragraph">📄 Paragraph (Información)</h3>
+            <p>Los paragraphs muestran información, créditos o instrucciones:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Información básica</span>
+<span class="variable">MainTab</span>:<span class="function">CreateParagraph</span>({
+    <span class="variable">Title</span> = <span class="string">"Información"</span>,
+    <span class="variable">Content</span> = <span class="string">"Este script fue creado por joao_mods. Versión 1.0"</span>
+})
+
+<span class="comment">--- Instrucciones de uso</span>
+<span class="variable">MainTab</span>:<span class="function">CreateParagraph</span>({
+    <span class="variable">Title</span> = <span class="string">"Instrucciones"</span>,
+    <span class="variable">Content</span> = <span class="string">"1. Activa Auto Farm\n2. Ajusta la velocidad\n3. Presiona F para volar"</span>
+})</code>
+            </div>
+        </section>
+
+        <!-- Funciones Avanzadas -->
+        <section class="section" id="funciones-avanzadas">
+            <h2>⚡ Funciones Avanzadas de JmodsLib</h2>
+            
+            <h3>🎨 Control Programático de Temas</h3>
+            <p>Puedes cambiar temas desde tu código y obtener información sobre el tema actual:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Cambiar tema programáticamente</span>
+<span class="variable">Window</span>:<span class="function">SetTheme</span>(<span class="string">"neon_blue"</span>)
+
+<span class="comment">--- Obtener el tema actual</span>
+<span class="keyword">local</span> <span class="variable">currentTheme</span> = <span class="variable">Window</span>:<span class="function">GetCurrentTheme</span>()
+<span class="function">print</span>(<span class="string">"Tema actual:"</span>, <span class="variable">currentTheme</span>)
+
+<span class="comment">--- Obtener información completa del sistema de temas</span>
+<span class="keyword">local</span> <span class="variable">themeInfo</span> = <span class="variable">JmodsLib</span>:<span class="function">GetThemeInfo</span>()
+<span class="function">print</span>(<span class="string">"Información de temas:"</span>, <span class="variable">themeInfo</span>)</code>
+            </div>
+
+            <h3>🔧 Configuración de Teclas de Minimizado</h3>
+            <p>Puedes cambiar la tecla que minimiza/restaura la interfaz:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Cambiar la tecla de minimizado a M</span>
+<span class="variable">Window</span>:<span class="function">SetRestoreKey</span>(<span class="function">Enum.KeyCode.M</span>)
+
+<span class="comment">--- Cambiar a Insert</span>
+<span class="variable">Window</span>:<span class="function">SetRestoreKey</span>(<span class="function">Enum.KeyCode.Insert</span>)</code>
+            </div>
+
+            <h3>🔄 Reset de Temas</h3>
+            <p>Resetea el sistema de temas al valor por defecto:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Resetear tema al por defecto (negro)</span>
+<span class="variable">JmodsLib</span>:<span class="function">ResetTheme</span>()</code>
+            </div>
+
+            <h3>📱 Compatibilidad Móvil</h3>
+            <p>JmodsLib detecta automáticamente si estás en móvil y adapta la interfaz:</p>
+            <ul>
+                <li><strong>Tamaño adaptativo:</strong> La interfaz es más pequeña en móvil</li>
+                <li><strong>Controles táctiles:</strong> Todos los elementos funcionan con touch</li>
+                <li><strong>Botón flotante:</strong> Aparece cuando minimizas en móvil</li>
+                <li><strong>Scrolling optimizado:</strong> Solo vertical para mejor experiencia</li>
+            </ul>
+
+            <div class="alert info">
+                <h4>📱 Características Móviles</h4>
+                <ul>
+                    <li>Interfaz redimensionada automáticamente</li>
+                    <li>Controles optimizados para dedos</li>
+                    <li>Botón flotante para restaurar la UI</li>
+                    <li>Scroll vertical únicamente</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Ejemplo completo -->
+        <section class="section" id="ejemplos">
+            <h2>📋 Ejemplo Completo</h2>
+            <p>Aquí tienes un script completo que demuestra todas las funcionalidades de JmodsLib:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- 🚀 SCRIPT COMPLETO DE EJEMPLO - JmodsLib</span>
+<span class="comment">--- Cargar la librería</span>
+<span class="keyword">local</span> <span class="variable">JmodsLib</span> = <span class="function">loadstring</span>(<span class="function">game:HttpGet</span>(<span class="string">'https://pastebin.com/raw/u4jihHkC'</span>))()
+
+<span class="comment">--- Crear la ventana principal</span>
+<span class="keyword">local</span> <span class="variable">Window</span> = <span class="variable">JmodsLib</span>:<span class="function">CreateWindow</span>({
+    <span class="variable">Name</span> = <span class="string">"Mi Script Completo"</span>,
+    <span class="variable">Icon</span> = <span class="number">90692784970350</span>,
+    <span class="variable">LoadingTitle</span> = <span class="string">"Cargando Script..."</span>,
+    <span class="variable">LoadingSubtitle</span> = <span class="string">"Inicializando componentes..."</span>,
+    <span class="variable">Theme</span> = <span class="string">"neon_blue"</span>,
+    <span class="variable">Intro</span> = <span class="keyword">true</span>,
+    <span class="variable">IntroIcon</span> = <span class="number">90692784970350</span>,
+    <span class="variable">AnimationIntro</span> = <span class="number">0</span>, <span class="comment">--- Animación aleatoria</span>
+    <span class="variable">DragImage</span> = <span class="number">127271155083726</span>
+})
+
+<span class="comment">--- Notificación de bienvenida</span>
+<span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+    <span class="variable">Title</span> = <span class="string">"¡Bienvenido!"</span>,
+    <span class="variable">Content</span> = <span class="string">"Script cargado correctamente. Discord: https://discord.gg/ZTVC94ZmVZ"</span>,
+    <span class="variable">Duration</span> = <span class="number">8</span>,
+    <span class="variable">Image</span> = <span class="number">13458017478</span>
+})
+
+<span class="comment">--- 📑 CREAR TABS</span>
+<span class="keyword">local</span> <span class="variable">MainTab</span> = <span class="variable">Window</span>:<span class="function">CreateTab</span>(<span class="string">"Principal"</span>)
+<span class="keyword">local</span> <span class="variable">PlayerTab</span> = <span class="variable">Window</span>:<span class="function">CreateTab</span>(<span class="string">"Jugador"</span>)
+<span class="keyword">local</span> <span class="variable">ScriptsTab</span> = <span class="variable">Window</span>:<span class="function">CreateTab</span>(<span class="string">"Scripts"</span>)
+<span class="keyword">local</span> <span class="variable">SettingsTab</span> = <span class="variable">Window</span>:<span class="function">CreateTab</span>(<span class="string">"Configuración"</span>)
+
+<span class="comment">--- 📋 TAB PRINCIPAL</span>
+<span class="variable">MainTab</span>:<span class="function">CreateSection</span>(<span class="string">"Información del Script"</span>)
+
+<span class="variable">MainTab</span>:<span class="function">CreateParagraph</span>({
+    <span class="variable">Title</span> = <span class="string">"Script Universal"</span>,
+    <span class="variable">Content</span> = <span class="string">"Este es un ejemplo completo de JmodsLib. Incluye todas las funcionalidades disponibles."</span>
+})
+
+<span class="variable">MainTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Mostrar Información"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="keyword">local</span> <span class="variable">player</span> = <span class="function">game.Players.LocalPlayer</span>
+        <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+            <span class="variable">Title</span> = <span class="string">"Tu Información"</span>,
+            <span class="variable">Content</span> = <span class="function">string.format</span>(<span class="string">"Jugador: %s\nUserID: %d\nCuenta creada: %s"</span>,
+                <span class="variable">player</span>.<span class="variable">Name</span>,
+                <span class="variable">player</span>.<span class="variable">UserId</span>,
+                <span class="function">os.date</span>(<span class="string">"%Y-%m-%d"</span>, <span class="variable">player</span>.<span class="variable">AccountAge</span> * <span class="number">86400</span>)
+            ),
+            <span class="variable">Duration</span> = <span class="number">6</span>
+        })
+    <span class="keyword">end</span>
+})
+
+<span class="variable">MainTab</span>:<span class="function">CreateSection</span>(<span class="string">""</span>) <span class="comment">--- Separador</span>
+
+<span class="comment">--- 🎮 TAB JUGADOR</span>
+<span class="variable">PlayerTab</span>:<span class="function">CreateSection</span>(<span class="string">"Modificadores del Jugador"</span>)
+
+<span class="comment">--- Variables para estados</span>
+<span class="keyword">local</span> <span class="variable">flyEnabled</span> = <span class="keyword">false</span>
+<span class="keyword">local</span> <span class="variable">noClipEnabled</span> = <span class="keyword">false</span>
+
+<span class="comment">--- Slider de velocidad de caminata</span>
+<span class="variable">PlayerTab</span>:<span class="function">CreateSlider</span>({
+    <span class="variable">Name</span> = <span class="string">"Velocidad de Caminata"</span>,
+    <span class="variable">Range</span> = {<span class="number">16</span>, <span class="number">200</span>},
+    <span class="variable">Increment</span> = <span class="number">1</span>,
+    <span class="variable">Suffix</span> = <span class="string">" studs/s"</span>,
+    <span class="variable">CurrentValue</span> = <span class="number">16</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">value</span>)
+        <span class="keyword">local</span> <span class="variable">char</span> = <span class="function">game.Players.LocalPlayer.Character</span>
+        <span class="keyword">if</span> <span class="variable">char</span> <span class="keyword">and</span> <span class="variable">char</span>:<span class="function">FindFirstChild</span>(<span class="string">"Humanoid"</span>) <span class="keyword">then</span>
+            <span class="variable">char</span>.<span class="variable">Humanoid</span>.<span class="variable">WalkSpeed</span> = <span class="variable">value</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- Slider de poder de salto</span>
+<span class="variable">PlayerTab</span>:<span class="function">CreateSlider</span>({
+    <span class="variable">Name</span> = <span class="string">"Poder de Salto"</span>,
+    <span class="variable">Range</span> = {<span class="number">50</span>, <span class="number">500</span>},
+    <span class="variable">Increment</span> = <span class="number">5</span>,
+    <span class="variable">Suffix</span> = <span class="string">" poder"</span>,
+    <span class="variable">CurrentValue</span> = <span class="number">50</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">value</span>)
+        <span class="keyword">local</span> <span class="variable">char</span> = <span class="function">game.Players.LocalPlayer.Character</span>
+        <span class="keyword">if</span> <span class="variable">char</span> <span class="keyword">and</span> <span class="variable">char</span>:<span class="function">FindFirstChild</span>(<span class="string">"Humanoid"</span>) <span class="keyword">then</span>
+            <span class="variable">char</span>.<span class="variable">Humanoid</span>.<span class="variable">JumpPower</span> = <span class="variable">value</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- Toggle para Fly</span>
+<span class="variable">PlayerTab</span>:<span class="function">CreateToggle</span>({
+    <span class="variable">Name</span> = <span class="string">"Fly Mode"</span>,
+    <span class="variable">CurrentValue</span> = <span class="keyword">false</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">state</span>)
+        <span class="variable">flyEnabled</span> = <span class="variable">state</span>
+        <span class="keyword">if</span> <span class="variable">state</span> <span class="keyword">then</span>
+            <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+                <span class="variable">Title</span> = <span class="string">"Fly Activado"</span>,
+                <span class="variable">Content</span> = <span class="string">"Usa WASD para volar, Space/Shift para subir/bajar"</span>,
+                <span class="variable">Duration</span> = <span class="number">4</span>
+            })
+            <span class="comment">--- Aquí iría la lógica del fly</span>
+        <span class="keyword">else</span>
+            <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+                <span class="variable">Title</span> = <span class="string">"Fly Desactivado"</span>,
+                <span class="variable">Content</span> = <span class="string">"Modo vuelo deshabilitado"</span>,
+                <span class="variable">Duration</span> = <span class="number">2</span>
+            })
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- Input para teletransporte</span>
+<span class="variable">PlayerTab</span>:<span class="function">CreateInput</span>({
+    <span class="variable">Name</span> = <span class="string">"Teleport a Jugador"</span>,
+    <span class="variable">PlaceholderText</span> = <span class="string">"Nombre del jugador..."</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">playerName</span>)
+        <span class="keyword">local</span> <span class="variable">targetPlayer</span> = <span class="function">game.Players</span>:<span class="function">FindFirstChild</span>(<span class="variable">playerName</span>)
+        <span class="keyword">if</span> <span class="variable">targetPlayer</span> <span class="keyword">and</span> <span class="variable">targetPlayer</span>.<span class="variable">Character</span> <span class="keyword">and</span> <span class="variable">targetPlayer</span>.<span class="variable">Character</span>:<span class="function">FindFirstChild</span>(<span class="string">"HumanoidRootPart"</span>) <span class="keyword">then</span>
+            <span class="keyword">local</span> <span class="variable">myChar</span> = <span class="function">game.Players.LocalPlayer.Character</span>
+            <span class="keyword">if</span> <span class="variable">myChar</span> <span class="keyword">and</span> <span class="variable">myChar</span>:<span class="function">FindFirstChild</span>(<span class="string">"HumanoidRootPart"</span>) <span class="keyword">then</span>
+                <span class="variable">myChar</span>.<span class="variable">HumanoidRootPart</span>.<span class="variable">CFrame</span> = <span class="variable">targetPlayer</span>.<span class="variable">Character</span>.<span class="variable">HumanoidRootPart</span>.<span class="variable">CFrame</span>
+                <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+                    <span class="variable">Title</span> = <span class="string">"Teleport Exitoso"</span>,
+                    <span class="variable">Content</span> = <span class="string">"Te teletransportaste a "</span> .. <span class="variable">targetPlayer</span>.<span class="variable">Name</span>,
+                    <span class="variable">Duration</span> = <span class="number">3</span>
+                })
+            <span class="keyword">end</span>
+        <span class="keyword">else</span>
+            <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+                <span class="variable">Title</span> = <span class="string">"Error"</span>,
+                <span class="variable">Content</span> = <span class="string">"Jugador no encontrado: "</span> .. <span class="variable">playerName</span>,
+                <span class="variable">Duration</span> = <span class="number">3</span>
+            })
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- 🛠️ TAB SCRIPTS</span>
+<span class="variable">ScriptsTab</span>:<span class="function">CreateSection</span>(<span class="string">"Scripts Externos"</span>)
+
+<span class="variable">ScriptsTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Infinite Yield"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="function">loadstring</span>(<span class="function">game:HttpGet</span>(<span class="string">'https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'</span>))()
+        <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+            <span class="variable">Title</span> = <span class="string">"Script Cargado"</span>,
+            <span class="variable">Content</span> = <span class="string">"Infinite Yield cargado exitosamente"</span>,
+            <span class="variable">Duration</span> = <span class="number">3</span>
+        })
+    <span class="keyword">end</span>
+})
+
+<span class="variable">ScriptsTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Dex Explorer"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="function">loadstring</span>(<span class="function">game:HttpGet</span>(<span class="string">"https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"</span>))()
+    <span class="keyword">end</span>
+})
+
+<span class="variable">ScriptsTab</span>:<span class="function">CreateDropdown</span>({
+    <span class="variable">Name</span> = <span class="string">"Scripts de Juegos"</span>,
+    <span class="variable">Options</span> = {<span class="string">"Arsenal"</span>, <span class="string">"Adopt Me"</span>, <span class="string">"Blox Fruits"</span>, <span class="string">"Tower Defense Simulator"</span>},
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">game</span>)
+        <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+            <span class="variable">Title</span> = <span class="string">"Script de Juego"</span>,
+            <span class="variable">Content</span> = <span class="string">"Cargando script para: "</span> .. <span class="variable">game</span>,
+            <span class="variable">Duration</span> = <span class="number">3</span>
+        })
+        <span class="comment">--- Aquí cargarías el script específico del juego</span>
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- ⚙️ TAB CONFIGURACIÓN</span>
+<span class="variable">SettingsTab</span>:<span class="function">CreateSection</span>(<span class="string">"Configuración de la Interfaz"</span>)
+
+<span class="variable">SettingsTab</span>:<span class="function">CreateParagraph</span>({
+    <span class="variable">Title</span> = <span class="string">"Control de Temas"</span>,
+    <span class="variable">Content</span> = <span class="string">"Los temas se guardan automáticamente. Usa el botón de paleta en la barra superior para cambiar temas."</span>
+})
+
+<span class="variable">SettingsTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Cambiar a Tema Aleatorio"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="keyword">local</span> <span class="variable">themes</span> = {<span class="string">"red"</span>, <span class="string">"green"</span>, <span class="string">"blue"</span>, <span class="string">"purple"</span>, <span class="string">"neon"</span>, <span class="string">"neon_blue"</span>, <span class="string">"neon_pink"</span>}
+        <span class="keyword">local</span> <span class="variable">randomTheme</span> = <span class="variable">themes</span>[<span class="function">math.random</span>(<span class="number">1</span>, #<span class="variable">themes</span>)]
+        <span class="variable">Window</span>:<span class="function">SetTheme</span>(<span class="variable">randomTheme</span>)
+        <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+            <span class="variable">Title</span> = <span class="string">"Tema Cambiado"</span>,
+            <span class="variable">Content</span> = <span class="string">"Nuevo tema aplicado: "</span> .. <span class="variable">randomTheme</span>,
+            <span class="variable">Duration</span> = <span class="number">4</span>
+        })
+    <span class="keyword">end</span>
+})
+
+<span class="variable">SettingsTab</span>:<span class="function">CreateColorPicker</span>({
+    <span class="variable">Name</span> = <span class="string">"Color de Ejemplo"</span>,
+    <span class="variable">Color</span> = <span class="function">Color3.fromRGB</span>(<span class="number">255</span>, <span class="number">100</span>, <span class="number">100</span>),
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">color</span>)
+        <span class="function">print</span>(<span class="function">string.format</span>(<span class="string">"Color RGB: %d, %d, %d"</span>, 
+            <span class="variable">color</span>.<span class="variable">R</span>*<span class="number">255</span>, <span class="variable">color</span>.<span class="variable">G</span>*<span class="number">255</span>, <span class="variable">color</span>.<span class="variable">B</span>*<span class="number">255</span>))
+    <span class="keyword">end</span>
+})
+
+<span class="variable">SettingsTab</span>:<span class="function">CreateKeybind</span>({
+    <span class="variable">Name</span> = <span class="string">"Hotkey de Ejemplo"</span>,
+    <span class="variable">CurrentKeybind</span> = <span class="string">"G"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">key</span>)
+        <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+            <span class="variable">Title</span> = <span class="string">"Hotkey Activado"</span>,
+            <span class="variable">Content</span> = <span class="string">"Presionaste: "</span> .. <span class="variable">key</span>.<span class="variable">Name</span>,
+            <span class="variable">Duration</span> = <span class="number">2</span>
+        })
+    <span class="keyword">end</span>
+})
+
+<span class="variable">SettingsTab</span>:<span class="function">CreateSection</span>(<span class="string">"Créditos"</span>)
+
+<span class="variable">SettingsTab</span>:<span class="function">CreateParagraph</span>({
+    <span class="variable">Title</span> = <span class="string">"Desarrollado por"</span>,
+    <span class="variable">Content</span> = <span class="string">"joao_mods - JmodsLib v1.0\nGracias por usar nuestro script!"</span>
+})
+
+<span class="comment">--- 📱 CONFIGURACIONES FINALES</span>
+<span class="comment">--- Cambiar la tecla de minimizado (opcional)</span>
+<span class="variable">Window</span>:<span class="function">SetRestoreKey</span>(<span class="function">Enum.KeyCode.Insert</span>)
+
+<span class="comment">--- Notificación final</span>
+<span class="function">wait</span>(<span class="number">2</span>)
+<span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+    <span class="variable">Title</span> = <span class="string">"¡Script Listo!"</span>,
+    <span class="variable">Content</span> = <span class="string">"Todas las funciones cargadas. Presiona INSERT para minimizar."</span>,
+    <span class="variable">Duration</span> = <span class="number">5</span>
+})</code>
+            </div>
+
+            <div class="alert success">
+                <h4>✅ Características del Ejemplo</h4>
+                <ul>
+                    <li><strong>4 tabs diferentes</strong> con funciones organizadas</li>
+                    <li><strong>Modificadores de jugador</strong> (velocidad, salto, fly)</li>
+                    <li><strong>Scripts externos</strong> populares integrados</li>
+                    <li><strong>Sistema de notificaciones</strong> con links</li>
+                    <li><strong>Control de temas</strong> programático</li>
+                    <li><strong>Keybinds personalizados</strong></li>
+                    <li><strong>Todos los elementos</strong> de UI demostrados</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Scripts Específicos -->
+        <section class="section">
+            <h2>🎮 Scripts para Juegos Específicos</h2>
+            <p>Ejemplos de cómo adaptar JmodsLib para juegos específicos de Roblox:</p>
+
+            <h3>Arsenal Script</h3>
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Script específico para Arsenal</span>
+<span class="keyword">local</span> <span class="variable">ArsenalTab</span> = <span class="variable">Window</span>:<span class="function">CreateTab</span>(<span class="string">"Arsenal"</span>)
+
+<span class="variable">ArsenalTab</span>:<span class="function">CreateToggle</span>({
+    <span class="variable">Name</span> = <span class="string">"Aimbot"</span>,
+    <span class="variable">CurrentValue</span> = <span class="keyword">false</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">state</span>)
+        <span class="function">print</span>(<span class="string">"Aimbot:"</span>, <span class="variable">state</span>)
+        <span class="comment">--- Lógica del aimbot aquí</span>
+    <span class="keyword">end</span>
+})
+
+<span class="variable">ArsenalTab</span>:<span class="function">CreateSlider</span>({
+    <span class="variable">Name</span> = <span class="string">"FOV del Aimbot"</span>,
+    <span class="variable">Range</span> = {<span class="number">50</span>, <span class="number">360</span>},
+    <span class="variable">CurrentValue</span> = <span class="number">120</span>,
+    <span class="variable">Suffix</span> = <span class="string">"°"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">value</span>)
+        <span class="function">print</span>(<span class="string">"FOV cambiado a:"</span>, <span class="variable">value</span>)
+    <span class="keyword">end</span>
+})</code>
+            </div>
+
+            <h3>Blox Fruits Script</h3>
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Script específico para Blox Fruits</span>
+<span class="keyword">local</span> <span class="variable">BloxTab</span> = <span class="variable">Window</span>:<span class="function">CreateTab</span>(<span class="string">"Blox Fruits"</span>)
+
+<span class="variable">BloxTab</span>:<span class="function">CreateToggle</span>({
+    <span class="variable">Name</span> = <span class="string">"Auto Farm"</span>,
+    <span class="variable">CurrentValue</span> = <span class="keyword">false</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">state</span>)
+        <span class="keyword">if</span> <span class="variable">state</span> <span class="keyword">then</span>
+            <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+                <span class="variable">Title</span> = <span class="string">"Auto Farm"</span>,
+                <span class="variable">Content</span> = <span class="string">"Auto Farm activado para Blox Fruits"</span>,
+                <span class="variable">Duration</span> = <span class="number">3</span>
+            })
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})
+
+<span class="variable">BloxTab</span>:<span class="function">CreateDropdown</span>({
+    <span class="variable">Name</span> = <span class="string">"Seleccionar Fruta"</span>,
+    <span class="variable">Options</span> = {<span class="string">"Rubber"</span>, <span class="string">"Fire"</span>, <span class="string">"Ice"</span>, <span class="string">"Dark"</span>, <span class="string">"Light"</span>},
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">fruit</span>)
+        <span class="function">print</span>(<span class="string">"Fruta seleccionada:"</span>, <span class="variable">fruit</span>)
+    <span class="keyword">end</span>
+})</code>
+            </div>
+        </section>
+
+        <!-- Consejos finales -->
+        <section class="section" id="consejos">
+            <h2>💡 Consejos y Mejores Prácticas</h2>
+            
+            <div class="alert info">
+                <h4>🎯 Mejores Prácticas de Desarrollo</h4>
+                <ul>
+                    <li><strong>Nombres únicos:</strong> Usa nombres diferentes para cada elemento para evitar conflictos</li>
+                    <li><strong>Organización:</strong> Usa secciones para separar grupos de elementos relacionados</li>
+                    <li><strong>Comentarios:</strong> Comenta tu código para recordar qué hace cada elemento</li>
+                    <li><strong>Manejo de errores:</strong> Usa pcall() para evitar crashes en funciones críticas</li>
+                    <li><strong>Feedback al usuario:</strong> Usa notificaciones para informar sobre acciones</li>
+                </ul>
+            </div>
+
+            <div class="alert success">
+                <h4>⚡ Características Automáticas</h4>
+                <ul>
+                    <li><strong>Auto-guardado de temas:</strong> Los usuarios pueden cambiar temas y se guardan automáticamente</li>
+                    <li><strong>Responsive design:</strong> La interfaz se adapta a dispositivos móviles y PC</li>
+                    <li><strong>Arrastrable y redimensionable:</strong> Los usuarios pueden personalizar el tamaño y posición</li>
+                    <li><strong>Minimizable:</strong> Bind personalizable para mostrar/ocultar la GUI</li>
+                    <li><strong>Links inteligentes:</strong> Las notificaciones detectan y procesan URLs automáticamente</li>
+                    <li><strong>Scroll optimizado:</strong> Solo vertical en móvil para mejor experiencia</li>
+                </ul>
+            </div>
+
+            <div class="alert warning">
+                <h4>⚠️ Cosas Importantes a Recordar</h4>
+                <ul>
+                    <li>Si <code>Intro = false</code>, puedes eliminar: LoadingTitle, LoadingSubtitle, IntroIcon, AnimationIntro</li>
+                    <li>Los temas se pueden escribir en español e inglés indistintamente</li>
+                    <li>Siempre haz referencia al tab correcto al agregar elementos</li>
+                    <li>Los Callbacks se ejecutan cuando el usuario interactúa con el elemento</li>
+                    <li>Usa variables globales para controlar estados (como flyEnabled, farmEnabled, etc.)</li>
+                    <li>Las notificaciones solo muestran una a la vez para evitar spam</li>
+                </ul>
+            </div>
+
+            <h3>🔧 Solución de Problemas Comunes</h3>
+            <div class="examples-grid">
+                <div class="example-card">
+                    <h4>Error: "attempt to index nil"</h4>
+                    <p>Siempre verifica que los objetos existan antes de usarlos:</p>
+                    <div class="code-block" data-language="lua">
+                        <code><span class="keyword">local</span> <span class="variable">char</span> = <span class="function">game.Players.LocalPlayer.Character</span>
+<span class="keyword">if</span> <span class="variable">char</span> <span class="keyword">and</span> <span class="variable">char</span>:<span class="function">FindFirstChild</span>(<span class="string">"Humanoid"</span>) <span class="keyword">then</span>
+    <span class="variable">char</span>.<span class="variable">Humanoid</span>.<span class="variable">WalkSpeed</span> = <span class="number">50</span>
+<span class="keyword">end</span></code>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h4>Elementos no aparecen</h4>
+                    <p>Verifica que estés referenciando el tab correcto:</p>
+                    <div class="code-block" data-language="lua">
+                        <code><span class="comment">--- ❌ Incorrecto</span>
+<span class="variable">WrongTab</span>:<span class="function">CreateButton</span>({...})
+
+<span class="comment">--- ✅ Correcto</span>
+<span class="variable">MainTab</span>:<span class="function">CreateButton</span>({...})</code>
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <h4>Callback no funciona</h4>
+                    <p>Asegúrate de que la sintaxis del callback sea correcta:</p>
+                    <div class="code-block" data-language="lua">
+                        <code><span class="comment">--- ✅ Correcto</span>
+<span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">value</span>)
+    <span class="function">print</span>(<span class="variable">value</span>)
+<span class="keyword">end</span></code>
+                    </div>
+                </div>
+            </div>
+
+            <h3>📚 Recursos Adicionales</h3>
+            <div class="alert info">
+                <h4>Enlaces Útiles</h4>
+                <ul>
+                    <li><strong>Discord de Soporte:</strong> https://discord.gg/ZTVC94ZmVZ</li>
+                    <li><strong>Canal de YouTube:</strong> https://youtube.com/@joao_mods0</li>
+                    <li><strong>Documentación de Roblox:</strong> https://developer.roblox.com/</li>
+                    <li><strong>Actualizaciones:</strong> Síguenos en redes sociales para las últimas novedades</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Tutorial creado para <a href="#">JmodsLib</a> • Desarrollado por <a href="https://youtube.com/@joao_mods0">joao_mods</a></p>
+        <p>¿Necesitas ayuda? Únete a nuestro <a href="https://discord.gg/ZTVC94ZmVZ">Discord</a> • Versión 1.0 - 2024</p>
+    </footer>
+
+    <script>
+        //
