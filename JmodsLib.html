@@ -1385,3 +1385,159 @@
 
     <script>
         //
+// Función para copiar código al portapapeles
+function copyCode(button) {
+    // Encontrar el elemento code dentro del mismo code-block
+    const codeBlock = button.closest('.code-block');
+    const codeElement = codeBlock.querySelector('code');
+    
+    if (codeElement) {
+        // Obtener el texto del código
+        const codeText = codeElement.innerText || codeElement.textContent;
+        
+        // Copiar al portapapeles usando la API moderna
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(codeText).then(() => {
+                // Cambiar temporalmente el texto del botón
+                const originalText = button.textContent;
+                button.textContent = '¡Copiado!';
+                button.style.background = 'rgba(34, 197, 94, 0.3)';
+                button.style.borderColor = '#22c55e';
+                
+                // Restaurar después de 2 segundos
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = 'rgba(59, 130, 246, 0.2)';
+                    button.style.borderColor = 'var(--color-accent)';
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar:', err);
+                fallbackCopyTextToClipboard(codeText, button);
+            });
+        } else {
+            // Fallback para navegadores que no soportan clipboard API
+            fallbackCopyTextToClipboard(codeText, button);
+        }
+    }
+}
+
+// Función fallback para copiar texto
+function fallbackCopyTextToClipboard(text, button) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    
+    // Hacer que el textarea sea invisible
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    textArea.style.opacity = "0";
+    
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            // Cambiar temporalmente el texto del botón
+            const originalText = button.textContent;
+            button.textContent = '¡Copiado!';
+            button.style.background = 'rgba(34, 197, 94, 0.3)';
+            button.style.borderColor = '#22c55e';
+            
+            // Restaurar después de 2 segundos
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = 'rgba(59, 130, 246, 0.2)';
+                button.style.borderColor = 'var(--color-accent)';
+            }, 2000);
+        } else {
+            console.error('Fallback: No se pudo copiar');
+            button.textContent = 'Error';
+            setTimeout(() => {
+                button.textContent = 'Copiar';
+            }, 2000);
+        }
+    } catch (err) {
+        console.error('Fallback: Error al copiar', err);
+        button.textContent = 'Error';
+        setTimeout(() => {
+            button.textContent = 'Copiar';
+        }, 2000);
+    }
+    
+    document.body.removeChild(textArea);
+}
+
+// Sistema de partículas (código que faltaba también)
+class ParticleSystem {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.init();
+        this.animate();
+    }
+
+    init() {
+        this.resizeCanvas();
+        window.addEventListener('resize', () => this.resizeCanvas());
+        
+        // Crear partículas iniciales
+        for (let i = 0; i < 50; i++) {
+            this.particles.push(this.createParticle());
+        }
+    }
+
+    resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+
+    createParticle() {
+        return {
+            x: Math.random() * this.canvas.width,
+            y: Math.random() * this.canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            size: Math.random() * 2 + 1,
+            opacity: Math.random() * 0.5 + 0.1
+        };
+    }
+
+    animate() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        this.particles.forEach(particle => {
+            // Actualizar posición
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            
+            // Rebotar en los bordes
+            if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
+            if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
+            
+            // Dibujar partícula
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(59, 130, 246, ${particle.opacity})`;
+            this.ctx.fill();
+        });
+        
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// Inicializar el sistema cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('particles-canvas');
+    if (canvas) {
+        new ParticleSystem(canvas);
+    }
+});
+
+
+        </script>
+
+    </body>
+</html>
