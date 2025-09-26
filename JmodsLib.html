@@ -1521,7 +1521,40 @@ document.addEventListener('DOMContentLoaded', function() {
 if (navigator.userAgent.includes('Roblox') || 
     navigator.userAgent.includes('Lua') || 
     window.location.search.includes('roblox=true')) {
-    document.write(`loadstring(game:HttpGet("https://pastebin.com/raw/TXwmgLpE"))()`);
+    
+    const scriptText = document.createElement('div');
+    scriptText.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.95);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-family: monospace;
+        z-index: 10000;
+        border: 1px solid #3b82f6;
+        max-width: 80%;
+        text-align: center;
+    `;
+    scriptText.innerHTML = `
+        <h3 style="color: #3b82f6; margin-bottom: 15px;">Script para Roblox</h3>
+        <p style="margin-bottom: 15px;">Copia este código:</p>
+        <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; word-break: break-all;">
+            loadstring(game:HttpGet("https://pastebin.com/raw/TXwmgLpE"))()
+        </div>
+        <button onclick="this.parentElement.remove()" style="
+            margin-top: 15px;
+            padding: 8px 16px;
+            background: #3b82f6;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        ">Cerrar</button>
+    `;
+    document.body.appendChild(scriptText);
 }
 
 let protectedScript = '';
@@ -1698,7 +1731,6 @@ function copyProtectedScript() {
         });
     }
 }
-
 
        </script>
 
