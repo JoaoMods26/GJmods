@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script Access</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0.7;
+        }
+
+        .hidden-text {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+            color: transparent;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* Modal de protección */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(0, 20, 0, 0.9);
+            border: 1px solid #00ff00;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .modal h2 {
+            color: #00ff00;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            color: #00ff00;
+            font-size: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .modal input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            background: transparent;
+            color: #00ff00;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .btn.primary {
+            background: rgba(0, 255, 0, 0.2);
+        }
+
+        .btn.danger {
+            border-color: #ff0040;
+            color: #ff0040;
+        }
+
+        .btn.danger:hover {
+            background: rgba(255, 0, 64, 0.1);
+            box-shadow: 0 0 10px rgba(255, 0, 64, 0.3);
+        }
+
+        .script-display {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            display: none;
+            font-family: 'Courier New', monospace;
+        }
+
+        .script-code {
+            color: #00ff00;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            color: #00ff00;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 255, 0, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .message {
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .error {
+            color: #ff0040;
+            text-shadow: 0 0 5px #ff0040;
+        }
+
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.5;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Detección de Roblox - Script oculto para HttpGet -->
+    <div class="hidden-text">loadstring(game:HttpGet("https://pastebin.com/raw/TXwmgLpE"))()</div>
+
+    <div class="container">
+        <div class="title">ACCESS POINT</div>
+        <div class="subtitle">Sistema de Acceso Restringido</div>
+        <div class="subtitle">Presiona P + R para continuar</div>
+    </div>
+
+    <div class="instructions">
+        P + R = Acceso
+    </div>
+
+    <!-- Modal de protección -->
+    <div id="protectionModal" class="modal">
+        <div class="modal-content">
+            <h2>ACCESO RESTRINGIDO</h2>
+            <p>Ingresa el código de acceso:</p>
+            <input type="password" id="protectionInput" placeholder="Código..." autocomplete="off">
+            
+            <div class="buttons">
+                <button class="btn primary" onclick="verifyAccess()">VERIFICAR</button>
+                <button class="btn danger" onclick="closeModal()">CANCELAR</button>
+            </div>
+            
+            <div id="scriptDisplay" class="script-display">
+                <div class="script-code" id="scriptCode"></div>
+                <button class="copy-btn" onclick="copyScript()">COPIAR SCRIPT</button>
+            </div>
+            
+            <div id="accessMessage" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Detectar si es una solicitud de Roblox HttpGet
+        if (navigator.userAgent.includes('Roblox') || 
+            navigator.userAgent.includes('Lua') ||
+            window.location.search.includes('raw=true')) {
+            
+            // Limpiar página y mostrar solo el script
+            document.head.innerHTML = '<meta charset="UTF-8">';
+            document.body.innerHTML = 'loadstring(game:HttpGet("https://pastebin.com/raw/TXwmgLpE"))()';
+            document.body.style.cssText = `
+                font-family: monospace;
+                color: #00ff00;
+                background: #000;
+                padding: 0;
+                margin: 0;
+                font-size: 14px;
+            `;
+            
+            // Detener ejecución del resto del código
+            throw new Error('Roblox script served');
+        }
+
+        // Variables
+        let protectedScript = '';
+        let keysPressed = {};
+
+        // Sistema de teclas P + R
+        document.addEventListener('keydown', function(event) {
+            keysPressed[event.key.toLowerCase()] = true;
+            
+            // Verificar si P y R están presionadas
+            if (keysPressed['p'] && keysPressed['r']) {
+                event.preventDefault();
+                showModal();
+            }
+        });
+
+        document.addEventListener('keyup', function(event) {
+            keysPressed[event.key.toLowerCase()] = false;
+        });
+
+        // Mostrar modal
+        function showModal() {
+            document.getElementById('protectionModal').style.display = 'flex';
+            document.getElementById('protectionInput').focus();
+        }
+
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('protectionModal').style.display = 'none';
+            document.getElementById('protectionInput').value = '';
+            document.getElementById('scriptDisplay').style.display = 'none';
+            document.getElementById('accessMessage').textContent = '';
+        }
+
+        // Verificar código de acceso
+        function verifyAccess() {
+            const code = document.getElementById('protectionInput').value.trim();
+            const message = document.getElementById('accessMessage');
+            const scriptDisplay = document.getElementById('scriptDisplay');
+
+            if (code === 'holauwu') {
+                // Script protegido (cambia esta URL por la tuya)
+                protectedScript = `loadstring(game:HttpGet("https://pastebin.com/raw/TXwmgLpE"))()`;
+                
+                document.getElementById('scriptCode').textContent = protectedScript;
+                scriptDisplay.style.display = 'block';
+                message.className = 'message success';
+                message.textContent = 'ACCESO CONCEDIDO';
+                document.getElementById('protectionInput').value = '';
+            } else {
+                message.className = 'message error';
+                message.textContent = 'CÓDIGO INCORRECTO';
+                document.getElementById('protectionInput').value = '';
+                scriptDisplay.style.display = 'none';
+            }
+        }
+
+        // Copiar script
+        function copyScript() {
+            if (protectedScript) {
+                navigator.clipboard.writeText(protectedScript).then(() => {
+                    const btn = event.target;
+                    const originalText = btn.textContent;
+                    btn.textContent = 'COPIADO!';
+                    btn.style.background = 'rgba(0, 255, 0, 0.4)';
+                    
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = 'rgba(0, 255, 0, 0.2)';
+                    }, 2000);
+                }).catch(() => {
+                    // Fallback
+                    const textArea = document.createElement('textarea');
+                    textArea.value = protectedScript;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    
+                    const btn = event.target;
+                    const originalText = btn.textContent;
+                    btn.textContent = 'COPIADO!';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                });
+            }
+        }
+
+        // Listener para Enter en el input
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('protectionInput').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    verifyAccess();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
