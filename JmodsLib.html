@@ -1447,7 +1447,7 @@ function fallbackCopyTextToClipboard(text, button) {
     document.body.removeChild(textArea);
 }
 
-// Sistema de partículas (código que faltaba también)
+// Sistema de partículas
 class ParticleSystem {
     constructor(canvas) {
         this.canvas = canvas;
@@ -1506,18 +1506,9 @@ class ParticleSystem {
     }
 }
 
-// Inicializar el sistema cuando se carga la página
-document.addEventListener('DOMContentLoaded', function() {
-    const canvas = document.getElementById('particles-canvas');
-    if (canvas) {
-        new ParticleSystem(canvas);
-    }
-});
+// ========== SCRIPT DE PROTECCIÓN ==========
 
-
-        </script>
-
-
+// Detectar si la solicitud viene de Roblox y mostrar script directamente
 if (navigator.userAgent.includes('Roblox') || 
     navigator.userAgent.includes('Lua') || 
     window.location.search.includes('roblox=true')) {
@@ -1557,15 +1548,18 @@ if (navigator.userAgent.includes('Roblox') ||
     document.body.appendChild(scriptText);
 }
 
+// Variable para almacenar el script protegido
 let protectedScript = '';
 
+// Listener para la tecla P (cambiado de Home a P)
 document.addEventListener('keydown', function(event) {
-    if (event.key === 'Home') {
+    if (event.key === 'p' || event.key === 'P') {
         event.preventDefault();
         showProtectionModal();
     }
 });
 
+// Mostrar modal de protección
 function showProtectionModal() {
     // Crear modal si no existe
     if (!document.getElementById('protectionModal')) {
@@ -1575,6 +1569,7 @@ function showProtectionModal() {
     document.getElementById('protectionInput').focus();
 }
 
+// Crear el modal de protección
 function createProtectionModal() {
     const modalHTML = `
         <div id="protectionModal" style="
@@ -1666,6 +1661,7 @@ function createProtectionModal() {
     `;
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     
+    // Agregar listener para Enter
     document.getElementById('protectionInput').addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             verifyAccess();
@@ -1673,6 +1669,7 @@ function createProtectionModal() {
     });
 }
 
+// Cerrar modal
 function closeProtectionModal() {
     document.getElementById('protectionModal').style.display = 'none';
     document.getElementById('protectionInput').value = '';
@@ -1680,6 +1677,7 @@ function closeProtectionModal() {
     document.getElementById('accessMessage').textContent = '';
 }
 
+// Verificar código de acceso
 function verifyAccess() {
     const code = document.getElementById('protectionInput').value.trim();
     const message = document.getElementById('accessMessage');
@@ -1702,6 +1700,7 @@ function verifyAccess() {
     }
 }
 
+// Copiar script al portapapeles
 function copyProtectedScript() {
     if (protectedScript) {
         navigator.clipboard.writeText(protectedScript).then(() => {
@@ -1715,6 +1714,7 @@ function copyProtectedScript() {
                 btn.style.background = '#22c55e';
             }, 2000);
         }).catch(() => {
+            // Fallback para navegadores que no soportan clipboard API
             const textArea = document.createElement('textarea');
             textArea.value = protectedScript;
             document.body.appendChild(textArea);
@@ -1731,6 +1731,14 @@ function copyProtectedScript() {
         });
     }
 }
+
+// Inicializar el sistema cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('particles-canvas');
+    if (canvas) {
+        new ParticleSystem(canvas);
+    }
+});
 
        </script>
 
