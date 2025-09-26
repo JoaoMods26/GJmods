@@ -233,25 +233,37 @@
     </div>
 
     <script>
-        // Detectar si es una solicitud de Roblox HttpGet
-        if (navigator.userAgent.includes('Roblox') || 
-            navigator.userAgent.includes('Lua') ||
-            window.location.search.includes('raw=true')) {
+        // DETECCIÓN MEJORADA DE ROBLOX
+        // Verificar múltiples indicadores de solicitud de Roblox
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isRobloxRequest = 
+            userAgent.includes('roblox') || 
+            userAgent.includes('lua') ||
+            userAgent.includes('httprequest') ||
+            userAgent.includes('game') ||
+            window.location.search.includes('raw=true') ||
+            window.location.search.includes('script=true') ||
+            // Verificar si no hay referrer (común en HttpGet)
+            document.referrer === '' ||
+            // Verificar si la página se carga sin JavaScript típico del navegador
+            !window.chrome && !window.opera && !window.safari;
+        
+        if (isRobloxRequest) {
+            // MODO ULTRA SIMPLE - Solo texto
+            document.open();
+            document.write('loadstring(game:HttpGet("https://pastebin.com/raw/TXwmgLpE"))()');
+            document.close();
             
-            // Limpiar página y mostrar solo el script
-            document.head.innerHTML = '<meta charset="UTF-8">';
-            document.body.innerHTML = 'loadstring(game:HttpGet("https://pastebin.com/raw/TXwmgLpE"))()';
-            document.body.style.cssText = `
-                font-family: monospace;
-                color: #00ff00;
-                background: #000;
-                padding: 0;
-                margin: 0;
-                font-size: 14px;
-            `;
+            // Alternativa si lo anterior no funciona
+            setTimeout(() => {
+                document.body.innerHTML = '';
+                document.head.innerHTML = '';
+                const textNode = document.createTextNode('loadstring(game:HttpGet("https://pastebin.com/raw/TXwmgLpE"))()');
+                document.body.appendChild(textNode);
+            }, 10);
             
-            // Detener ejecución del resto del código
-            throw new Error('Roblox script served');
+            // Detener completamente
+            return;
         }
 
         // Variables
