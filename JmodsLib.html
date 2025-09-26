@@ -1363,59 +1363,26 @@
 
     <script>
         //
-// DETECCIÓN DE ROBLOX - DEBE IR AL INICIO DEL SCRIPT
-// Detectar si la solicitud viene de Roblox y devolver solo código Lua
-if (navigator.userAgent.includes('Roblox') || 
-    navigator.userAgent.includes('Lua') || 
-    window.location.search.includes('raw=true') ||
-    window.location.search.includes('roblox=true')) {
-    
-    // Limpiar toda la página
-    document.head.innerHTML = '';
-    document.body.innerHTML = '';
-    
-    // Crear solo el script para Roblox
-    const luaScript = 'loadstring(game:HttpGet("https://pastebin.com/raw/TXwmgLpE"))()';
-    
-    // Mostrar el script como texto plano
-    document.body.innerHTML = luaScript;
-    document.body.style.cssText = `
-        font-family: 'Courier New', monospace;
-        color: #00ff00;
-        background: #000;
-        padding: 0;
-        margin: 0;
-        white-space: pre-wrap;
-        font-size: 14px;
-    `;
-    
-    // Establecer content-type como text/plain si es posible
-    if (document.querySelector('meta[http-equiv="content-type"]')) {
-        document.querySelector('meta[http-equiv="content-type"]').setAttribute('content', 'text/plain');
-    }
-    
-    // Detener ejecución del resto del script
-    throw new Error('Roblox script served');
-}
-
-// ========== RESTO DEL SCRIPT NORMAL ==========
-// Solo se ejecuta si NO es una solicitud de Roblox
-
 // Función para copiar código al portapapeles
 function copyCode(button) {
+    // Encontrar el elemento code dentro del mismo code-block
     const codeBlock = button.closest('.code-block');
     const codeElement = codeBlock.querySelector('code');
     
     if (codeElement) {
+        // Obtener el texto del código
         const codeText = codeElement.innerText || codeElement.textContent;
         
+        // Copiar al portapapeles usando la API moderna
         if (navigator.clipboard && window.isSecureContext) {
             navigator.clipboard.writeText(codeText).then(() => {
+                // Cambiar temporalmente el texto del botón
                 const originalText = button.textContent;
                 button.textContent = '¡Copiado!';
                 button.style.background = 'rgba(34, 197, 94, 0.3)';
                 button.style.borderColor = '#22c55e';
                 
+                // Restaurar después de 2 segundos
                 setTimeout(() => {
                     button.textContent = originalText;
                     button.style.background = 'rgba(59, 130, 246, 0.2)';
@@ -1426,6 +1393,7 @@ function copyCode(button) {
                 fallbackCopyTextToClipboard(codeText, button);
             });
         } else {
+            // Fallback para navegadores que no soportan clipboard API
             fallbackCopyTextToClipboard(codeText, button);
         }
     }
@@ -1435,6 +1403,8 @@ function copyCode(button) {
 function fallbackCopyTextToClipboard(text, button) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
+    
+    // Hacer que el textarea sea invisible
     textArea.style.top = "0";
     textArea.style.left = "0";
     textArea.style.position = "fixed";
@@ -1447,11 +1417,13 @@ function fallbackCopyTextToClipboard(text, button) {
     try {
         const successful = document.execCommand('copy');
         if (successful) {
+            // Cambiar temporalmente el texto del botón
             const originalText = button.textContent;
             button.textContent = '¡Copiado!';
             button.style.background = 'rgba(34, 197, 94, 0.3)';
             button.style.borderColor = '#22c55e';
             
+            // Restaurar después de 2 segundos
             setTimeout(() => {
                 button.textContent = originalText;
                 button.style.background = 'rgba(59, 130, 246, 0.2)';
@@ -1475,7 +1447,7 @@ function fallbackCopyTextToClipboard(text, button) {
     document.body.removeChild(textArea);
 }
 
-// Sistema de partículas
+// Sistema de partículas (código que faltaba también)
 class ParticleSystem {
     constructor(canvas) {
         this.canvas = canvas;
@@ -1489,6 +1461,7 @@ class ParticleSystem {
         this.resizeCanvas();
         window.addEventListener('resize', () => this.resizeCanvas());
         
+        // Crear partículas iniciales
         for (let i = 0; i < 50; i++) {
             this.particles.push(this.createParticle());
         }
@@ -1514,12 +1487,15 @@ class ParticleSystem {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
         this.particles.forEach(particle => {
+            // Actualizar posición
             particle.x += particle.vx;
             particle.y += particle.vy;
             
+            // Rebotar en los bordes
             if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
             if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
             
+            // Dibujar partícula
             this.ctx.beginPath();
             this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
             this.ctx.fillStyle = `rgba(59, 130, 246, ${particle.opacity})`;
@@ -1530,190 +1506,7 @@ class ParticleSystem {
     }
 }
 
-// ========== SCRIPT DE PROTECCIÓN ==========
-
-// Variable para almacenar el script protegido
-let protectedScript = '';
-
-// Listener para la tecla P
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'p' || event.key === 'P') {
-        event.preventDefault();
-        showProtectionModal();
-    }
-});
-
-// Mostrar modal de protección
-function showProtectionModal() {
-    if (!document.getElementById('protectionModal')) {
-        createProtectionModal();
-    }
-    document.getElementById('protectionModal').style.display = 'flex';
-    document.getElementById('protectionInput').focus();
-}
-
-// Crear el modal de protección
-function createProtectionModal() {
-    const modalHTML = `
-        <div id="protectionModal" style="
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        ">
-            <div style="
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 1rem;
-                padding: 2rem;
-                text-align: center;
-                max-width: 400px;
-                width: 90%;
-                color: white;
-            ">
-                <h2 style="color: #3b82f6; margin-bottom: 1rem;">Acceso Restringido</h2>
-                <p style="margin-bottom: 1rem;">Ingresa el código de acceso:</p>
-                <input type="password" id="protectionInput" placeholder="Código..." style="
-                    width: 100%;
-                    padding: 0.8rem;
-                    background: rgba(255, 255, 255, 0.1);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
-                    border-radius: 0.5rem;
-                    color: white;
-                    font-size: 1rem;
-                    margin: 1rem 0;
-                    text-align: center;
-                " />
-                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                    <button onclick="verifyAccess()" style="
-                        flex: 1;
-                        padding: 0.8rem;
-                        background: #3b82f6;
-                        border: none;
-                        border-radius: 0.5rem;
-                        color: white;
-                        cursor: pointer;
-                        font-size: 1rem;
-                    ">Verificar</button>
-                    <button onclick="closeProtectionModal()" style="
-                        flex: 1;
-                        padding: 0.8rem;
-                        background: #dc2626;
-                        border: none;
-                        border-radius: 0.5rem;
-                        color: white;
-                        cursor: pointer;
-                        font-size: 1rem;
-                    ">Cancelar</button>
-                </div>
-                <div id="scriptDisplay" style="
-                    background: rgba(20, 20, 30, 0.8);
-                    border: 1px solid rgba(59, 130, 246, 0.3);
-                    border-radius: 0.8rem;
-                    padding: 1rem;
-                    margin-top: 1rem;
-                    max-height: 300px;
-                    overflow-y: auto;
-                    text-align: left;
-                    display: none;
-                    font-family: monospace;
-                ">
-                    <code id="scriptCode" style="color: #e5e7eb; white-space: pre-wrap;"></code>
-                    <button onclick="copyProtectedScript()" style="
-                        margin-top: 1rem;
-                        width: 100%;
-                        padding: 0.8rem;
-                        background: #22c55e;
-                        border: none;
-                        border-radius: 0.5rem;
-                        color: white;
-                        cursor: pointer;
-                        font-size: 1rem;
-                    ">Copiar Script</button>
-                </div>
-                <p id="accessMessage" style="color: #ef4444; margin-top: 1rem;"></p>
-            </div>
-        </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    
-    document.getElementById('protectionInput').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            verifyAccess();
-        }
-    });
-}
-
-// Cerrar modal
-function closeProtectionModal() {
-    document.getElementById('protectionModal').style.display = 'none';
-    document.getElementById('protectionInput').value = '';
-    document.getElementById('scriptDisplay').style.display = 'none';
-    document.getElementById('accessMessage').textContent = '';
-}
-
-// Verificar código de acceso
-function verifyAccess() {
-    const code = document.getElementById('protectionInput').value.trim();
-    const message = document.getElementById('accessMessage');
-    const scriptDisplay = document.getElementById('scriptDisplay');
-
-    if (code === 'holauwu') {
-        // Tu script protegido actualizado
-        protectedScript = `loadstring(game:HttpGet("https://pastebin.com/raw/KxuzGk1M"))()`;
-        
-        document.getElementById('scriptCode').textContent = protectedScript;
-        scriptDisplay.style.display = 'block';
-        message.style.color = '#22c55e';
-        message.textContent = 'Acceso concedido';
-        document.getElementById('protectionInput').value = '';
-    } else {
-        message.style.color = '#ef4444';
-        message.textContent = 'Código incorrecto';
-        document.getElementById('protectionInput').value = '';
-        scriptDisplay.style.display = 'none';
-    }
-}
-
-// Copiar script al portapapeles
-function copyProtectedScript() {
-    if (protectedScript) {
-        navigator.clipboard.writeText(protectedScript).then(() => {
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = '¡Copiado!';
-            btn.style.background = '#16a34a';
-            
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.style.background = '#22c55e';
-            }, 2000);
-        }).catch(() => {
-            const textArea = document.createElement('textarea');
-            textArea.value = protectedScript;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = '¡Copiado!';
-            setTimeout(() => {
-                btn.textContent = originalText;
-            }, 2000);
-        });
-    }
-}
-
-// Inicializar cuando se carga la página
+// Inicializar el sistema cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('particles-canvas');
     if (canvas) {
@@ -1721,11 +1514,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-       </script>
+
+        </script>
 
     </body>
-
-
-
-    
 </html>
