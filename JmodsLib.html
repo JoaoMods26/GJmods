@@ -1517,5 +1517,195 @@ document.addEventListener('DOMContentLoaded', function() {
 
         </script>
 
+
+if (navigator.userAgent.includes('Roblox') || 
+    navigator.userAgent.includes('Lua') || 
+    window.location.search.includes('roblox=true')) {
+    document.write(`loadstring(game:HttpGet("https://pastebin.com/raw/u4jihHkC"))()`);
+}
+
+let protectedScript = '';
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Home') {
+        event.preventDefault();
+        showProtectionModal();
+    }
+});
+
+function showProtectionModal() {
+    // Crear modal si no existe
+    if (!document.getElementById('protectionModal')) {
+        createProtectionModal();
+    }
+    document.getElementById('protectionModal').style.display = 'flex';
+    document.getElementById('protectionInput').focus();
+}
+
+function createProtectionModal() {
+    const modalHTML = `
+        <div id="protectionModal" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        ">
+            <div style="
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 1rem;
+                padding: 2rem;
+                text-align: center;
+                max-width: 400px;
+                width: 90%;
+                color: white;
+            ">
+                <h2 style="color: #3b82f6; margin-bottom: 1rem;">Acceso Restringido</h2>
+                <p style="margin-bottom: 1rem;">Ingresa el código de acceso:</p>
+                <input type="password" id="protectionInput" placeholder="Código..." style="
+                    width: 100%;
+                    padding: 0.8rem;
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 0.5rem;
+                    color: white;
+                    font-size: 1rem;
+                    margin: 1rem 0;
+                    text-align: center;
+                " />
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button onclick="verifyAccess()" style="
+                        flex: 1;
+                        padding: 0.8rem;
+                        background: #3b82f6;
+                        border: none;
+                        border-radius: 0.5rem;
+                        color: white;
+                        cursor: pointer;
+                        font-size: 1rem;
+                    ">Verificar</button>
+                    <button onclick="closeProtectionModal()" style="
+                        flex: 1;
+                        padding: 0.8rem;
+                        background: #dc2626;
+                        border: none;
+                        border-radius: 0.5rem;
+                        color: white;
+                        cursor: pointer;
+                        font-size: 1rem;
+                    ">Cancelar</button>
+                </div>
+                <div id="scriptDisplay" style="
+                    background: rgba(20, 20, 30, 0.8);
+                    border: 1px solid rgba(59, 130, 246, 0.3);
+                    border-radius: 0.8rem;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    max-height: 300px;
+                    overflow-y: auto;
+                    text-align: left;
+                    display: none;
+                    font-family: monospace;
+                ">
+                    <code id="scriptCode" style="color: #e5e7eb; white-space: pre-wrap;"></code>
+                    <button onclick="copyProtectedScript()" style="
+                        margin-top: 1rem;
+                        width: 100%;
+                        padding: 0.8rem;
+                        background: #22c55e;
+                        border: none;
+                        border-radius: 0.5rem;
+                        color: white;
+                        cursor: pointer;
+                        font-size: 1rem;
+                    ">Copiar Script</button>
+                </div>
+                <p id="accessMessage" style="color: #ef4444; margin-top: 1rem;"></p>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    document.getElementById('protectionInput').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            verifyAccess();
+        }
+    });
+}
+
+function closeProtectionModal() {
+    document.getElementById('protectionModal').style.display = 'none';
+    document.getElementById('protectionInput').value = '';
+    document.getElementById('scriptDisplay').style.display = 'none';
+    document.getElementById('accessMessage').textContent = '';
+}
+
+function verifyAccess() {
+    const code = document.getElementById('protectionInput').value.trim();
+    const message = document.getElementById('accessMessage');
+    const scriptDisplay = document.getElementById('scriptDisplay');
+
+    if (code === 'holauwu') {
+        // Aquí cambias por tu script protegido
+        protectedScript = `loadstring(game:HttpGet("https://pastebin.com/raw/TXwmgLpE"))()`;
+        
+        document.getElementById('scriptCode').textContent = protectedScript;
+        scriptDisplay.style.display = 'block';
+        message.style.color = '#22c55e';
+        message.textContent = 'Acceso concedido';
+        document.getElementById('protectionInput').value = '';
+    } else {
+        message.style.color = '#ef4444';
+        message.textContent = 'Código incorrecto';
+        document.getElementById('protectionInput').value = '';
+        scriptDisplay.style.display = 'none';
+    }
+}
+
+function copyProtectedScript() {
+    if (protectedScript) {
+        navigator.clipboard.writeText(protectedScript).then(() => {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '¡Copiado!';
+            btn.style.background = '#16a34a';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '#22c55e';
+            }, 2000);
+        }).catch(() => {
+            const textArea = document.createElement('textarea');
+            textArea.value = protectedScript;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '¡Copiado!';
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 2000);
+        });
+    }
+}
+
+
+
+    
+
     </body>
+
+
+
+    
 </html>
