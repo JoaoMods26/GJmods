@@ -944,6 +944,375 @@
             </div>
         </section>
 
+
+
+
+
+
+<!-- Métodos Dinámicos del Dropdown -->
+<section class="section" id="dropdown-dinamico">
+    <h2>🔄 Métodos Dinámicos del Dropdown</h2>
+    <p>El Dropdown de JmodsLib incluye métodos avanzados para actualizar las opciones de forma dinámica durante la ejecución del script:</p>
+
+    <h3>📋 Crear un Dropdown Base</h3>
+    <p>Primero, crea el dropdown y guarda su referencia en una variable:</p>
+
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- Crear dropdown y guardar referencia</span>
+<span class="keyword">local</span> <span class="variable">MiDropdown</span> = <span class="variable">MainTab</span>:<span class="function">CreateDropdown</span>({
+    <span class="variable">Name</span> = <span class="string">"Seleccionar Jugador"</span>,
+    <span class="variable">Options</span> = {<span class="string">"Jugador1"</span>, <span class="string">"Jugador2"</span>, <span class="string">"Jugador3"</span>},
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">selected</span>)
+        <span class="function">print</span>(<span class="string">"Jugador seleccionado:"</span>, <span class="variable">selected</span>)
+    <span class="keyword">end</span>
+})</code>
+    </div>
+
+    <div class="alert info">
+        <h4>💡 Importante</h4>
+        <p>Debes guardar el dropdown en una variable (ej. <code>MiDropdown</code>) para poder usar sus métodos posteriormente.</p>
+    </div>
+
+    <h3 id="metodo-updateoptions">⚡ UpdateOptions() - Actualización Inmediata</h3>
+    <p>Este método actualiza las opciones del dropdown <strong>inmediatamente</strong>, incluso si el dropdown está abierto:</p>
+
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- Actualización inmediata de opciones</span>
+<span class="variable">MiDropdown</span>:<span class="function">UpdateOptions</span>({<span class="string">"NuevaOpcion1"</span>, <span class="string">"NuevaOpcion2"</span>, <span class="string">"NuevaOpcion3"</span>})
+
+<span class="comment">--- Ejemplo práctico: Actualizar lista de jugadores en tiempo real</span>
+<span class="keyword">local</span> <span class="function">function</span> <span class="variable">actualizarJugadores</span>()
+    <span class="keyword">local</span> <span class="variable">jugadores</span> = {}
+    <span class="keyword">for</span> <span class="variable">_</span>, <span class="variable">player</span> <span class="keyword">in</span> <span class="function">pairs</span>(<span class="function">game.Players</span>:<span class="function">GetPlayers</span>()) <span class="keyword">do</span>
+        <span class="function">table.insert</span>(<span class="variable">jugadores</span>, <span class="variable">player</span>.<span class="variable">Name</span>)
+    <span class="keyword">end</span>
+    <span class="variable">MiDropdown</span>:<span class="function">UpdateOptions</span>(<span class="variable">jugadores</span>)
+<span class="keyword">end</span>
+
+<span class="comment">--- Actualizar cada 5 segundos</span>
+<span class="function">spawn</span>(<span class="keyword">function</span>()
+    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+        <span class="function">wait</span>(<span class="number">5</span>)
+        <span class="function">actualizarJugadores</span>()
+    <span class="keyword">end</span>
+<span class="keyword">end</span>)</code>
+    </div>
+
+    <div class="alert success">
+        <h4>✅ Características de UpdateOptions()</h4>
+        <ul>
+            <li><strong>Actualización instantánea:</strong> Las opciones cambian inmediatamente</li>
+            <li><strong>Cierra el dropdown:</strong> Si está abierto, se cierra automáticamente</li>
+            <li><strong>Limpia opciones anteriores:</strong> Elimina todas las opciones previas</li>
+            <li><strong>Resetea selección:</strong> Si la opción actual ya no existe, selecciona la primera nueva</li>
+            <li><strong>Uso típico:</strong> Actualizaciones frecuentes o en tiempo real</li>
+        </ul>
+    </div>
+
+    <h3 id="metodo-updateonclose">🕐 UpdateOnClose() - Actualización Diferida</h3>
+    <p>Este método <strong>programa</strong> una actualización que solo se aplicará cuando el usuario cierre el dropdown:</p>
+
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- Actualización diferida (cuando se cierre el dropdown)</span>
+<span class="variable">MiDropdown</span>:<span class="function">UpdateOnClose</span>({<span class="string">"Opcion1"</span>, <span class="string">"Opcion2"</span>, <span class="string">"Opcion3"</span>})
+
+<span class="comment">--- Ejemplo práctico: Escaneo de NPCs sin interrumpir al usuario</span>
+<span class="keyword">local</span> <span class="variable">NPCDropdown</span> = <span class="variable">MainTab</span>:<span class="function">CreateDropdown</span>({
+    <span class="variable">Name</span> = <span class="string">"Seleccionar NPC"</span>,
+    <span class="variable">Options</span> = {<span class="string">"Escaneando..."</span>},
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">npc</span>)
+        <span class="function">print</span>(<span class="string">"NPC seleccionado:"</span>, <span class="variable">npc</span>)
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- Función que escanea NPCs constantemente</span>
+<span class="function">spawn</span>(<span class="keyword">function</span>()
+    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+        <span class="function">wait</span>(<span class="number">2</span>)
+        
+        <span class="comment">--- Buscar todos los NPCs en el Workspace</span>
+        <span class="keyword">local</span> <span class="variable">npcs</span> = {}
+        <span class="keyword">for</span> <span class="variable">_</span>, <span class="variable">npc</span> <span class="keyword">in</span> <span class="function">pairs</span>(<span class="function">workspace.NPCs</span>:<span class="function">GetChildren</span>()) <span class="keyword">do</span>
+            <span class="keyword">if</span> <span class="variable">npc</span>:<span class="function">FindFirstChild</span>(<span class="string">"Humanoid"</span>) <span class="keyword">then</span>
+                <span class="function">table.insert</span>(<span class="variable">npcs</span>, <span class="variable">npc</span>.<span class="variable">Name</span>)
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        
+        <span class="comment">--- Programar actualización (no interrumpe si está abierto)</span>
+        <span class="variable">NPCDropdown</span>:<span class="function">UpdateOnClose</span>(<span class="variable">npcs</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>)</code>
+    </div>
+
+    <div class="alert info">
+        <h4>✅ Características de UpdateOnClose()</h4>
+        <ul>
+            <li><strong>No interrumpe:</strong> Si el usuario tiene el dropdown abierto, no lo cierra</li>
+            <li><strong>Se aplica al cerrar:</strong> Los cambios se ven cuando el usuario cierra manualmente</li>
+            <li><strong>Múltiples llamadas:</strong> Solo se guarda la última actualización programada</li>
+            <li><strong>Mejor UX:</strong> No molesta al usuario mientras está seleccionando</li>
+            <li><strong>Uso típico:</strong> Actualizaciones en segundo plano o escaneos continuos</li>
+        </ul>
+    </div>
+
+    <h3>🆚 Comparación: UpdateOptions() vs UpdateOnClose()</h3>
+    
+    <table class="theme-table">
+        <thead>
+            <tr>
+                <th>Característica</th>
+                <th>UpdateOptions()</th>
+                <th>UpdateOnClose()</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Momento de aplicación</strong></td>
+                <td>Inmediato</td>
+                <td>Al cerrar dropdown</td>
+            </tr>
+            <tr>
+                <td><strong>Cierra el dropdown?</strong></td>
+                <td>Sí, siempre</td>
+                <td>No, respeta la interacción</td>
+            </tr>
+            <tr>
+                <td><strong>Interrumpe al usuario?</strong></td>
+                <td>Sí, si está seleccionando</td>
+                <td>No, espera a que termine</td>
+            </tr>
+            <tr>
+                <td><strong>Mejor para...</strong></td>
+                <td>Botones, eventos únicos</td>
+                <td>Loops, escaneos continuos</td>
+            </tr>
+            <tr>
+                <td><strong>Ejemplo de uso</strong></td>
+                <td>Cambiar mapa actual</td>
+                <td>Lista de jugadores en vivo</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 id="metodo-set">📝 Set() - Cambiar Selección</h3>
+    <p>Cambia la opción seleccionada actualmente (no modifica la lista de opciones):</p>
+
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- Cambiar la selección actual</span>
+<span class="variable">MiDropdown</span>:<span class="function">Set</span>(<span class="string">"Jugador2"</span>)
+
+<span class="comment">--- Ejemplo: Seleccionar automáticamente al jugador más cercano</span>
+<span class="keyword">local</span> <span class="function">function</span> <span class="variable">seleccionarMasCercano</span>()
+    <span class="keyword">local</span> <span class="variable">player</span> = <span class="function">game.Players.LocalPlayer</span>
+    <span class="keyword">local</span> <span class="variable">char</span> = <span class="variable">player</span>.<span class="variable">Character</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> <span class="variable">char</span> <span class="keyword">or</span> <span class="keyword">not</span> <span class="variable">char</span>:<span class="function">FindFirstChild</span>(<span class="string">"HumanoidRootPart"</span>) <span class="keyword">then</span> <span class="keyword">return</span> <span class="keyword">end</span>
+    
+    <span class="keyword">local</span> <span class="variable">pos</span> = <span class="variable">char</span>.<span class="variable">HumanoidRootPart</span>.<span class="variable">Position</span>
+    <span class="keyword">local</span> <span class="variable">closest</span> = <span class="keyword">nil</span>
+    <span class="keyword">local</span> <span class="variable">minDist</span> = <span class="function">math.huge</span>
+    
+    <span class="keyword">for</span> <span class="variable">_</span>, <span class="variable">p</span> <span class="keyword">in</span> <span class="function">pairs</span>(<span class="function">game.Players</span>:<span class="function">GetPlayers</span>()) <span class="keyword">do</span>
+        <span class="keyword">if</span> <span class="variable">p</span> ~= <span class="variable">player</span> <span class="keyword">and</span> <span class="variable">p</span>.<span class="variable">Character</span> <span class="keyword">and</span> <span class="variable">p</span>.<span class="variable">Character</span>:<span class="function">FindFirstChild</span>(<span class="string">"HumanoidRootPart"</span>) <span class="keyword">then</span>
+            <span class="keyword">local</span> <span class="variable">dist</span> = (<span class="variable">p</span>.<span class="variable">Character</span>.<span class="variable">HumanoidRootPart</span>.<span class="variable">Position</span> - <span class="variable">pos</span>).<span class="variable">Magnitude</span>
+            <span class="keyword">if</span> <span class="variable">dist</span> < <span class="variable">minDist</span> <span class="keyword">then</span>
+                <span class="variable">minDist</span> = <span class="variable">dist</span>
+                <span class="variable">closest</span> = <span class="variable">p</span>.<span class="variable">Name</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    
+    <span class="keyword">if</span> <span class="variable">closest</span> <span class="keyword">then</span>
+        <span class="variable">MiDropdown</span>:<span class="function">Set</span>(<span class="variable">closest</span>)
+        <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+            <span class="variable">Title</span> = <span class="string">"Jugador Más Cercano"</span>,
+            <span class="variable">Content</span> = <span class="string">"Seleccionado: "</span> .. <span class="variable">closest</span>,
+            <span class="variable">Duration</span> = <span class="number">3</span>
+        })
+    <span class="keyword">end</span>
+<span class="keyword">end</span></code>
+    </div>
+
+    <h3 id="metodo-get">📥 Get() - Obtener Selección Actual</h3>
+    <p>Obtiene el valor actualmente seleccionado en el dropdown:</p>
+
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- Obtener la opción seleccionada</span>
+<span class="keyword">local</span> <span class="variable">seleccion</span> = <span class="variable">MiDropdown</span>:<span class="function">Get</span>()
+<span class="function">print</span>(<span class="string">"Opción actual:"</span>, <span class="variable">seleccion</span>)
+
+<span class="comment">--- Ejemplo: Botón que usa la selección actual</span>
+<span class="variable">MainTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Teleport al Jugador"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="keyword">local</span> <span class="variable">targetName</span> = <span class="variable">MiDropdown</span>:<span class="function">Get</span>()
+        <span class="keyword">local</span> <span class="variable">target</span> = <span class="function">game.Players</span>:<span class="function">FindFirstChild</span>(<span class="variable">targetName</span>)
+        
+        <span class="keyword">if</span> <span class="variable">target</span> <span class="keyword">and</span> <span class="variable">target</span>.<span class="variable">Character</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> <span class="variable">myChar</span> = <span class="function">game.Players.LocalPlayer.Character</span>
+            <span class="keyword">if</span> <span class="variable">myChar</span> <span class="keyword">and</span> <span class="variable">myChar</span>:<span class="function">FindFirstChild</span>(<span class="string">"HumanoidRootPart"</span>) <span class="keyword">then</span>
+                <span class="variable">myChar</span>.<span class="variable">HumanoidRootPart</span>.<span class="variable">CFrame</span> = <span class="variable">target</span>.<span class="variable">Character</span>.<span class="variable">HumanoidRootPart</span>.<span class="variable">CFrame</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})</code>
+    </div>
+
+    <h3>🎯 Ejemplos Prácticos Completos</h3>
+
+    <div class="examples-grid">
+        <div class="example-card">
+            <h4>Ejemplo 1: Lista de Jugadores en Tiempo Real</h4>
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Dropdown con actualización continua</span>
+<span class="keyword">local</span> <span class="variable">JugadorDropdown</span> = <span class="variable">MainTab</span>:<span class="function">CreateDropdown</span>({
+    <span class="variable">Name</span> = <span class="string">"Jugadores (Auto-actualiza)"</span>,
+    <span class="variable">Options</span> = {<span class="string">"Cargando..."</span>},
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">jugador</span>)
+        <span class="function">print</span>(<span class="string">"Seleccionado:"</span>, <span class="variable">jugador</span>)
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- Loop de actualización cada 3 segundos</span>
+<span class="function">spawn</span>(<span class="keyword">function</span>()
+    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+        <span class="function">wait</span>(<span class="number">3</span>)
+        
+        <span class="keyword">local</span> <span class="variable">jugadores</span> = {}
+        <span class="keyword">for</span> <span class="variable">_</span>, <span class="variable">p</span> <span class="keyword">in</span> <span class="function">pairs</span>(<span class="function">game.Players</span>:<span class="function">GetPlayers</span>()) <span class="keyword">do</span>
+            <span class="function">table.insert</span>(<span class="variable">jugadores</span>, <span class="variable">p</span>.<span class="variable">Name</span>)
+        <span class="keyword">end</span>
+        
+        <span class="comment">--- Usar UpdateOnClose para no interrumpir</span>
+        <span class="variable">JugadorDropdown</span>:<span class="function">UpdateOnClose</span>(<span class="variable">jugadores</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>)</code>
+            </div>
+        </div>
+
+        <div class="example-card">
+            <h4>Ejemplo 2: Cambio Manual con Botón</h4>
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Dropdown de armas</span>
+<span class="keyword">local</span> <span class="variable">ArmaDropdown</span> = <span class="variable">MainTab</span>:<span class="function">CreateDropdown</span>({
+    <span class="variable">Name</span> = <span class="string">"Seleccionar Arma"</span>,
+    <span class="variable">Options</span> = {<span class="string">"Espada"</span>, <span class="string">"Arco"</span>},
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">arma</span>)
+        <span class="function">print</span>(<span class="string">"Arma:"</span>, <span class="variable">arma</span>)
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- Botón para actualizar armas disponibles</span>
+<span class="variable">MainTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Escanear Armas"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="keyword">local</span> <span class="variable">armas</span> = {}
+        
+        <span class="comment">--- Buscar armas en el inventario</span>
+        <span class="keyword">local</span> <span class="variable">backpack</span> = <span class="function">game.Players.LocalPlayer.Backpack</span>
+        <span class="keyword">for</span> <span class="variable">_</span>, <span class="variable">tool</span> <span class="keyword">in</span> <span class="function">pairs</span>(<span class="variable">backpack</span>:<span class="function">GetChildren</span>()) <span class="keyword">do</span>
+            <span class="function">table.insert</span>(<span class="variable">armas</span>, <span class="variable">tool</span>.<span class="variable">Name</span>)
+        <span class="keyword">end</span>
+        
+        <span class="comment">--- Actualizar inmediatamente</span>
+        <span class="variable">ArmaDropdown</span>:<span class="function">UpdateOptions</span>(<span class="variable">armas</span>)
+        
+        <span class="variable">JmodsLib</span>:<span class="function">Notify</span>({
+            <span class="variable">Title</span> = <span class="string">"Escaneo Completo"</span>,
+            <span class="variable">Content</span> = <span class="string">"Encontradas "</span> .. #<span class="variable">armas</span> .. <span class="string">" armas"</span>,
+            <span class="variable">Duration</span> = <span class="number">3</span>
+        })
+    <span class="keyword">end</span>
+})</code>
+            </div>
+        </div>
+
+        <div class="example-card">
+            <h4>Ejemplo 3: Filtrado Dinámico</h4>
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">--- Dropdown principal</span>
+<span class="keyword">local</span> <span class="variable">TipoDropdown</span> = <span class="variable">MainTab</span>:<span class="function">CreateDropdown</span>({
+    <span class="variable">Name</span> = <span class="string">"Tipo de Mob"</span>,
+    <span class="variable">Options</span> = {<span class="string">"Todos"</span>, <span class="string">"Jefes"</span>, <span class="string">"Normales"</span>},
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">tipo</span>)
+        <span class="comment">--- Actualizar el segundo dropdown según el tipo</span>
+        <span class="keyword">local</span> <span class="variable">mobs</span> = {}
+        
+        <span class="keyword">if</span> <span class="variable">tipo</span> == <span class="string">"Jefes"</span> <span class="keyword">then</span>
+            <span class="variable">mobs</span> = {<span class="string">"Boss1"</span>, <span class="string">"Boss2"</span>, <span class="string">"Boss3"</span>}
+        <span class="keyword">elseif</span> <span class="variable">tipo</span> == <span class="string">"Normales"</span> <span class="keyword">then</span>
+            <span class="variable">mobs</span> = {<span class="string">"Mob1"</span>, <span class="string">"Mob2"</span>, <span class="string">"Mob3"</span>}
+        <span class="keyword">else</span>
+            <span class="variable">mobs</span> = {<span class="string">"Todos los mobs..."</span>}
+        <span class="keyword">end</span>
+        
+        <span class="variable">MobDropdown</span>:<span class="function">UpdateOptions</span>(<span class="variable">mobs</span>)
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- Dropdown secundario (se actualiza según el primero)</span>
+<span class="keyword">local</span> <span class="variable">MobDropdown</span> = <span class="variable">MainTab</span>:<span class="function">CreateDropdown</span>({
+    <span class="variable">Name</span> = <span class="string">"Seleccionar Mob"</span>,
+    <span class="variable">Options</span> = {<span class="string">"Selecciona un tipo primero"</span>},
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">mob</span>)
+        <span class="function">print</span>(<span class="string">"Mob objetivo:"</span>, <span class="variable">mob</span>)
+    <span class="keyword">end</span>
+})</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert warning">
+        <h4>⚠️ Consejos Importantes</h4>
+        <ul>
+            <li><strong>Siempre valida:</strong> Verifica que las opciones no estén vacías antes de actualizar</li>
+            <li><strong>Usa UpdateOnClose para loops:</strong> Evita interrumpir al usuario con actualizaciones constantes</li>
+            <li><strong>Usa UpdateOptions para eventos:</strong> Cuando el usuario hace clic en un botón o cambia algo</li>
+            <li><strong>Guarda la referencia:</strong> Sin guardar el dropdown en una variable, no podrás usar estos métodos</li>
+            <li><strong>Maneja errores:</strong> Usa <code>pcall()</code> si los datos pueden fallar</li>
+        </ul>
+    </div>
+
+    <h3>🔄 Resumen de Métodos</h3>
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- RESUMEN DE TODOS LOS MÉTODOS DEL DROPDOWN</span>
+
+<span class="comment">--- 1. Crear dropdown (guardar referencia)</span>
+<span class="keyword">local</span> <span class="variable">dropdown</span> = <span class="variable">Tab</span>:<span class="function">CreateDropdown</span>({...})
+
+<span class="comment">--- 2. Actualizar opciones inmediatamente</span>
+<span class="variable">dropdown</span>:<span class="function">UpdateOptions</span>({<span class="string">"op1"</span>, <span class="string">"op2"</span>, <span class="string">"op3"</span>})
+
+<span class="comment">--- 3. Programar actualización al cerrar</span>
+<span class="variable">dropdown</span>:<span class="function">UpdateOnClose</span>({<span class="string">"op1"</span>, <span class="string">"op2"</span>, <span class="string">"op3"</span>})
+
+<span class="comment">--- 4. Cambiar la selección actual</span>
+<span class="variable">dropdown</span>:<span class="function">Set</span>(<span class="string">"op2"</span>)
+
+<span class="comment">--- 5. Obtener la selección actual</span>
+<span class="keyword">local</span> <span class="variable">actual</span> = <span class="variable">dropdown</span>:<span class="function">Get</span>()
+<span class="function">print</span>(<span class="variable">actual</span>) <span class="comment">--- Imprime: "op2"</span></code>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+            
+
         <!-- Ejemplo completo -->
         <section class="section" id="ejemplos">
             <h2>📋 Ejemplo Completo</h2>
