@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test API WEAO</title>
+    <title>Test API WEAO con Worker</title>
     <style>
         * {
             margin: 0;
@@ -182,15 +182,27 @@
         a:hover {
             text-decoration: underline;
         }
+
+        .worker-url {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            word-break: break-all;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 Prueba API WEAO</h1>
+        <h1>🚀 Prueba API WEAO con Worker</h1>
         
         <div class="status loading" id="status">
             <div class="spinner"></div>
-            <p>Cargando datos de la API...</p>
+            <p>Conectando con el Worker...</p>
+            <div class="worker-url">
+                Worker URL: https://lively-hat-19e4.joao-lokofrank.workers.dev/api
+            </div>
         </div>
 
         <div class="center" style="margin-bottom: 30px;">
@@ -203,31 +215,34 @@
     </div>
 
     <script>
-        const API_BASE = 'https://lively-hat-19e4.joao-lokofrank.workers.dev/';
+        // ✅ URL DE TU CLOUDFLARE WORKER
+        const WORKER_URL = 'https://lively-hat-19e4.joao-lokofrank.workers.dev/api';
         
-        async function fetchWithProxy(url) {
-            const proxies = [
-                url, // Intento directo
-                `https://corsproxy.io/?${encodeURIComponent(url)}`,
-                `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
-            ];
-
-            for (const proxyUrl of proxies) {
-                try {
-                    console.log(`🔄 Intentando: ${proxyUrl}`);
-                    const response = await fetch(proxyUrl);
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('✅ Éxito con:', proxyUrl);
-                        return data;
+        async function fetchFromWorker(endpoint) {
+            try {
+                console.log(`🔄 Solicitando: ${WORKER_URL}${endpoint}`);
+                
+                const response = await fetch(`${WORKER_URL}${endpoint}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
                     }
-                } catch (error) {
-                    console.log(`❌ Falló: ${error.message}`);
+                });
+                
+                console.log(`📊 Respuesta status: ${response.status}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                
+                const data = await response.json();
+                console.log(`✅ Datos recibidos:`, data);
+                return data;
+                
+            } catch (error) {
+                console.error(`❌ Error en ${endpoint}:`, error);
+                throw error;
             }
-            
-            throw new Error('Todos los métodos fallaron');
         }
 
         async function loadData() {
@@ -236,15 +251,25 @@
             const exploitsContainer = document.getElementById('exploits-container');
             
             statusDiv.className = 'status loading';
-            statusDiv.innerHTML = '<div class="spinner"></div><p>Cargando datos de la API...</p>';
+            statusDiv.innerHTML = `
+                <div class="spinner"></div>
+                <p>Cargando datos desde el Worker...</p>
+                <div class="worker-url">
+                    Worker URL: ${WORKER_URL}
+                </div>
+            `;
             
             try {
+                console.log('🎯 Iniciando carga de datos...');
+                
                 // Cargar versiones
                 const [current, future, past] = await Promise.all([
-                    fetchWithProxy(`${API_BASE}/versions/current`),
-                    fetchWithProxy(`${API_BASE}/versions/future`),
-                    fetchWithProxy(`${API_BASE}/versions/past`)
+                    fetchFromWorker('/versions/current'),
+                    fetchFromWorker('/versions/future'),
+                    fetchFromWorker('/versions/past')
                 ]);
+
+                console.log('✅ Versiones cargadas correctamente');
 
                 versionsContainer.innerHTML = `
                     <div class="card">
@@ -273,18 +298,20 @@
                 `;
 
                 // Cargar exploits
-                const exploits = await fetchWithProxy(`${API_BASE}/status/exploits`);
+                console.log('📡 Cargando exploits...');
+                const exploits = await fetchFromWorker('/status/exploits');
+                console.log(`✅ ${exploits.length} exploits cargados`);
                 
                 let exploitsHTML = '<div class="card" style="grid-column: 1/-1;"><h2>⚡ Exploits Disponibles</h2>';
                 
-                exploits.slice(0, 10).forEach(exploit => {
+                exploits.slice(0, 15).forEach(exploit => {
                     exploitsHTML += `
                         <div class="exploit-item">
                             <h3>${exploit.title}</h3>
                             <div>
-                                ${exploit.updateStatus ? '<span class="badge updated">Actualizado</span>' : '<span class="badge not-updated">No Actualizado</span>'}
-                                ${exploit.detected ? '<span class="badge detected">Detectado</span>' : '<span class="badge not-detected">No Detectado</span>'}
-                                ${exploit.free ? '<span class="badge free">Gratis</span>' : '<span class="badge paid">Pago</span>'}
+                                ${exploit.updateStatus ? '<span class="badge updated">✅ Actualizado</span>' : '<span class="badge not-updated">❌ No Actualizado</span>'}
+                                ${exploit.detected ? '<span class="badge detected">⚠️ Detectado</span>' : '<span class="badge not-detected">✅ No Detectado</span>'}
+                                ${exploit.free ? '<span class="badge free">💰 Gratis</span>' : '<span class="badge paid">💎 Pago</span>'}
                             </div>
                             <p><strong>Versión:</strong> ${exploit.version}</p>
                             <p><strong>Plataforma:</strong> ${exploit.platform}</p>
@@ -295,20 +322,35 @@
                     `;
                 });
                 
-                exploitsHTML += `<p style="margin-top: 20px; text-align: center;">Mostrando 10 de ${exploits.length} exploits</p></div>`;
+                exploitsHTML += `<p style="margin-top: 20px; text-align: center; font-size: 1.1rem;">
+                    ✅ Mostrando 15 de ${exploits.length} exploits totales
+                </p></div>`;
                 exploitsContainer.innerHTML = exploitsHTML;
 
                 statusDiv.className = 'status success';
-                statusDiv.innerHTML = `<p>✅ Datos cargados correctamente (${exploits.length} exploits encontrados)</p>`;
+                statusDiv.innerHTML = `
+                    <p>✅ ¡Datos cargados correctamente desde el Worker!</p>
+                    <p style="margin-top: 10px;">📊 Total: ${exploits.length} exploits encontrados</p>
+                `;
                 
             } catch (error) {
-                console.error('Error:', error);
+                console.error('💥 Error completo:', error);
                 statusDiv.className = 'status error';
-                statusDiv.innerHTML = `<p>❌ Error al cargar datos: ${error.message}</p><p>Verifica la consola para más detalles</p>`;
+                statusDiv.innerHTML = `
+                    <p>❌ Error al cargar datos del Worker</p>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Detalles: ${error.message}</p>
+                    <p style="margin-top: 10px; font-size: 0.85rem;">
+                        Verifica que el Worker esté activo y la URL sea correcta
+                    </p>
+                    <div class="worker-url">
+                        ${WORKER_URL}
+                    </div>
+                `;
             }
         }
 
         // Cargar datos al iniciar
+        console.log('🚀 Iniciando aplicación...');
         loadData();
     </script>
 </body>
