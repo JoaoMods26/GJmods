@@ -397,15 +397,136 @@
             .main-card { padding: 1.2rem; }
             .btn { padding: 10px 20px; font-size: 11px; }
         }
+
+        /* ── ADS LATERALES ── */
+        .title-with-ads {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .side-ad {
+            position: absolute;
+            top: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 10px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .side-ad-left  { left: 20px; }
+        .side-ad-right { right: 20px; }
+
+        @media (max-width: 1024px) {
+            .side-ad { display: none !important; }
+        }
+
+        /* ── ADS BOTTOM ── */
+        .bottom-ads-section {
+            width: 100%;
+            max-width: 1300px;
+            margin: 3rem auto 2rem;
+            padding: 2rem 1rem;
+            border-top: 1px solid var(--glass-border);
+        }
+        .bottom-ads-title {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bottom-ads-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        .bottom-ad {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s ease;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .bottom-ad:hover { transform: scale(1.01); border-color: rgba(59,130,246,0.3); }
+        .ad-mobile-banner { max-width: 320px; min-height: 70px; }
+        .ad-banner        { max-width: 468px; min-height: 80px; }
+        .ad-leaderboard   { max-width: 728px; min-height: 110px; }
+        .ad-script        { max-width: 400px; min-height: 100px; }
+
+        @media (max-width: 768px) {
+            .bottom-ad { padding: 8px; max-width: calc(100vw - 2rem); }
+            .ad-leaderboard { max-width: 300px; min-height: 80px; }
+            .ad-banner      { max-width: 280px; min-height: 70px; }
+            .ad-mobile-banner { max-width: 280px; min-height: 60px; }
+            .ad-script      { max-width: 280px; min-height: 80px; }
+        }
+        @media (max-width: 480px) {
+            .ad-leaderboard, .ad-banner, .ad-mobile-banner, .ad-script {
+                max-width: 250px; min-height: 60px;
+            }
+        }
+        @media (max-width: 320px) {
+            .ad-leaderboard, .ad-banner { display: none; }
+        }
+        .bottom-ad iframe { max-width: 100% !important; border: none; display: block; margin: 0 auto; }
     </style>
 </head>
 <body>
 
 <canvas id="particles-canvas"></canvas>
 
-<div class="header">
-    <h1 class="main-logo">Lua Obfuscator</h1>
-    <p class="subtitle-header">Protect your code &bull; Pro-grade encryption</p>
+<div class="title-with-ads">
+    <!-- Anuncio lateral izquierdo (160x300) -->
+    <div class="side-ad side-ad-left">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'ab51e186a04576460b84ebe553be82ea',
+                'format' : 'iframe',
+                'height' : 300,
+                'width' : 160,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//believableordinarygentlemen.com/ab51e186a04576460b84ebe553be82ea/invoke.js"></script>
+    </div>
+
+    <div class="header" style="flex:1; padding: 3rem 2rem 2rem;">
+        <h1 class="main-logo">Lua Obfuscator</h1>
+        <p class="subtitle-header">Protect your code &bull; Pro-grade encryption</p>
+    </div>
+
+    <!-- Anuncio lateral derecho (300x250) -->
+    <div class="side-ad side-ad-right">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'aa4b552f34e750eee2a4f60ed72cc416',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//believableordinarygentlemen.com/aa4b552f34e750eee2a4f60ed72cc416/invoke.js"></script>
+    </div>
 </div>
 
 <div class="container">
@@ -536,6 +657,62 @@
     </div>
 </div>
 
+<!-- ── BOTTOM ADS ── -->
+<div class="bottom-ads-section">
+    <h2 class="bottom-ads-title">Contenido Patrocinado</h2>
+    <div class="bottom-ads-grid">
+
+        <!-- ANUNCIO 1: 320x50 (móvil optimizado) -->
+        <div class="bottom-ad ad-mobile-banner">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '3673085df22687e59379948e6eb888d9',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//believableordinarygentlemen.com/3673085df22687e59379948e6eb888d9/invoke.js"></script>
+        </div>
+
+        <!-- ANUNCIO 2: 468x60 (banner mediano) -->
+        <div class="bottom-ad ad-banner">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '8c3ca771c13fd8624f87fdec4e5b7d29',
+                    'format' : 'iframe',
+                    'height' : 60,
+                    'width' : 468,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//believableordinarygentlemen.com/8c3ca771c13fd8624f87fdec4e5b7d29/invoke.js"></script>
+        </div>
+
+        <!-- ANUNCIO 3: 728x90 (leaderboard) -->
+        <div class="bottom-ad ad-leaderboard">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : 'd1a9332ab68f936abaa310ff142b94ef',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//believableordinarygentlemen.com/d1a9332ab68f936abaa310ff142b94ef/invoke.js"></script>
+        </div>
+
+        <!-- ANUNCIO 4: Script directo -->
+        <div class="bottom-ad ad-script">
+            <script async data-cfasync="false" src="//believableordinarygentlemen.com/4525df450d44613469633168ded413cf/invoke.js"></script>
+            <div id="container-4525df450d44613469633168ded413cf"></div>
+        </div>
+
+    </div>
+</div>
+
 <script>
     // ── DOM refs ──
     const fileInput     = document.getElementById('fileInput');
@@ -594,6 +771,13 @@
         const preset = obfPreset.value;
 
         try {
+            const TARGET = 'https://luacrack.site/';
+            const PROXIES = [
+                url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+                url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+                url => `https://proxy.cors.sh/${url}`,
+            ];
+
             const formData = new FormData();
             formData.append('action', 'create_obf');
             formData.append('api_token', 'c77b02714b72f3b2b2d8ae412bdd0d0a');
@@ -601,23 +785,31 @@
             formData.append('content', code);
             formData.append('output', 'console');
 
-            const response = await fetch('https://luacrack.site/', {
-                method: 'POST',
-                body: formData,
-                mode: 'cors'
-            });
-
-            if (response.ok) {
-                let result = await response.text();
-                if (result && result.trim()) {
-                    result = replaceXHiderComment(result);
-                    outputCode.value = result;
-                    showSuccess('¡Ofuscación completada!');
-                    loading.classList.remove('active');
-                    return;
+            // Intentar con cada proxy hasta que uno funcione
+            let lastError = null;
+            for (const proxyFn of PROXIES) {
+                try {
+                    const proxyUrl = proxyFn(TARGET);
+                    const response = await fetch(proxyUrl, {
+                        method: 'POST',
+                        body: formData,
+                    });
+                    if (response.ok) {
+                        let result = await response.text();
+                        if (result && result.trim() && !result.includes('CORS')) {
+                            result = replaceXHiderComment(result);
+                            outputCode.value = result;
+                            showSuccess('¡Ofuscación completada!');
+                            loading.classList.remove('active');
+                            return;
+                        }
+                    }
+                } catch(e) {
+                    lastError = e;
+                    continue;
                 }
             }
-            throw new Error('Failed');
+            throw lastError || new Error('All proxies failed');
         } catch (error) {
             loading.classList.remove('active');
             outputCode.value = `-- CORS Error\n-- Para solucionar esto tienes 3 opciones:\n\n-- Opción 1: Instala una extensión CORS\n--   Chrome: "CORS Unblock" o "Allow CORS"\n--   Firefox: "CORS Everywhere"\n\n-- Opción 2: Usa el sitio directamente\n--   https://luacrack.site/\n\n-- Opción 3: Usa cURL (Terminal/CMD)\ncurl -L -X POST "https://luacrack.site/" \\\n  -d "action=create_obf" \\\n  -d "api_token=c77b02714b72f3b2b2d8ae412bdd0d0a" \\\n  -d "preset=${preset}" \\\n  -d "content=YOUR_CODE_HERE" \\\n  -d "output=console"`;
