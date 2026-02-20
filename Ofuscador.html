@@ -772,7 +772,12 @@
         const preset = obfPreset.value;
 
         try {
-            // Parámetros como URLSearchParams (compatible con todos los proxies POST)
+            // ─── WORKER URL ───────────────────────────────────────────────
+            // Reemplaza con la URL de tu Cloudflare Worker después de deployarlo
+            // Ejemplo: 'https://luaproxy.tuusuario.workers.dev'
+            const WORKER_URL = 'https://luaproxy.tuusuario.workers.dev';
+            // ──────────────────────────────────────────────────────────────
+
             const params = new URLSearchParams();
             params.append('action', 'create_obf');
             params.append('api_token', 'c77b02714b72f3b2b2d8ae412bdd0d0a');
@@ -780,54 +785,26 @@
             params.append('content', code);
             params.append('output', 'console');
 
-            const TARGET = 'https://luacrack.site/';
+            const response = await fetch(WORKER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString(),
+            });
 
-            // Lista de proxies que soportan POST real
-            const PROXIES = [
-                {
-                    url: `https://corsproxy.io/?url=${encodeURIComponent(TARGET)}`,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                },
-                {
-                    url: `https://proxy.cors.sh/${TARGET}`,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'x-cors-api-key': 'temp_demo' }
-                },
-                {
-                    url: `https://corsproxy.org/?${encodeURIComponent(TARGET)}`,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                },
-            ];
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-            let lastError = null;
-            for (const proxy of PROXIES) {
-                try {
-                    const response = await fetch(proxy.url, {
-                        method: 'POST',
-                        headers: proxy.headers,
-                        body: params.toString(),
-                    });
+            let result = await response.text();
+            if (!result || result.trim().length === 0) throw new Error('Empty response');
 
-                    if (response.ok) {
-                        let result = await response.text();
-                        // Verificar que la respuesta es código Lua válido y no un error HTML
-                        if (result && result.trim() && !result.trim().startsWith('<') && result.length > 5) {
-                            result = replaceXHiderComment(result);
-                            outputCode.value = result;
-                            showSuccess('¡Ofuscación completada!');
-                            loading.classList.remove('active');
-                            return;
-                        }
-                    }
-                } catch(e) {
-                    lastError = e;
-                    continue;
-                }
-            }
-            throw lastError || new Error('All proxies failed');
+            result = replaceXHiderComment(result);
+            outputCode.value = result;
+            showSuccess('¡Ofuscación completada!');
+            loading.classList.remove('active');
+
         } catch (error) {
             loading.classList.remove('active');
-            showError('No se pudo conectar. Intenta con la extensión CORS o el sitio directo.');
-            outputCode.value = `-- ❌ Error de conexión\n--\n-- El navegador bloquea la petición por CORS.\n-- Soluciones:\n--\n-- 1) Instala la extensión "CORS Unblock" en Chrome\n--    o "CORS Everywhere" en Firefox, actívala y reintenta.\n--\n-- 2) Usa el sitio directamente:\n--    https://luacrack.site/\n--\n-- 3) Desde Terminal / CMD:\ncurl -X POST "https://luacrack.site/" \\\n  -d "action=create_obf" \\\n  -d "api_token=c77b02714b72f3b2b2d8ae412bdd0d0a" \\\n  -d "preset=${preset}" \\\n  --data-urlencode "content=TU_CODIGO_AQUI" \\\n  -d "output=console"`;
+            showError('⚠️ Configura tu Worker. Ver instrucciones en el archivo worker.js');
+            outputCode.value = `-- ⚠️  CLOUDFLARE WORKER NO CONFIGURADO\n--\n-- Pasos rápidos:\n--\n-- 1) Ve a https://workers.cloudflare.com/ (cuenta gratis)\n-- 2) Click "Create Worker"\n-- 3) Pega el contenido de worker.js\n-- 4) Click "Save and Deploy"\n-- 5) Copia la URL (ej: mi-worker.tuuser.workers.dev)\n-- 6) En este HTML busca: const WORKER_URL\n--    y reemplaza con tu URL\n-- 7) Guarda y recarga. Listo!`;
         }
     });
 
