@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lua Obfuscator</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Vcbqr6wC/Srudios.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -771,32 +772,45 @@
         const preset = obfPreset.value;
 
         try {
+            // Parámetros como URLSearchParams (compatible con todos los proxies POST)
+            const params = new URLSearchParams();
+            params.append('action', 'create_obf');
+            params.append('api_token', 'c77b02714b72f3b2b2d8ae412bdd0d0a');
+            params.append('preset', preset);
+            params.append('content', code);
+            params.append('output', 'console');
+
             const TARGET = 'https://luacrack.site/';
+
+            // Lista de proxies que soportan POST real
             const PROXIES = [
-                url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-                url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-                url => `https://proxy.cors.sh/${url}`,
+                {
+                    url: `https://corsproxy.io/?url=${encodeURIComponent(TARGET)}`,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                },
+                {
+                    url: `https://proxy.cors.sh/${TARGET}`,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'x-cors-api-key': 'temp_demo' }
+                },
+                {
+                    url: `https://corsproxy.org/?${encodeURIComponent(TARGET)}`,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                },
             ];
 
-            const formData = new FormData();
-            formData.append('action', 'create_obf');
-            formData.append('api_token', 'c77b02714b72f3b2b2d8ae412bdd0d0a');
-            formData.append('preset', preset);
-            formData.append('content', code);
-            formData.append('output', 'console');
-
-            // Intentar con cada proxy hasta que uno funcione
             let lastError = null;
-            for (const proxyFn of PROXIES) {
+            for (const proxy of PROXIES) {
                 try {
-                    const proxyUrl = proxyFn(TARGET);
-                    const response = await fetch(proxyUrl, {
+                    const response = await fetch(proxy.url, {
                         method: 'POST',
-                        body: formData,
+                        headers: proxy.headers,
+                        body: params.toString(),
                     });
+
                     if (response.ok) {
                         let result = await response.text();
-                        if (result && result.trim() && !result.includes('CORS')) {
+                        // Verificar que la respuesta es código Lua válido y no un error HTML
+                        if (result && result.trim() && !result.trim().startsWith('<') && result.length > 5) {
                             result = replaceXHiderComment(result);
                             outputCode.value = result;
                             showSuccess('¡Ofuscación completada!');
@@ -812,8 +826,8 @@
             throw lastError || new Error('All proxies failed');
         } catch (error) {
             loading.classList.remove('active');
-            outputCode.value = `-- CORS Error\n-- Para solucionar esto tienes 3 opciones:\n\n-- Opción 1: Instala una extensión CORS\n--   Chrome: "CORS Unblock" o "Allow CORS"\n--   Firefox: "CORS Everywhere"\n\n-- Opción 2: Usa el sitio directamente\n--   https://luacrack.site/\n\n-- Opción 3: Usa cURL (Terminal/CMD)\ncurl -L -X POST "https://luacrack.site/" \\\n  -d "action=create_obf" \\\n  -d "api_token=c77b02714b72f3b2b2d8ae412bdd0d0a" \\\n  -d "preset=${preset}" \\\n  -d "content=YOUR_CODE_HERE" \\\n  -d "output=console"`;
-            showError('CORS bloqueado. Ver output para soluciones.');
+            showError('No se pudo conectar. Intenta con la extensión CORS o el sitio directo.');
+            outputCode.value = `-- ❌ Error de conexión\n--\n-- El navegador bloquea la petición por CORS.\n-- Soluciones:\n--\n-- 1) Instala la extensión "CORS Unblock" en Chrome\n--    o "CORS Everywhere" en Firefox, actívala y reintenta.\n--\n-- 2) Usa el sitio directamente:\n--    https://luacrack.site/\n--\n-- 3) Desde Terminal / CMD:\ncurl -X POST "https://luacrack.site/" \\\n  -d "action=create_obf" \\\n  -d "api_token=c77b02714b72f3b2b2d8ae412bdd0d0a" \\\n  -d "preset=${preset}" \\\n  --data-urlencode "content=TU_CODIGO_AQUI" \\\n  -d "output=console"`;
         }
     });
 
