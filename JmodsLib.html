@@ -892,6 +892,125 @@
         </section>
 
 
+
+
+
+
+<!-- Paragraph Avanzado -->
+        <section class="section" id="paragraph-avanzado">
+            <h2>📄 Paragraph — Guía Detallada</h2>
+
+            <p>El <strong>Paragraph</strong> es un componente de JmodsLib usado para mostrar texto dinámico como estado, estadísticas, listas o información en tiempo real. A diferencia de un texto estático, puede actualizarse desde el código en cualquier momento.</p>
+
+            <h3>🧠 Crear un Paragraph</h3>
+            <p>Guarda la referencia en una variable para poder actualizarlo después:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="keyword">local</span> <span class="variable">info</span> = <span class="variable">Tab</span>:<span class="function">CreateParagraph</span>({
+    <span class="variable">Title</span> = <span class="string">"Estado"</span>,
+    <span class="variable">Content</span> = <span class="string">"Esperando..."</span>
+})</code>
+            </div>
+
+            <h3>⚙️ Métodos Disponibles</h3>
+
+            <div class="examples-grid">
+                <div class="example-card">
+                    <h4>🔹 UpdateTitle</h4>
+                    <p>Cambia el título del Paragraph en tiempo real.</p>
+                    <div class="code-block" data-language="lua">
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                        <code><span class="variable">info</span>:<span class="function">UpdateTitle</span>(<span class="string">"Nuevo título"</span>)</code>
+                    </div>
+                </div>
+                <div class="example-card">
+                    <h4>🔹 UpdateContent</h4>
+                    <p>Cambia el contenido del Paragraph en tiempo real.</p>
+                    <div class="code-block" data-language="lua">
+                        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                        <code><span class="variable">info</span>:<span class="function">UpdateContent</span>(<span class="string">"Nuevo contenido"</span>)</code>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🚀 Ejemplo Completo</h3>
+            <p>Paragraph que muestra la hora actual, actualizándose cada segundo:</p>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="comment">-- Cargar librería</span>
+<span class="keyword">local</span> <span class="variable">JmodsLib</span> = <span class="function">loadstring</span>(<span class="function">game:HttpGet</span>(<span class="string">"https://raw.githubusercontent.com/pruebasjoao/test/main/JmodsLibV1.0"</span>))()
+
+<span class="keyword">local</span> <span class="variable">Window</span> = <span class="variable">JmodsLib</span>:<span class="function">CreateWindow</span>({ <span class="variable">Title</span> = <span class="string">"Demo Paragraph"</span> })
+<span class="keyword">local</span> <span class="variable">Tab</span> = <span class="variable">Window</span>:<span class="function">CreateTab</span>(<span class="string">"Main"</span>)
+
+<span class="keyword">local</span> <span class="variable">info</span> = <span class="variable">Tab</span>:<span class="function">CreateParagraph</span>({
+    <span class="variable">Title</span> = <span class="string">"Estado"</span>,
+    <span class="variable">Content</span> = <span class="string">"Esperando..."</span>
+})
+
+<span class="function">task.spawn</span>(<span class="keyword">function</span>()
+    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+        <span class="variable">info</span>:<span class="function">UpdateTitle</span>(<span class="string">"Estado actualizado"</span>)
+        <span class="variable">info</span>:<span class="function">UpdateContent</span>(<span class="string">"Hora: "</span> .. <span class="function">os.date</span>(<span class="string">"%X"</span>))
+        <span class="function">task.wait</span>(<span class="number">1</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>)</code>
+            </div>
+
+            <h3>📊 Ejemplo: Lista de Jugadores en Tiempo Real</h3>
+
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="keyword">local</span> <span class="variable">Players</span> = <span class="function">game:GetService</span>(<span class="string">"Players"</span>)
+
+<span class="keyword">local</span> <span class="variable">lista</span> = <span class="variable">Tab</span>:<span class="function">CreateParagraph</span>({
+    <span class="variable">Title</span> = <span class="string">"Jugadores"</span>,
+    <span class="variable">Content</span> = <span class="string">"..."</span>
+})
+
+<span class="function">task.spawn</span>(<span class="keyword">function</span>()
+    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+        <span class="keyword">local</span> <span class="variable">text</span> = <span class="string">""</span>
+        <span class="keyword">for</span> <span class="variable">_</span>, <span class="variable">plr</span> <span class="keyword">in</span> <span class="function">ipairs</span>(<span class="variable">Players</span>:<span class="function">GetPlayers</span>()) <span class="keyword">do</span>
+            <span class="variable">text</span> ..= <span class="variable">plr</span>.<span class="variable">Name</span> .. <span class="string">"\n"</span>
+        <span class="keyword">end</span>
+        <span class="variable">lista</span>:<span class="function">UpdateTitle</span>(<span class="string">"Jugadores ("</span> .. <span class="function">#Players:GetPlayers</span>() .. <span class="string">")"</span>)
+        <span class="variable">lista</span>:<span class="function">UpdateContent</span>(<span class="variable">text</span>)
+        <span class="function">task.wait</span>(<span class="number">1</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>)</code>
+            </div>
+
+            <div class="alert warning">
+                <h4>⚠️ Limitaciones del Paragraph</h4>
+                <ul>
+                    <li>No permite cambiar color</li>
+                    <li>No permite cambiar tipografía</li>
+                    <li>No tiene interacción (no es botón ni toggle)</li>
+                    <li>Solo muestra información</li>
+                </ul>
+            </div>
+
+            <div class="alert success">
+                <h4>💡 Tips</h4>
+                <ul>
+                    <li>Usa <code>task.wait()</code> para evitar lag</li>
+                    <li>Puedes actualizarlo en loops o eventos</li>
+                </ul>
+            </div>
+        </section>
+
+
+
+
+
+
+
+
+
+            
             
 
         <!-- Funciones Avanzadas -->
