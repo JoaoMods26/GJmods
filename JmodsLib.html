@@ -891,6 +891,107 @@
             </div>
         </section>
 
+
+<section id="paragraph">
+  <h2>📄 Paragraph</h2>
+
+  <p>
+    El <b>Paragraph</b> es un componente de <b>JmodsLib</b> usado para mostrar texto dinámico
+    como estado, estadísticas, listas o información en tiempo real.
+  </p>
+
+  <h3>🧠 Crear un Paragraph</h3>
+
+  <pre><code>
+local info = Tab:CreateParagraph({
+    Title = "Estado",
+    Content = "Esperando..."
+})
+  </code></pre>
+
+  <h3>⚙️ Métodos</h3>
+
+  <h4>🔹 UpdateTitle</h4>
+  <p>Cambia el título del Paragraph.</p>
+
+  <pre><code>
+info:UpdateTitle("Nuevo título")
+  </code></pre>
+
+  <h4>🔹 UpdateContent</h4>
+  <p>Cambia el contenido del Paragraph.</p>
+
+  <pre><code>
+info:UpdateContent("Nuevo contenido")
+  </code></pre>
+
+  <h3>🚀 Ejemplo completo</h3>
+
+  <pre><code>
+-- cargar librería
+local JmodsLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/pruebasjoao/test/main/JmodsLibV1.0"))()
+
+local Window = JmodsLib:CreateWindow({
+    Title = "Demo Paragraph"
+})
+
+local Tab = Window:CreateTab("Main")
+
+local info = Tab:CreateParagraph({
+    Title = "Estado",
+    Content = "Esperando..."
+})
+
+task.spawn(function()
+    while true do
+        info:UpdateTitle("Estado actualizado")
+        info:UpdateContent("Hora: " .. os.date("%X"))
+        task.wait(1)
+    end
+end)
+  </code></pre>
+
+  <h3>📊 Ejemplo: Lista de jugadores</h3>
+
+  <pre><code>
+local Players = game:GetService("Players")
+
+local lista = Tab:CreateParagraph({
+    Title = "Jugadores",
+    Content = "..."
+})
+
+task.spawn(function()
+    while true do
+        local text = ""
+        for _, plr in ipairs(Players:GetPlayers()) do
+            text ..= plr.Name .. "\n"
+        end
+
+        lista:UpdateTitle("Jugadores (" .. #Players:GetPlayers() .. ")")
+        lista:UpdateContent(text)
+
+        task.wait(1)
+    end
+end)
+  </code></pre>
+
+  <h3>⚠️ Limitaciones</h3>
+  <ul>
+    <li>No permite cambiar color</li>
+    <li>No permite cambiar tipografía</li>
+    <li>No tiene interacción (no es botón ni toggle)</li>
+    <li>Solo muestra información auto actualziable</li>
+  </ul>
+
+  <h3>💡 Tips</h3>
+  <ul>
+    <li>Usa <code>task.wait()</code> para evitar lag</li>
+    <li>Puedes actualizarlo en loops o eventos</li>
+  </ul>
+</section>
+            
+
         <!-- Funciones Avanzadas -->
         <section class="section" id="funciones-avanzadas">
             <h2>⚡ Funciones Avanzadas de JmodsLib</h2>
