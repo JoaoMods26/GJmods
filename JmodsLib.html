@@ -1429,7 +1429,709 @@
 
 
 
+<!-- ============================================================
+     SECCIÓN NUEVA: Imágenes y Botones Flotantes
+     
+     INSTRUCCIONES DE DÓNDE PEGARLO:
+     Abre tu HTML y busca esta línea (cerca del final, antes del footer):
+     
+         <section class="section" id="consejos">
+     
+     Pega TODO este bloque JUSTO ANTES de esa línea.
+     (o después de la sección id="dropdown-dinamico" si lo prefieres)
+     ============================================================ -->
 
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECCIÓN: IMÁGENES (CreateImage y CreateImageRow)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="imagenes">
+    <h2>🖼️ Sistema de Imágenes</h2>
+    <p>JmodsLib incluye dos componentes especiales para mostrar imágenes dentro de tus tabs: <strong>CreateImage</strong> para mostrar una imagen sola con alineación libre, y <strong>CreateImageRow</strong> para combinar una imagen con texto informativo al lado derecho. Ambos son totalmente dinámicos y reaccionan al sistema de temas.</p>
+
+    <div class="alert info">
+        <h4>💡 ¿Cuándo usar cada uno?</h4>
+        <ul>
+            <li><strong>CreateImage:</strong> Cuando quieres mostrar un logo, ícono o avatar de jugador de forma destacada y centrada</li>
+            <li><strong>CreateImageRow:</strong> Cuando quieres mostrar una imagen con información al lado, como una tarjeta de jugador (avatar + nombre + stats)</li>
+        </ul>
+    </div>
+
+    <!-- ─── CreateImage ─────────────────────────────────────────── -->
+    <h3 id="createimage">🔳 CreateImage — Imagen Individual</h3>
+    <p>Muestra una imagen cuadrada dentro del tab. Tiene fondo con el color del tema, alineación configurable y se puede actualizar en cualquier momento desde el código.</p>
+
+    <h4 style="color: rgba(255,255,255,0.7); margin: 1.5rem 0 0.5rem;">Opciones disponibles:</h4>
+    <table class="theme-table">
+        <thead>
+            <tr><th>Opción</th><th>Tipo</th><th>Default</th><th>Descripción</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>Image</code></td><td>número / string</td><td>0</td><td>AssetId de Roblox (<code>6031071057</code>) o string (<code>"rbxassetid://..."</code>)</td></tr>
+            <tr><td><code>PlayerImage</code></td><td>true / false</td><td>false</td><td>Si es <code>true</code>, carga el thumbnail del jugador usando <code>Image</code> como UserId</td></tr>
+            <tr><td><code>Size</code></td><td>número</td><td>64</td><td>Tamaño en píxeles del cuadrado de la imagen</td></tr>
+            <tr><td><code>Align</code></td><td>string</td><td>"Center"</td><td>Alineación horizontal: <code>"Left"</code>, <code>"Center"</code> o <code>"Right"</code></td></tr>
+            <tr><td><code>CornerRadius</code></td><td>número</td><td>8</td><td>Redondeo de esquinas. Usa la mitad del Size para un círculo perfecto</td></tr>
+            <tr><td><code>Background</code></td><td>true / false</td><td>true</td><td>Muestra un fondo con el color del tema detrás de la imagen</td></tr>
+        </tbody>
+    </table>
+
+    <h4 style="color: rgba(255,255,255,0.7); margin: 1.5rem 0 0.5rem;">Métodos del objeto devuelto:</h4>
+    <table class="theme-table">
+        <thead>
+            <tr><th>Método</th><th>Parámetro</th><th>Qué hace</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>:SetImage(id)</code></td><td>AssetId o string</td><td>Cambia la imagen a cualquier AssetId de Roblox en tiempo real</td></tr>
+            <tr><td><code>:SetPlayerThumbnail(userId)</code></td><td>UserId numérico</td><td>Carga el avatar (headshot) del jugador con ese UserId de forma asíncrona</td></tr>
+            <tr><td><code>:GetFrame()</code></td><td>—</td><td>Devuelve el Frame contenedor por si necesitas referenciarlo</td></tr>
+        </tbody>
+    </table>
+
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- Ejemplo 1: Imagen con AssetId fijo, centrada</span>
+<span class="keyword">local</span> <span class="variable">Logo</span> = <span class="variable">MainTab</span>:<span class="function">CreateImage</span>({
+    <span class="variable">Image</span>      = <span class="number">6031071057</span>,  <span class="comment">--- AssetId de Roblox</span>
+    <span class="variable">Size</span>       = <span class="number">80</span>,           <span class="comment">--- 80x80 píxeles</span>
+    <span class="variable">Align</span>      = <span class="string">"Center"</span>,    <span class="comment">--- centrada horizontalmente</span>
+    <span class="variable">Background</span> = <span class="keyword">true</span>,         <span class="comment">--- fondo con el color del tema</span>
+    <span class="variable">CornerRadius</span> = <span class="number">10</span>          <span class="comment">--- esquinas redondeadas</span>
+})
+
+<span class="comment">--- Ejemplo 2: Avatar del jugador actual, circular</span>
+<span class="keyword">local</span> <span class="variable">MiAvatar</span> = <span class="variable">MainTab</span>:<span class="function">CreateImage</span>({
+    <span class="variable">Image</span>       = <span class="function">game.Players.LocalPlayer.UserId</span>, <span class="comment">--- UserId del jugador</span>
+    <span class="variable">PlayerImage</span> = <span class="keyword">true</span>,    <span class="comment">--- activa carga de thumbnail automáticamente</span>
+    <span class="variable">Size</span>        = <span class="number">80</span>,
+    <span class="variable">Align</span>       = <span class="string">"Center"</span>,
+    <span class="variable">CornerRadius</span> = <span class="number">40</span>       <span class="comment">--- 40 = mitad de 80 → círculo perfecto</span>
+})
+
+<span class="comment">--- Cambiar imagen dinámicamente con un botón</span>
+<span class="variable">MainTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Cambiar logo"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="variable">Logo</span>:<span class="function">SetImage</span>(<span class="number">48965502</span>)  <span class="comment">--- cambia a otro AssetId</span>
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- Cambiar a avatar de otro jugador dinámicamente</span>
+<span class="variable">MainTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Ver avatar de Roblox oficial"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="variable">MiAvatar</span>:<span class="function">SetPlayerThumbnail</span>(<span class="number">156</span>)  <span class="comment">--- UserId 156 = cuenta Roblox oficial</span>
+    <span class="keyword">end</span>
+})</code>
+    </div>
+
+    <div class="alert success">
+        <h4>✅ Truco: Círculo perfecto</h4>
+        <p>Para hacer que la imagen sea un círculo, pon <code>CornerRadius</code> igual a la mitad del <code>Size</code>. Por ejemplo: <code>Size = 80</code> → <code>CornerRadius = 40</code>.</p>
+    </div>
+
+    <!-- ─── CreateImageRow ──────────────────────────────────────── -->
+    <h3 id="createimagerow" style="margin-top: 3rem;">🪪 CreateImageRow — Imagen + Información</h3>
+    <p>Crea una tarjeta horizontal con una imagen a la izquierda y un bloque de título + descripción a la derecha. Perfecto para mostrar información de jugadores, personajes, items o cualquier cosa que combina visual con datos.</p>
+
+    <h4 style="color: rgba(255,255,255,0.7); margin: 1.5rem 0 0.5rem;">Opciones disponibles:</h4>
+    <table class="theme-table">
+        <thead>
+            <tr><th>Opción</th><th>Tipo</th><th>Default</th><th>Descripción</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>Image</code></td><td>número / string</td><td>0</td><td>AssetId de Roblox o UserId (si usas PlayerImage)</td></tr>
+            <tr><td><code>PlayerImage</code></td><td>true / false</td><td>false</td><td>Carga automáticamente el thumbnail del jugador</td></tr>
+            <tr><td><code>ImgSize</code></td><td>número</td><td>56</td><td>Tamaño en píxeles de la imagen cuadrada</td></tr>
+            <tr><td><code>Height</code></td><td>número</td><td>ImgSize+18</td><td>Altura total de la tarjeta en píxeles</td></tr>
+            <tr><td><code>Spacing</code></td><td>número</td><td>10</td><td>Espacio en px entre la imagen y el texto</td></tr>
+            <tr><td><code>CornerRadius</code></td><td>número</td><td>8</td><td>Redondeo de la imagen</td></tr>
+            <tr><td><code>Title</code></td><td>string</td><td>""</td><td>Título en negrita que aparece a la derecha de la imagen</td></tr>
+            <tr><td><code>Content</code></td><td>string</td><td>""</td><td>Descripción o información debajo del título</td></tr>
+        </tbody>
+    </table>
+
+    <h4 style="color: rgba(255,255,255,0.7); margin: 1.5rem 0 0.5rem;">Métodos del objeto devuelto:</h4>
+    <table class="theme-table">
+        <thead>
+            <tr><th>Método</th><th>Parámetro</th><th>Qué hace</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>:SetImage(id)</code></td><td>AssetId</td><td>Cambia la imagen del lado izquierdo</td></tr>
+            <tr><td><code>:SetPlayerThumbnail(userId)</code></td><td>UserId</td><td>Carga el avatar del jugador con ese UserId</td></tr>
+            <tr><td><code>:UpdateTitle(texto)</code></td><td>string</td><td>Cambia el título en tiempo real</td></tr>
+            <tr><td><code>:UpdateContent(texto)</code></td><td>string</td><td>Cambia la descripción en tiempo real</td></tr>
+            <tr><td><code>:GetFrame()</code></td><td>—</td><td>Devuelve el Frame contenedor</td></tr>
+            <tr><td><code>:GetContentArea()</code></td><td>—</td><td>Devuelve la zona derecha para insertar elementos extra</td></tr>
+        </tbody>
+    </table>
+
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- Tarjeta de jugador básica</span>
+<span class="keyword">local</span> <span class="variable">TarjetaJugador</span> = <span class="variable">MainTab</span>:<span class="function">CreateImageRow</span>({
+    <span class="variable">Image</span>       = <span class="function">game.Players.LocalPlayer.UserId</span>,
+    <span class="variable">PlayerImage</span> = <span class="keyword">true</span>,    <span class="comment">--- carga el headshot automáticamente al crear</span>
+    <span class="variable">ImgSize</span>     = <span class="number">56</span>,        <span class="comment">--- imagen de 56x56 px</span>
+    <span class="variable">Height</span>      = <span class="number">74</span>,        <span class="comment">--- altura total de la tarjeta</span>
+    <span class="variable">Title</span>       = <span class="function">game.Players.LocalPlayer.Name</span>,
+    <span class="variable">Content</span>     = <span class="string">"Nivel 42 · Rank: Pro · Kills: 120"</span>
+})
+
+<span class="comment">--- Actualizar la tarjeta con otro jugador</span>
+<span class="variable">MainTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Ver cuenta Roblox"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="variable">TarjetaJugador</span>:<span class="function">SetPlayerThumbnail</span>(<span class="number">156</span>)       <span class="comment">--- cambia avatar</span>
+        <span class="variable">TarjetaJugador</span>:<span class="function">UpdateTitle</span>(<span class="string">"Roblox"</span>)             <span class="comment">--- cambia título</span>
+        <span class="variable">TarjetaJugador</span>:<span class="function">UpdateContent</span>(<span class="string">"El creador · ID: 156"</span>) <span class="comment">--- cambia descripción</span>
+    <span class="keyword">end</span>
+})</code>
+    </div>
+
+    <!-- ─── Selector de jugadores ───────────────────────────────── -->
+    <h3 id="imagen-selector" style="margin-top: 3rem;">👥 Selector de Jugadores con Imagen</h3>
+    <p>Una de las combinaciones más potentes: un <strong>Dropdown</strong> de jugadores conectado a un <strong>CreateImage</strong> o <strong>CreateImageRow</strong>. Al seleccionar un jugador en el dropdown, la imagen y la información se actualizan automáticamente.</p>
+    <p>Funciona igual con <code>CreateImage</code> (solo avatar) y con <code>CreateImageRow</code> (avatar + info). El truco es guardar el objeto en una variable y llamar a sus métodos dentro del Callback del Dropdown.</p>
+
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- SELECTOR DE JUGADOR CON IMAGEN — funciona con CreateImage</span>
+
+<span class="comment">--- 1. Crear la imagen (empieza con tu propio avatar)</span>
+<span class="keyword">local</span> <span class="variable">AvatarDisplay</span> = <span class="variable">MainTab</span>:<span class="function">CreateImage</span>({
+    <span class="variable">Image</span>       = <span class="function">game.Players.LocalPlayer.UserId</span>,
+    <span class="variable">PlayerImage</span> = <span class="keyword">true</span>,
+    <span class="variable">Size</span>        = <span class="number">80</span>,
+    <span class="variable">Align</span>       = <span class="string">"Center"</span>,
+    <span class="variable">CornerRadius</span> = <span class="number">40</span>  <span class="comment">--- círculo</span>
+})
+
+<span class="comment">--- 2. Crear el dropdown con los jugadores actuales</span>
+<span class="keyword">local</span> <span class="variable">playerNames</span> = {}
+<span class="keyword">for</span> <span class="variable">_</span>, <span class="variable">p</span> <span class="keyword">in</span> <span class="function">ipairs</span>(<span class="function">game.Players:GetPlayers</span>()) <span class="keyword">do</span>
+    <span class="function">table.insert</span>(<span class="variable">playerNames</span>, <span class="variable">p</span>.<span class="variable">Name</span>)
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="variable">SelectorJugador</span> = <span class="variable">MainTab</span>:<span class="function">CreateDropdown</span>({
+    <span class="variable">Name</span>    = <span class="string">"Seleccionar jugador"</span>,
+    <span class="variable">Options</span> = <span class="variable">playerNames</span>,
+    <span class="variable">Default</span> = <span class="function">game.Players.LocalPlayer.Name</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">nombre</span>)
+        <span class="keyword">local</span> <span class="variable">jugador</span> = <span class="function">game.Players</span>:<span class="function">FindFirstChild</span>(<span class="variable">nombre</span>)
+        <span class="keyword">if</span> <span class="variable">jugador</span> <span class="keyword">then</span>
+            <span class="comment">--- Actualizar la imagen con el avatar del jugador elegido</span>
+            <span class="variable">AvatarDisplay</span>:<span class="function">SetPlayerThumbnail</span>(<span class="variable">jugador</span>.<span class="variable">UserId</span>)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- 3. Actualizar el dropdown cuando entren/salgan jugadores</span>
+<span class="function">game.Players.PlayerAdded</span>:<span class="function">Connect</span>(<span class="keyword">function</span>()
+    <span class="keyword">local</span> <span class="variable">lista</span> = {}
+    <span class="keyword">for</span> <span class="variable">_</span>, <span class="variable">p</span> <span class="keyword">in</span> <span class="function">ipairs</span>(<span class="function">game.Players:GetPlayers</span>()) <span class="keyword">do</span>
+        <span class="function">table.insert</span>(<span class="variable">lista</span>, <span class="variable">p</span>.<span class="variable">Name</span>)
+    <span class="keyword">end</span>
+    <span class="variable">SelectorJugador</span>:<span class="function">UpdateOptions</span>(<span class="variable">lista</span>)
+<span class="keyword">end</span>)
+
+<span class="function">game.Players.PlayerRemoving</span>:<span class="function">Connect</span>(<span class="keyword">function</span>(<span class="variable">p</span>)
+    <span class="keyword">local</span> <span class="variable">lista</span> = {}
+    <span class="keyword">for</span> <span class="variable">_</span>, <span class="variable">pl</span> <span class="keyword">in</span> <span class="function">ipairs</span>(<span class="function">game.Players:GetPlayers</span>()) <span class="keyword">do</span>
+        <span class="keyword">if</span> <span class="variable">pl</span> ~= <span class="variable">p</span> <span class="keyword">then</span> <span class="function">table.insert</span>(<span class="variable">lista</span>, <span class="variable">pl</span>.<span class="variable">Name</span>) <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="variable">SelectorJugador</span>:<span class="function">UpdateOptions</span>(<span class="variable">lista</span>)
+<span class="keyword">end</span>)</code>
+    </div>
+
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- LO MISMO PERO CON CreateImageRow (avatar + nombre + stats)</span>
+
+<span class="keyword">local</span> <span class="variable">TarjetaRow</span> = <span class="variable">MainTab</span>:<span class="function">CreateImageRow</span>({
+    <span class="variable">Image</span>       = <span class="function">game.Players.LocalPlayer.UserId</span>,
+    <span class="variable">PlayerImage</span> = <span class="keyword">true</span>,
+    <span class="variable">ImgSize</span>     = <span class="number">56</span>,
+    <span class="variable">Height</span>      = <span class="number">74</span>,
+    <span class="variable">Title</span>       = <span class="string">"Selecciona un jugador"</span>,
+    <span class="variable">Content</span>     = <span class="string">"Usa el dropdown de abajo"</span>
+})
+
+<span class="keyword">local</span> <span class="variable">SelectorRow</span> = <span class="variable">MainTab</span>:<span class="function">CreateDropdown</span>({
+    <span class="variable">Name</span>    = <span class="string">"Jugador a inspeccionar"</span>,
+    <span class="variable">Options</span> = playerNames,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">nombre</span>)
+        <span class="keyword">local</span> <span class="variable">jugador</span> = <span class="function">game.Players</span>:<span class="function">FindFirstChild</span>(<span class="variable">nombre</span>)
+        <span class="keyword">if</span> <span class="variable">jugador</span> <span class="keyword">then</span>
+            <span class="variable">TarjetaRow</span>:<span class="function">SetPlayerThumbnail</span>(<span class="variable">jugador</span>.<span class="variable">UserId</span>)
+            <span class="variable">TarjetaRow</span>:<span class="function">UpdateTitle</span>(<span class="variable">jugador</span>.<span class="variable">Name</span>)
+            <span class="variable">TarjetaRow</span>:<span class="function">UpdateContent</span>(<span class="string">"UserId: "</span> .. <span class="variable">jugador</span>.<span class="variable">UserId</span>)
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})</code>
+    </div>
+
+    <!-- ─── Actualización dinámica ──────────────────────────────── -->
+    <h3 id="imagen-dinamica" style="margin-top: 3rem;">🔄 Actualización Dinámica de Imágenes</h3>
+    <p>Tanto <code>CreateImage</code> como <code>CreateImageRow</code> pueden actualizarse en cualquier momento desde el código, sin necesidad de recrearlos. La imagen carga de forma asíncrona (no bloquea el juego) y el texto cambia instantáneamente.</p>
+
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- Actualización desde un loop en tiempo real</span>
+<span class="keyword">local</span> <span class="variable">InfoRow</span> = <span class="variable">MainTab</span>:<span class="function">CreateImageRow</span>({
+    <span class="variable">Image</span>       = <span class="function">game.Players.LocalPlayer.UserId</span>,
+    <span class="variable">PlayerImage</span> = <span class="keyword">true</span>,
+    <span class="variable">ImgSize</span>     = <span class="number">56</span>,
+    <span class="variable">Height</span>      = <span class="number">74</span>,
+    <span class="variable">Title</span>       = <span class="function">game.Players.LocalPlayer.Name</span>,
+    <span class="variable">Content</span>     = <span class="string">"Cargando estadísticas..."</span>
+})
+
+<span class="comment">--- Actualizar el contenido cada segundo con datos reales</span>
+<span class="function">task.spawn</span>(<span class="keyword">function</span>()
+    <span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+        <span class="keyword">local</span> <span class="variable">char</span> = <span class="function">game.Players.LocalPlayer.Character</span>
+        <span class="keyword">if</span> <span class="variable">char</span> <span class="keyword">and</span> <span class="variable">char</span>:<span class="function">FindFirstChild</span>(<span class="string">"Humanoid"</span>) <span class="keyword">then</span>
+            <span class="keyword">local</span> <span class="variable">hp</span> = <span class="function">math.floor</span>(<span class="variable">char</span>.<span class="variable">Humanoid</span>.<span class="variable">Health</span>)
+            <span class="keyword">local</span> <span class="variable">maxHp</span> = <span class="function">math.floor</span>(<span class="variable">char</span>.<span class="variable">Humanoid</span>.<span class="variable">MaxHealth</span>)
+            <span class="variable">InfoRow</span>:<span class="function">UpdateContent</span>(<span class="string">"❤️ HP: "</span> .. <span class="variable">hp</span> .. <span class="string">"/"</span> .. <span class="variable">maxHp</span>)
+        <span class="keyword">end</span>
+        <span class="function">task.wait</span>(<span class="number">1</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>)</code>
+    </div>
+
+    <div class="alert warning">
+        <h4>⚠️ Diferencia importante: AssetId vs UserId</h4>
+        <ul>
+            <li><strong>AssetId</strong> → cualquier imagen subida a Roblox. Úsalo con <code>:SetImage(id)</code> o directamente en <code>Image = 6031071057</code></li>
+            <li><strong>UserId</strong> → el ID numérico del jugador. Úsalo con <code>PlayerImage = true</code> + <code>Image = UserId</code>, o con <code>:SetPlayerThumbnail(userId)</code></li>
+            <li>No mezcles los dos: un UserId no es un AssetId válido y viceversa</li>
+        </ul>
+    </div>
+
+    <!-- ─── Resumen ─────────────────────────────────────────────── -->
+    <h3 style="margin-top: 2rem;">📋 Resumen de todos los métodos</h3>
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- ── CreateImage ──────────────────────────────────────────────</span>
+<span class="keyword">local</span> <span class="variable">img</span> = <span class="variable">Tab</span>:<span class="function">CreateImage</span>({
+    <span class="variable">Image</span> = <span class="number">6031071057</span>, <span class="variable">Size</span> = <span class="number">80</span>, <span class="variable">Align</span> = <span class="string">"Center"</span>,
+    <span class="variable">PlayerImage</span> = <span class="keyword">false</span>, <span class="variable">Background</span> = <span class="keyword">true</span>, <span class="variable">CornerRadius</span> = <span class="number">8</span>
+})
+<span class="variable">img</span>:<span class="function">SetImage</span>(<span class="number">48965502</span>)               <span class="comment">--- cambiar a otro AssetId</span>
+<span class="variable">img</span>:<span class="function">SetPlayerThumbnail</span>(<span class="number">156</span>)           <span class="comment">--- cambiar a avatar del jugador con UserId 156</span>
+
+<span class="comment">--- ── CreateImageRow ────────────────────────────────────────────</span>
+<span class="keyword">local</span> <span class="variable">row</span> = <span class="variable">Tab</span>:<span class="function">CreateImageRow</span>({
+    <span class="variable">Image</span> = <span class="number">0</span>, <span class="variable">PlayerImage</span> = <span class="keyword">true</span>, <span class="variable">ImgSize</span> = <span class="number">56</span>, <span class="variable">Height</span> = <span class="number">74</span>,
+    <span class="variable">Title</span> = <span class="string">"Nombre"</span>, <span class="variable">Content</span> = <span class="string">"Descripción"</span>
+})
+<span class="variable">row</span>:<span class="function">SetImage</span>(<span class="number">6031071057</span>)             <span class="comment">--- cambiar imagen (AssetId)</span>
+<span class="variable">row</span>:<span class="function">SetPlayerThumbnail</span>(<span class="number">156</span>)          <span class="comment">--- cambiar imagen (avatar de jugador)</span>
+<span class="variable">row</span>:<span class="function">UpdateTitle</span>(<span class="string">"Nuevo título"</span>)       <span class="comment">--- cambiar título en tiempo real</span>
+<span class="variable">row</span>:<span class="function">UpdateContent</span>(<span class="string">"Nueva descripción"</span>) <span class="comment">--- cambiar descripción en tiempo real</span></code>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECCIÓN: BOTONES FLOTANTES (CreateButtonFloat)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="botones-flotantes">
+    <h2>🎮 Botones Flotantes — CreateButtonFloat</h2>
+    <p>Los botones flotantes son botones independientes que aparecen <strong>sobre el juego</strong>, fuera del panel principal de la interfaz. Puedes posicionarlos en cualquier lugar de la pantalla, hacerlos arrastrables, mostrarlos solo en móvil o solo en PC, darles un color fijo o que reaccionen al tema, y activarlos/desactivarlos desde el código.</p>
+    <p>Son perfectos para controles que necesitas acceder rápido sin abrir la interfaz, como botones de acción en un fly, auto-farm, o cualquier función que se usa constantemente.</p>
+
+    <div class="alert info">
+        <h4>💡 ¿Cómo funciona internamente?</h4>
+        <p>El botón se crea directamente en el <code>ScreenGui</code> principal, por encima de todo. No ocupa espacio en el tab ni en la lista de elementos — vive libre en la pantalla. Su posición se define en coordenadas de escala (0 a 1) donde <code>X=0</code> es el borde izquierdo y <code>X=1</code> el borde derecho, igual en Y.</p>
+    </div>
+
+    <!-- ─── Opciones ────────────────────────────────────────────── -->
+    <h3 id="float-opciones">⚙️ Opciones de Creación</h3>
+    <table class="theme-table">
+        <thead>
+            <tr><th>Opción</th><th>Tipo</th><th>Default</th><th>Descripción</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>Name</code></td><td>string</td><td>"Botón"</td><td>Texto del botón (solo si no tiene imagen)</td></tr>
+            <tr><td><code>Image</code></td><td>número</td><td>nil</td><td>AssetId de imagen. Si se pone, el botón muestra imagen en vez de texto</td></tr>
+            <tr><td><code>Width</code></td><td>número</td><td>100</td><td>Ancho en píxeles</td></tr>
+            <tr><td><code>Height</code></td><td>número</td><td>40</td><td>Alto en píxeles</td></tr>
+            <tr><td><code>X</code></td><td>0.0 – 1.0</td><td>0.5</td><td>Posición horizontal en pantalla. 0 = izquierda, 1 = derecha, 0.5 = centro</td></tr>
+            <tr><td><code>Y</code></td><td>0.0 – 1.0</td><td>0.8</td><td>Posición vertical en pantalla. 0 = arriba, 1 = abajo</td></tr>
+            <tr><td><code>OffsetX</code></td><td>número</td><td>0</td><td>Ajuste fino en píxeles sobre la posición X</td></tr>
+            <tr><td><code>OffsetY</code></td><td>número</td><td>0</td><td>Ajuste fino en píxeles sobre la posición Y</td></tr>
+            <tr><td><code>Draggable</code></td><td>true / false</td><td>false</td><td>Si es <code>true</code>, el usuario puede arrastrarlo con el ratón o dedo</td></tr>
+            <tr><td><code>MobileOnly</code></td><td>true / false</td><td>false</td><td>Si es <code>true</code>, solo aparece en dispositivos táctiles (móvil/tablet)</td></tr>
+            <tr><td><code>PCOnly</code></td><td>true / false</td><td>false</td><td>Si es <code>true</code>, solo aparece en PC (no en móvil)</td></tr>
+            <tr><td><code>CustomColor</code></td><td>{R,G,B} o false</td><td>nil</td><td>Color fijo RGB que NO cambia con el tema. Si es <code>false</code> o nil, sigue el tema</td></tr>
+            <tr><td><code>CornerRadius</code></td><td>número</td><td>8</td><td>Redondeo. Usa la mitad de Width/Height para un círculo</td></tr>
+            <tr><td><code>Callback</code></td><td>function</td><td>nil</td><td>Función que se ejecuta al hacer clic</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ─── Métodos ─────────────────────────────────────────────── -->
+    <h3 id="float-metodos" style="margin-top: 2rem;">🔧 Métodos del objeto devuelto</h3>
+    <table class="theme-table">
+        <thead>
+            <tr><th>Método</th><th>Parámetro</th><th>Qué hace</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>:Show()</code></td><td>—</td><td>Hace visible el botón (respeta la plataforma: si es MobileOnly y estás en PC, no aparece)</td></tr>
+            <tr><td><code>:Hide()</code></td><td>—</td><td>Oculta el botón completamente</td></tr>
+            <tr><td><code>:SetVisible(bool)</code></td><td>true / false</td><td>Muestra u oculta según el valor booleano</td></tr>
+            <tr><td><code>:Destroy()</code></td><td>—</td><td>Elimina el botón permanentemente de la pantalla</td></tr>
+            <tr><td><code>:SetText(string)</code></td><td>string</td><td>Cambia el texto (solo en botones de texto, no de imagen)</td></tr>
+            <tr><td><code>:SetImage(id)</code></td><td>AssetId</td><td>Cambia la imagen (solo en botones de imagen)</td></tr>
+            <tr><td><code>:SetColor(r, g, b)</code></td><td>tres números</td><td>Cambia el color de fondo manualmente en tiempo real</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ─── Posicionamiento ─────────────────────────────────────── -->
+    <h3 id="float-posicion" style="margin-top: 2rem;">📐 Entendiendo el Posicionamiento</h3>
+    <p>La posición se define con <code>X</code> e <code>Y</code> en escala de 0 a 1, donde el punto de anclaje es el centro del botón. Aquí los valores más útiles:</p>
+
+    <table class="theme-table">
+        <thead>
+            <tr><th>Zona de pantalla</th><th>X</th><th>Y</th><th>Descripción</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Centro arriba</td><td>0.5</td><td>0.1</td><td>Arriba centrado</td></tr>
+            <tr><td>Centro pantalla</td><td>0.5</td><td>0.5</td><td>Centro exacto</td></tr>
+            <tr><td>Centro abajo</td><td>0.5</td><td>0.9</td><td>Abajo centrado (lo más común)</td></tr>
+            <tr><td>Izquierda medio</td><td>0.05</td><td>0.5</td><td>Borde izquierdo, centrado verticalmente</td></tr>
+            <tr><td>Derecha medio</td><td>0.95</td><td>0.5</td><td>Borde derecho, centrado verticalmente</td></tr>
+            <tr><td>Esquina superior derecha</td><td>0.95</td><td>0.1</td><td>Arriba a la derecha</td></tr>
+            <tr><td>Esquina inferior izquierda</td><td>0.05</td><td>0.9</td><td>Abajo a la izquierda</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ─── Ejemplos ────────────────────────────────────────────── -->
+    <h3 id="float-ejemplos" style="margin-top: 2rem;">🧪 Ejemplos Completos</h3>
+
+    <h4 style="color: var(--color-accent); margin: 1.5rem 0 0.5rem;">Ejemplo 1 — Siempre visible al cargar el script</h4>
+    <p>El botón más simple posible. Aparece en cuanto se ejecuta el script, sin necesidad de activarlo con nada.</p>
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="keyword">local</span> <span class="variable">BtnAccion</span> = <span class="variable">MainTab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>     = <span class="string">"⚡ Acción"</span>,
+    <span class="variable">Width</span>    = <span class="number">110</span>,
+    <span class="variable">Height</span>   = <span class="number">42</span>,
+    <span class="variable">X</span>        = <span class="number">0.5</span>,    <span class="comment">--- centro horizontal</span>
+    <span class="variable">Y</span>        = <span class="number">0.9</span>,    <span class="comment">--- abajo</span>
+    <span class="variable">Draggable</span> = <span class="keyword">true</span>,  <span class="comment">--- el usuario puede moverlo</span>
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="function">print</span>(<span class="string">"¡Botón flotante presionado!"</span>)
+    <span class="keyword">end</span>
+})
+<span class="comment">--- No necesitas llamar a :Show() — aparece automáticamente al crearlo</span></code>
+    </div>
+
+    <h4 style="color: var(--color-accent); margin: 1.5rem 0 0.5rem;">Ejemplo 2 — Activar y desactivar con un Toggle</h4>
+    <p>El botón empieza oculto. El Toggle lo muestra u oculta. Úsalo para botones que solo tienen sentido cuando una función está activa.</p>
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- Crear el botón YA OCULTO</span>
+<span class="keyword">local</span> <span class="variable">BtnFuncion</span> = <span class="variable">MainTab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>        = <span class="string">"🔥 Ejecutar"</span>,
+    <span class="variable">Width</span>       = <span class="number">110</span>,
+    <span class="variable">Height</span>      = <span class="number">42</span>,
+    <span class="variable">X</span>           = <span class="number">0.85</span>,
+    <span class="variable">Y</span>           = <span class="number">0.7</span>,
+    <span class="variable">CustomColor</span> = {<span class="number">80</span>, <span class="number">200</span>, <span class="number">120</span>},  <span class="comment">--- verde fijo, no cambia con el tema</span>
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="function">print</span>(<span class="string">"Función ejecutada"</span>)
+    <span class="keyword">end</span>
+})
+<span class="variable">BtnFuncion</span>:<span class="function">Hide</span>()  <span class="comment">--- ocultar al inicio</span>
+
+<span class="comment">--- El Toggle lo muestra/oculta</span>
+<span class="variable">MainTab</span>:<span class="function">CreateToggle</span>({
+    <span class="variable">Name</span>         = <span class="string">"Mostrar botón flotante"</span>,
+    <span class="variable">CurrentValue</span> = <span class="keyword">false</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">estado</span>)
+        <span class="variable">BtnFuncion</span>:<span class="function">SetVisible</span>(<span class="variable">estado</span>)
+    <span class="keyword">end</span>
+})</code>
+    </div>
+
+    <h4 style="color: var(--color-accent); margin: 1.5rem 0 0.5rem;">Ejemplo 3 — Activar con un Botón normal</h4>
+    <p>Un botón dentro de la interfaz que activa/desactiva otro botón flotante. Aquí necesitas manejar el estado tú mismo.</p>
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="keyword">local</span> <span class="variable">BtnManual</span> = <span class="variable">MainTab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>      = <span class="string">"✅ Activo"</span>,
+    <span class="variable">Width</span>     = <span class="number">100</span>,
+    <span class="variable">Height</span>    = <span class="number">40</span>,
+    <span class="variable">X</span>         = <span class="number">0.15</span>,
+    <span class="variable">Y</span>         = <span class="number">0.5</span>,
+    <span class="variable">Draggable</span> = <span class="keyword">true</span>,
+    <span class="variable">Callback</span>  = <span class="keyword">function</span>()
+        <span class="function">print</span>(<span class="string">"¡Presionado!"</span>)
+    <span class="keyword">end</span>
+})
+<span class="variable">BtnManual</span>:<span class="function">Hide</span>()
+
+<span class="comment">--- Variable local para trackear el estado</span>
+<span class="keyword">local</span> <span class="variable">flotanteVisible</span> = <span class="keyword">false</span>
+
+<span class="variable">MainTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Mostrar / Ocultar botón manual"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="variable">flotanteVisible</span> = <span class="keyword">not</span> <span class="variable">flotanteVisible</span>
+        <span class="variable">BtnManual</span>:<span class="function">SetVisible</span>(<span class="variable">flotanteVisible</span>)
+    <span class="keyword">end</span>
+})</code>
+    </div>
+
+    <h4 style="color: var(--color-accent); margin: 1.5rem 0 0.5rem;">Ejemplo 4 — Solo en móvil, con color personalizado</h4>
+    <p>Botón que solo aparece en dispositivos táctiles y mantiene un color fijo sin importar qué tema uses.</p>
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="keyword">local</span> <span class="variable">BtnMobile</span> = <span class="variable">MainTab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>        = <span class="string">"📱 Solo Móvil"</span>,
+    <span class="variable">Width</span>       = <span class="number">90</span>,
+    <span class="variable">Height</span>      = <span class="number">38</span>,
+    <span class="variable">X</span>           = <span class="number">0.05</span>,   <span class="comment">--- borde izquierdo</span>
+    <span class="variable">Y</span>           = <span class="number">0.5</span>,    <span class="comment">--- centro vertical</span>
+    <span class="variable">MobileOnly</span>  = <span class="keyword">true</span>,   <span class="comment">--- INVISIBLE en PC automáticamente</span>
+    <span class="variable">CustomColor</span> = {<span class="number">255</span>, <span class="number">100</span>, <span class="number">0</span>},  <span class="comment">--- naranja siempre, no sigue el tema</span>
+    <span class="variable">Draggable</span>   = <span class="keyword">true</span>,
+    <span class="variable">Callback</span>    = <span class="keyword">function</span>()
+        <span class="function">print</span>(<span class="string">"Solo en móvil"</span>)
+    <span class="keyword">end</span>
+})</code>
+    </div>
+
+    <h4 style="color: var(--color-accent); margin: 1.5rem 0 0.5rem;">Ejemplo 5 — Botón con imagen (icono)</h4>
+    <p>Cuando pones <code>Image</code>, el botón muestra una imagen de Roblox en vez de texto. Ideal para botones circulares tipo joystick o iconos de acción.</p>
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="keyword">local</span> <span class="variable">BtnIcono</span> = <span class="variable">MainTab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Image</span>        = <span class="number">6031071057</span>,  <span class="comment">--- AssetId de la imagen</span>
+    <span class="variable">Width</span>        = <span class="number">55</span>,
+    <span class="variable">Height</span>       = <span class="number">55</span>,
+    <span class="variable">X</span>            = <span class="number">0.95</span>,
+    <span class="variable">Y</span>            = <span class="number">0.5</span>,
+    <span class="variable">CornerRadius</span> = <span class="number">27</span>,  <span class="comment">--- círculo (mitad de 55)</span>
+    <span class="variable">PCOnly</span>       = <span class="keyword">true</span>,  <span class="comment">--- solo en PC</span>
+    <span class="variable">Callback</span>     = <span class="keyword">function</span>()
+        <span class="function">print</span>(<span class="string">"Icono presionado"</span>)
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- Cambiar la imagen dinámicamente</span>
+<span class="variable">BtnIcono</span>:<span class="function">SetImage</span>(<span class="number">48965502</span>)</code>
+    </div>
+
+    <h4 style="color: var(--color-accent); margin: 1.5rem 0 0.5rem;">Ejemplo 6 — Fly completo con botones flotantes arriba/abajo</h4>
+    <p>El caso de uso más avanzado: un Toggle que activa el modo vuelo y crea dos botones flotantes para subir y bajar. Los botones aparecen solo cuando el fly está activo y desaparecen al desactivarlo.</p>
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="keyword">local</span> <span class="variable">flyActivo</span>    = <span class="keyword">false</span>
+<span class="keyword">local</span> <span class="variable">flyConexion</span>  = <span class="keyword">nil</span>
+<span class="keyword">local</span> <span class="variable">subiendoActivo</span>  = <span class="keyword">false</span>
+<span class="keyword">local</span> <span class="variable">bajandoActivo</span>   = <span class="keyword">false</span>
+<span class="keyword">local</span> <span class="variable">RunService</span> = <span class="function">game:GetService</span>(<span class="string">"RunService"</span>)
+<span class="keyword">local</span> <span class="variable">UIS</span>        = <span class="function">game:GetService</span>(<span class="string">"UserInputService"</span>)
+
+<span class="comment">--- Botón SUBIR (empieza oculto)</span>
+<span class="keyword">local</span> <span class="variable">BtnSubir</span> = <span class="variable">PlayerTab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>        = <span class="string">"▲"</span>,
+    <span class="variable">Width</span>       = <span class="number">60</span>,
+    <span class="variable">Height</span>      = <span class="number">60</span>,
+    <span class="variable">X</span>           = <span class="number">0.9</span>,
+    <span class="variable">Y</span>           = <span class="number">0.58</span>,
+    <span class="variable">CornerRadius</span> = <span class="number">30</span>,
+    <span class="variable">CustomColor</span> = {<span class="number">60</span>, <span class="number">140</span>, <span class="number">255</span>},
+    <span class="variable">Callback</span>    = <span class="keyword">function</span>() <span class="keyword">end</span>  <span class="comment">--- el movimiento se hace en el loop</span>
+})
+<span class="variable">BtnSubir</span>:<span class="function">Hide</span>()
+
+<span class="comment">--- Botón BAJAR (empieza oculto)</span>
+<span class="keyword">local</span> <span class="variable">BtnBajar</span> = <span class="variable">PlayerTab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>        = <span class="string">"▼"</span>,
+    <span class="variable">Width</span>       = <span class="number">60</span>,
+    <span class="variable">Height</span>      = <span class="number">60</span>,
+    <span class="variable">X</span>           = <span class="number">0.9</span>,
+    <span class="variable">Y</span>           = <span class="number">0.74</span>,
+    <span class="variable">CornerRadius</span> = <span class="number">30</span>,
+    <span class="variable">CustomColor</span> = {<span class="number">60</span>, <span class="number">140</span>, <span class="number">255</span>},
+    <span class="variable">Callback</span>    = <span class="keyword">function</span>() <span class="keyword">end</span>
+})
+<span class="variable">BtnBajar</span>:<span class="function">Hide</span>()
+
+<span class="comment">--- Toggle que activa/desactiva el fly y los botones</span>
+<span class="variable">PlayerTab</span>:<span class="function">CreateToggle</span>({
+    <span class="variable">Name</span>         = <span class="string">"✈️ Activar Fly"</span>,
+    <span class="variable">CurrentValue</span> = <span class="keyword">false</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>(<span class="variable">estado</span>)
+        <span class="variable">flyActivo</span> = <span class="variable">estado</span>
+        <span class="keyword">local</span> <span class="variable">char</span> = <span class="function">game.Players.LocalPlayer.Character</span>
+        <span class="keyword">local</span> <span class="variable">hrp</span>  = <span class="variable">char</span> <span class="keyword">and</span> <span class="variable">char</span>:<span class="function">FindFirstChild</span>(<span class="string">"HumanoidRootPart"</span>)
+        <span class="keyword">local</span> <span class="variable">hum</span>  = <span class="variable">char</span> <span class="keyword">and</span> <span class="variable">char</span>:<span class="function">FindFirstChild</span>(<span class="string">"Humanoid"</span>)
+
+        <span class="keyword">if</span> <span class="variable">estado</span> <span class="keyword">then</span>
+            <span class="comment">--- Mostrar botones flotantes</span>
+            <span class="variable">BtnSubir</span>:<span class="function">Show</span>()
+            <span class="variable">BtnBajar</span>:<span class="function">Show</span>()
+            <span class="keyword">if</span> <span class="variable">hum</span> <span class="keyword">then</span> <span class="variable">hum</span>.<span class="variable">PlatformStand</span> = <span class="keyword">true</span> <span class="keyword">end</span>
+
+            <span class="comment">--- Loop de vuelo</span>
+            <span class="variable">flyConexion</span> = <span class="variable">RunService</span>.<span class="variable">Heartbeat</span>:<span class="function">Connect</span>(<span class="keyword">function</span>()
+                <span class="keyword">if</span> <span class="keyword">not</span> <span class="variable">flyActivo</span> <span class="keyword">or</span> <span class="keyword">not</span> <span class="variable">hrp</span> <span class="keyword">or</span> <span class="keyword">not</span> <span class="variable">hrp</span>.<span class="variable">Parent</span> <span class="keyword">then</span>
+                    <span class="variable">flyConexion</span>:<span class="function">Disconnect</span>()
+                    <span class="keyword">return</span>
+                <span class="keyword">end</span>
+                <span class="keyword">local</span> <span class="variable">vel</span> = <span class="variable">hrp</span>.<span class="variable">Velocity</span>
+                <span class="comment">--- PC: Space=subir, C=bajar</span>
+                <span class="keyword">if</span> <span class="variable">UIS</span>:<span class="function">IsKeyDown</span>(<span class="function">Enum.KeyCode.Space</span>) <span class="keyword">then</span>
+                    <span class="variable">hrp</span>.<span class="variable">Velocity</span> = <span class="function">Vector3.new</span>(<span class="variable">vel</span>.<span class="variable">X</span>, <span class="number">40</span>, <span class="variable">vel</span>.<span class="variable">Z</span>)
+                <span class="keyword">elseif</span> <span class="variable">UIS</span>:<span class="function">IsKeyDown</span>(<span class="function">Enum.KeyCode.C</span>) <span class="keyword">then</span>
+                    <span class="variable">hrp</span>.<span class="variable">Velocity</span> = <span class="function">Vector3.new</span>(<span class="variable">vel</span>.<span class="variable">X</span>, -<span class="number">40</span>, <span class="variable">vel</span>.<span class="variable">Z</span>)
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>)
+
+        <span class="keyword">else</span>
+            <span class="comment">--- Ocultar botones y desactivar fly</span>
+            <span class="variable">BtnSubir</span>:<span class="function">Hide</span>()
+            <span class="variable">BtnBajar</span>:<span class="function">Hide</span>()
+            <span class="keyword">if</span> <span class="variable">flyConexion</span> <span class="keyword">then</span> <span class="variable">flyConexion</span>:<span class="function">Disconnect</span>() <span class="keyword">end</span>
+            <span class="keyword">if</span> <span class="variable">hum</span> <span class="keyword">then</span> <span class="variable">hum</span>.<span class="variable">PlatformStand</span> = <span class="keyword">false</span> <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+})</code>
+    </div>
+
+    <h4 style="color: var(--color-accent); margin: 1.5rem 0 0.5rem;">Ejemplo 7 — Cambiar texto y color dinámicamente</h4>
+    <p>Los botones flotantes pueden cambiar su apariencia en cualquier momento sin recrearlos.</p>
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="keyword">local</span> <span class="variable">BtnDinamico</span> = <span class="variable">MainTab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>   = <span class="string">"Texto original"</span>,
+    <span class="variable">Width</span>  = <span class="number">130</span>,
+    <span class="variable">Height</span> = <span class="number">40</span>,
+    <span class="variable">X</span>      = <span class="number">0.5</span>,
+    <span class="variable">Y</span>      = <span class="number">0.85</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="function">print</span>(<span class="string">"Clic"</span>)
+    <span class="keyword">end</span>
+})
+
+<span class="comment">--- Cambiar apariencia desde un botón de la interfaz</span>
+<span class="variable">MainTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Modificar botón flotante"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="variable">BtnDinamico</span>:<span class="function">SetText</span>(<span class="string">"✨ Cambiado"</span>)         <span class="comment">--- nuevo texto</span>
+        <span class="variable">BtnDinamico</span>:<span class="function">SetColor</span>(<span class="number">200</span>, <span class="number">80</span>, <span class="number">255</span>)          <span class="comment">--- nuevo color (morado)</span>
+    <span class="keyword">end</span>
+})</code>
+    </div>
+
+    <!-- ─── Color: tema vs custom ───────────────────────────────── -->
+    <h3 id="float-colores" style="margin-top: 2rem;">🎨 Color del tema vs Color personalizado</h3>
+    <p>Aquí la diferencia entre poner <code>CustomColor</code> o no:</p>
+
+    <div class="examples-grid">
+        <div class="example-card">
+            <h4>Sin CustomColor → sigue el tema</h4>
+            <p>El botón siempre tiene el color de acento del tema activo. Si el usuario cambia el tema, el botón también cambia de color automáticamente.</p>
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="keyword">local</span> <span class="variable">BtnTema</span> = <span class="variable">Tab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>   = <span class="string">"Sigo el tema"</span>,
+    <span class="variable">Width</span>  = <span class="number">120</span>,
+    <span class="variable">Height</span> = <span class="number">40</span>,
+    <span class="variable">X</span>      = <span class="number">0.5</span>,
+    <span class="variable">Y</span>      = <span class="number">0.9</span>,
+    <span class="comment">--- SIN CustomColor</span>
+    <span class="variable">Callback</span> = <span class="keyword">function</span>() <span class="keyword">end</span>
+})</code>
+                </div>
+        </div>
+        <div class="example-card">
+            <h4>Con CustomColor → color fijo siempre</h4>
+            <p>El botón mantiene ese color RGB sin importar qué tema elija el usuario. Ideal para botones de peligro (rojo), confirmación (verde), etc.</p>
+            <div class="code-block" data-language="lua">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <code><span class="keyword">local</span> <span class="variable">BtnFijo</span> = <span class="variable">Tab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>        = <span class="string">"Color fijo"</span>,
+    <span class="variable">Width</span>       = <span class="number">120</span>,
+    <span class="variable">Height</span>      = <span class="number">40</span>,
+    <span class="variable">X</span>           = <span class="number">0.5</span>,
+    <span class="variable">Y</span>           = <span class="number">0.9</span>,
+    <span class="variable">CustomColor</span> = {<span class="number">220</span>, <span class="number">50</span>, <span class="number">50</span>},  <span class="comment">--- rojo</span>
+    <span class="variable">Callback</span>    = <span class="keyword">function</span>() <span class="keyword">end</span>
+})</code>
+                </div>
+        </div>
+    </div>
+
+    <!-- ─── Varios botones al mismo tiempo ──────────────────────── -->
+    <h3 id="float-varios" style="margin-top: 2rem;">📦 Varios botones flotantes a la vez</h3>
+    <p>Puedes crear todos los botones que necesites, cada uno con su propia posición, color y comportamiento. Solo asegúrate de que no se sobrepongan entre sí ajustando los valores de X e Y.</p>
+
+    <div class="code-block" data-language="lua">
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        <code><span class="comment">--- Conjunto de 3 botones flotantes en la esquina inferior derecha</span>
+<span class="keyword">local</span> <span class="variable">Btn1</span> = <span class="variable">MainTab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>        = <span class="string">"A"</span>,
+    <span class="variable">Width</span>       = <span class="number">48</span>,
+    <span class="variable">Height</span>      = <span class="number">48</span>,
+    <span class="variable">X</span>           = <span class="number">0.88</span>,
+    <span class="variable">Y</span>           = <span class="number">0.72</span>,
+    <span class="variable">CornerRadius</span> = <span class="number">24</span>,
+    <span class="variable">CustomColor</span> = {<span class="number">0</span>, <span class="number">180</span>, <span class="number">100</span>},
+    <span class="variable">Callback</span>    = <span class="keyword">function</span>() <span class="function">print</span>(<span class="string">"A"</span>) <span class="keyword">end</span>
+})
+
+<span class="keyword">local</span> <span class="variable">Btn2</span> = <span class="variable">MainTab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>        = <span class="string">"B"</span>,
+    <span class="variable">Width</span>       = <span class="number">48</span>,
+    <span class="variable">Height</span>      = <span class="number">48</span>,
+    <span class="variable">X</span>           = <span class="number">0.95</span>,
+    <span class="variable">Y</span>           = <span class="number">0.82</span>,
+    <span class="variable">CornerRadius</span> = <span class="number">24</span>,
+    <span class="variable">CustomColor</span> = {<span class="number">60</span>, <span class="number">120</span>, <span class="number">255</span>},
+    <span class="variable">Callback</span>    = <span class="keyword">function</span>() <span class="function">print</span>(<span class="string">"B"</span>) <span class="keyword">end</span>
+})
+
+<span class="keyword">local</span> <span class="variable">Btn3</span> = <span class="variable">MainTab</span>:<span class="function">CreateButtonFloat</span>({
+    <span class="variable">Name</span>        = <span class="string">"X"</span>,
+    <span class="variable">Width</span>       = <span class="number">48</span>,
+    <span class="variable">Height</span>      = <span class="number">48</span>,
+    <span class="variable">X</span>           = <span class="number">0.81</span>,
+    <span class="variable">Y</span>           = <span class="number">0.82</span>,
+    <span class="variable">CornerRadius</span> = <span class="number">24</span>,
+    <span class="variable">CustomColor</span> = {<span class="number">220</span>, <span class="number">60</span>, <span class="number">60</span>},
+    <span class="variable">Callback</span>    = <span class="keyword">function</span>() <span class="function">print</span>(<span class="string">"X"</span>) <span class="keyword">end</span>
+})
+
+<span class="comment">--- Eliminar todos al mismo tiempo si se necesita</span>
+<span class="variable">MainTab</span>:<span class="function">CreateButton</span>({
+    <span class="variable">Name</span> = <span class="string">"Eliminar los 3 botones"</span>,
+    <span class="variable">Callback</span> = <span class="keyword">function</span>()
+        <span class="variable">Btn1</span>:<span class="function">Destroy</span>()
+        <span class="variable">Btn2</span>:<span class="function">Destroy</span>()
+        <span class="variable">Btn3</span>:<span class="function">Destroy</span>()
+    <span class="keyword">end</span>
+})</code>
+    </div>
+
+    <!-- ─── Resumen final ───────────────────────────────────────── -->
+    <div class="alert success">
+        <h4>✅ Puntos clave para recordar</h4>
+        <ul>
+            <li><strong>El botón aparece visible por defecto</strong> al crearlo. Llama a <code>:Hide()</code> justo después si quieres que empiece oculto.</li>
+            <li><strong>Puedes crearlo desde cualquier tab</strong> — el botón no pertenece al tab, vive en la pantalla directamente. Usar <code>MainTab</code> o <code>SettingsTab</code> da el mismo resultado.</li>
+            <li><strong><code>MobileOnly</code> y <code>PCOnly</code></strong> se detectan automáticamente al crear. Si estás en PC y pones <code>MobileOnly = true</code>, el botón no aparece nunca aunque llames a <code>:Show()</code>.</li>
+            <li><strong>El arrastre es compatible con móvil y PC</strong> al mismo tiempo cuando <code>Draggable = true</code>.</li>
+            <li><strong>Sin <code>CustomColor</code></strong>, el botón cambia de color automáticamente cuando el usuario cambia el tema desde el panel de la interfaz.</li>
+        </ul>
+    </div>
+</section>
 
 
 
